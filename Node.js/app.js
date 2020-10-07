@@ -125,17 +125,56 @@ app.get('/userTag/:userId', async (req, res) => {
 
 /*************************************************
 		GET DOOR HISTORY BY DOOR ID
-*************************************************/	//VOIR AVEC LUCAS
+*************************************************/	//TEST OK
 
 app.get('/doorHistory/:doorId', async (req, res) => {
     let doorId = parseInt(req.url.split('/doorHistory/').pop());
-    let sql = 'select tag from access where users = ' + doorId ;
+    let sql = 'select * from history where door = ' + doorId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);
     })
 });
 
+/*************************************************
+		POST ACCESS
+*************************************************/	//TEST OK
+
+app.post('/newaccess', async (req, res) => {
+  const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
+  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];		
+  await pool.query(query, valeur, (err) => {
+	if (err) return res.send(false);
+	return res.send(true);
+});
+});
+
+/*************************************************
+		POST DOOR
+*************************************************/	//TEST OK
+
+app.post('/newdoor', async (req, res) => {
+  const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
+  let valeur = [req.query.password, req.query.status];		
+  await pool.query(query, valeur, (err) => {
+	if (err) return res.send(false);
+	return res.send(true);
+});
+});
+
+
+/*************************************************
+		POST HISTORY
+*************************************************/
+
+app.post('/newhistory', async (req, res) => {
+  const query = "INSERT INTO history (door, users, date, action) VALUES ($1,$2,$3,$4)";
+  let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];		
+  await pool.query(query, valeur, (err) => {
+	if (err) return res.send(false);
+	return res.send(true);
+});
+});
 
 app.all("/*", function(req, res, next){
   res.header('Access-Control-Allow-Origin', '*');
