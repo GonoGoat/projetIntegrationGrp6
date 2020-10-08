@@ -1,19 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Home from "./Components/Home"
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet, View, Text, Button } from 'react-native'
+import Test from './Components/Test'
 
-export default function App() {
+const Stack = createStackNavigator();
+const HomeScreen = ({ navigation }) => {
   return (
-    <Home/>
+    <Button
+      title="Accéder à vos portes"
+      onPress={() =>
+        navigation.navigate('Portes', { name: 'door' })
+      }
+    />
   );
-}
+};
+const Door = () => {
+  return <Text>Voici la liste de vos portes</Text>;
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Bienvenu' }}
+        />
+        <Stack.Screen name="Portes" component={Door} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+export default App;
