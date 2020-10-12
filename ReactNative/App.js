@@ -1,36 +1,64 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, View, Text, Button } from 'react-native'
-import Test from './Components/Test'
+import { Button, View } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
+import { createStackNavigator} from '@react-navigation/stack'
 
-const Stack = createStackNavigator();
-const HomeScreen = ({ navigation }) => {
-  return (
-    <Button
-      title="Accéder à vos portes"
-      onPress={() =>
-        navigation.navigate('Portes', { name: 'door' })
-      }
-    />
-  );
-};
-const Door = () => {
-  return <Text>Voici la liste de vos portes</Text>;
-};
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const App = () => {
+import Page1 from './Components/Page1'
+import Page2 from './Components/Page2'
+import Page3 from './Components/Page3'
+
+const Drawer = createDrawerNavigator();
+const HomeStack = createStackNavigator();
+const Page2Stack = createStackNavigator();
+
+const HomeStackScreen = ({navigation}) => (
+  <HomeStack.Navigator screenOptions={{
+    headerStyle: {
+      backgroundcolor: "blue",
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight:'bold'
+    }
+    }}>
+    <HomeStack.Screen name="YOYO" component={Page1} options={{
+      title:"Overview",
+      headerLeft: () => (
+        <Icon.Button name="md-menu" size={25}
+        onPress={() => navigation.openDrawer()}></Icon.Button>
+      )
+    }}></HomeStack.Screen>
+    </HomeStack.Navigator>
+)
+const Page2StackScreen = ({navigation}) => (
+  <Page2Stack.Navigator screenOptions={{
+    headerStyle: {
+      backgroundcolor: "blue",
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight:'bold'
+    }
+    }}>
+    <Page2Stack.Screen name="Page2" component={Page2} options={{
+      headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25}
+        onPress={() => navigation.openDrawer()}></Icon.Button>
+      )
+    }}></Page2Stack.Screen>
+    </Page2Stack.Navigator>
+)
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ title: 'Bienvenu' }}
-        />
-        <Stack.Screen name="Portes" component={Door} />
-      </Stack.Navigator>
+      <Drawer.Navigator initialRouteName="Page1">
+        <Drawer.Screen name="Page1" component={HomeStackScreen} />
+        <Drawer.Screen name="Page2" component={Page2StackScreen} />
+        <Drawer.Screen name="Page3" component={Page3} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
-};
-export default App;
+}

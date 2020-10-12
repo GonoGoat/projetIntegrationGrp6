@@ -1,11 +1,11 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
-class Test extends React.Component {
+class Page2 extends React.Component {
   render() {
     return (
       <View style={styles.main_container}>
-        <Text>Détail des portes</Text>
+        <Text>Page 2 </Text>
       </View>
     )
   }
@@ -13,8 +13,10 @@ class Test extends React.Component {
 
 const styles = StyleSheet.create({
   main_container: {
-    flex: 1,
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
   }
 })
 
-export default Test
+export default Page2
