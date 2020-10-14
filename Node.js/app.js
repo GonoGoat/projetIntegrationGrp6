@@ -165,7 +165,7 @@ app.post('/newdoor', async (req, res) => {
 
 /*************************************************
 		POST HISTORY
-*************************************************/
+*************************************************/	//TEST OK
 
 app.post('/newhistory', async (req, res) => {
   const query = "INSERT INTO history (door, users, date, action) VALUES ($1,$2,$3,$4)";
@@ -175,6 +175,28 @@ app.post('/newhistory', async (req, res) => {
 	return res.send(true);
 });
 });
+
+/*************************************************
+		POST CHANGE DOOR STATUS
+*************************************************/
+
+app.post('/changeDoorStatus', async (req, res) => {
+  const query = "UPDATE door set status = !status where id=door VALUES ($1)";
+  let valeur = [req.query.door];		
+  await pool.query(query, valeur, (err) => {
+	if (err) return res.send(false);
+	return res.send(true);
+});
+});
+
+
+
+
+
+
+
+
+
 
 app.all("/*", function(req, res, next){
   res.header('Access-Control-Allow-Origin', '*');
