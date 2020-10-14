@@ -53,12 +53,15 @@ const Page2StackScreen = ({navigation}) => (
 )
 export default function App() {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Page1">
-        <Drawer.Screen name="Page1" component={HomeStackScreen} />
-        <Drawer.Screen name="Page2" component={Page2StackScreen} />
-        <Drawer.Screen name="Page3" component={Page3} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Home/>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
