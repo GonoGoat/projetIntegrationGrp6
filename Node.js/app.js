@@ -173,22 +173,14 @@ app.post('/newhistory', async (req, res) => {
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
-});
-});
-
-/*************************************************
-		POST CHANGE DOOR STATUS
-*************************************************/
-
-app.post('/changeDoorStatus', async (req, res) => {
-  const query = "UPDATE door set status = !status where id=door VALUES ($1)";
-  let valeur = [req.query.door];		
-  await pool.query(query, valeur, (err) => {
+	});
+   const query2 = "UPDATE door set status = !status where id=door VALUES ($1)"
+   let valeur2 = [req.query.door];
+   await pool.query(query2, valeur2, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
+	});
 });
-});
-
 
 /*-----------------STATIC------------------*/
 
