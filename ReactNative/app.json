@@ -1,12 +1,7 @@
 {
   "expo": {
-<<<<<<< HEAD
     "name": "Integration",
     "slug": "Integration",
-=======
-    "name": "integration",
-    "slug": "integration",
->>>>>>> Nathan
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

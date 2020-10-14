@@ -1,5 +1,6 @@
 import {Picker, StyleSheet, Text, TextInput, View, TouchableOpacity} from "react-native";
 import React from "react";
+import Connection from "./Connection";
 
 class Inscription extends React.Component {
   render() {
@@ -25,7 +26,7 @@ class Inscription extends React.Component {
         <TouchableOpacity style={styles.button}>
           <Text style={styles.text}>Inscription</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => nav('Connection')} style={styles.connect}>
+        <TouchableOpacity onPress={() => nav("Connexion")} style={styles.connect}>
           <Text style={styles.text}>Déjà un compte ? </Text>
         </TouchableOpacity>
       </View>

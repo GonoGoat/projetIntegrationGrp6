@@ -1,16 +1,17 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
 
 const Page1 = ({navigation}) => {
     return (
       <View style={styles.container}>
+        <Text style={styles.Text}>Accueil</Text>
         <Button
-        title="Go to page2"
-        onPress={() => navigation.navigate("Page2")}
+        title="Aller à la page de connexion"
+        onPress={() => navigation.navigate("Connexion")}
       />
       <Button
-        title="Go to page3"
-        onPress={() => navigation.navigate("Page3")}
+        title="Aller à la page des inscriptions"
+        onPress={() => navigation.navigate("Inscription")}
       />
       </View>
     );
@@ -24,4 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center'
   },
+  Text: {
+    fontSize: 30,
+  }
 });

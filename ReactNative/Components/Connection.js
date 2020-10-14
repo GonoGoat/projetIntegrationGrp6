@@ -1,6 +1,10 @@
-import {StyleSheet, Text, TextInput, View, TouchableOpacity} from "react-native";
+import {StyleSheet, Text, TextInput, View, TouchableOpacity, Button} from "react-native";
 import React from "react";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Inscription from "./Inscription";
+
+const Stack = createStackNavigator();
 
 class Connection extends React.Component {
 
@@ -27,6 +31,7 @@ class Connection extends React.Component {
   }
   render() {
     const nav = this.props.navigation.navigate;
+    var navigation = this.props.navigation.navigate
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
@@ -36,9 +41,9 @@ class Connection extends React.Component {
         <TouchableOpacity style={styles.button} onPress={()=> this._checkUser()}>
           <Text style={styles.text}>Connexion</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connect} onPress={() => nav('Inscription')} >
+        <TouchableOpacity style={styles.connect} onPress={() => nav("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
-        </TouchableOpacity>
+          </TouchableOpacity>          
       </View>
     )
   }

@@ -1,4 +1,3 @@
-// Navigation/Navigation.js
 
 import { createStackNavigator } from 'react-navigation-stack'
 import Inscription from '../Components/Inscription'
