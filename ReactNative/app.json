@@ -1,12 +1,13 @@
 {
   "expo": {
-    "name": "Porte",
-    "slug": "Porte",
+    "name": "Integration",
+    "slug": "Integration",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
+      "fontFamily": "Consolas",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
