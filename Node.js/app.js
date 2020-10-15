@@ -18,10 +18,10 @@ app.use(bodyParser.urlencoded({
 
 //connection avec la db
 let pool = new pg.Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'dbIntegration',
-  password: 'dbpassword$$$',
+  user: 'postgresArnaud',
+  host: '82.165.248.136',
+  database: 'projetIntegration',
+  password: 'zGwgD4he37QvL7YY',
   port: '5432'
 });
 pool.connect(function (err) {
@@ -401,4 +401,4 @@ app.all("/*", function(req, res, next){
 });
 
 //ecoute sur le port 8888
-app.listen(8888);
+app.listen(8081);
