@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-const Page1 = ({navigation}) => {
+const Accueil = ({navigation}) => {
     return (
       <View style={styles.container}>
         <Text style={styles.Text}>Accueil</Text>
@@ -17,7 +17,7 @@ const Page1 = ({navigation}) => {
     );
 };
 
-export default Page1;
+export default Accueil;
 
 const styles = StyleSheet.create({
   container: {
