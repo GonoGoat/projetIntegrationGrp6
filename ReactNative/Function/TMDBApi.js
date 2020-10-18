@@ -2,8 +2,8 @@
 import axios from "axios"
 const API_TOKEN = "17bd62cc476b319141fbaaceb846867d";
 
-export function getFilmsFromApiWithSearchedText (text,page) {
-  const url = 'https://api.themoviedb.org/3/search/movie?api_key=' + API_TOKEN + '&language=fr&query=' + text + "&page=" + page
+export function getFilmsFromApiWithSearchedText (text) {
+  const url = 'https://api.themoviedb.org/3/search/movie?api_key=' + API_TOKEN + '&language=fr&query=' + text
   return axios
   .get(url)
   .catch(function(error) {

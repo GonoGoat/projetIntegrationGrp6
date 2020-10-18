@@ -9,22 +9,14 @@ function Home() {
 
   const [films, setfilms] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [test,setTest] = useState([0]);
 
-  let search = "";
-  let page = 0;
-  let totalPages = 0;
+  var search = "";
 
   async function _loadFilms() {
     if (search.length > 0) { // Seulement si le texte recherché n'est pas vide
       setLoading(true);
-      console.log(page);
-      getFilmsFromApiWithSearchedText(search,page+1).then(data =>{
-        console.log(data.data);
-        page = data.data.page;
-        totalPages = data.data.total_pages;
-        console.log(page + '/' + totalPages);
-        setfilms([...films,...data.data.results]);
+      getFilmsFromApiWithSearchedText(search).then(data =>{
+        setfilms(data.data.results);
         setLoading(false)
         ;}
       );
@@ -41,12 +33,6 @@ function Home() {
             data={films}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item,index}) => <FilmItem films={films[index]}/>}
-            onEndReachedThreshold={0.5}
-            onEndReached={() => {
-                if (page < totalPages) { // On vérifie qu'on n'a pas atteint la fin de la pagination (totalPages) avant de charger plus d'éléments
-                  _loadFilms();
-                }
-            }}
           />
         <View style={styles.loading_container}>
           <ActivityIndicator size='large' animating={isLoading}/>
