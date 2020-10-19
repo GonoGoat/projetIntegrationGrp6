@@ -45,6 +45,18 @@ app.get('/user/:id', async (req, res) => {
 });
 
 /*************************************************
+ GET ALL USER
+ *************************************************/	// TEST OK
+
+app.get('/users', async (req, res) => {
+    let sql = 'select * from users';
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        return res.send(rows.rows);
+    })
+});
+
+/*************************************************
 		POST USER
 *************************************************/	// TEST OK
 
