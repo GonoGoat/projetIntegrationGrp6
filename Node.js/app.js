@@ -4,7 +4,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
-var http = require('http');
+const http = require('http');
 
 
 const app = express();
@@ -36,8 +36,14 @@ pool.connect(function (err) {
 *************************************************/	// TEST OK
 
 app.get('/user/:id', async (req, res) => {
-  let userId = parseInt(req.url.split('/user/').pop());
-  let sql = 'select * from users where id = ' + userId;					
+  let userId = req.url.split('/user/').pop();
+  let sql;
+  if (userId === "*") {
+    sql = 'select * from users'
+  }
+  else {
+    sql = 'select * from users where id = ' + parseInt(userId);
+  }
   pool.query(sql, (err, rows) => {
     if (err) throw err;
     return res.send(rows.rows);
@@ -50,7 +56,7 @@ app.get('/user/:id', async (req, res) => {
 
 app.post('/newuser', async (req, res) => {
   const query = "INSERT INTO users (firstname, lastname, sexe, mail, password) VALUES ($1,$2,$3,$4,$5)";
-  let valeur = [req.query.firstname, req.query.lastname, req.query.sexe, req.query.mail, req.query.password];		
+  let valeur = [req.query.firstname, req.query.lastname, req.query.sexe, req.query.mail, req.query.password];
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
@@ -63,7 +69,7 @@ app.post('/newuser', async (req, res) => {
 
 app.get('/access/:door', async (req, res) => {
   let doorId = parseInt(req.url.split('/access/').pop());
-  let sql = 'select * from access where door = ' + doorId;					
+  let sql = 'select * from access where door = ' + doorId;
   pool.query(sql, (err, rows) => {
     if (err) throw err;
     return res.send(rows.rows);
@@ -142,7 +148,7 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 
 app.post('/newaccess', async (req, res) => {
   const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
-  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];		
+  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
@@ -155,7 +161,7 @@ app.post('/newaccess', async (req, res) => {
 
 app.post('/newdoor', async (req, res) => {
   const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
-  let valeur = [req.query.password, req.query.status];		
+  let valeur = [req.query.password, req.query.status];
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
@@ -169,7 +175,7 @@ app.post('/newdoor', async (req, res) => {
 
 app.post('/newhistory', async (req, res) => {
   const query = "INSERT INTO history (door, users, date, action) VALUES ($1,$2,$3,$4)";
-  let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];		
+  let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
@@ -200,8 +206,8 @@ app.get('/listUsers/:id', function (req, res) {
     fs.readFile( __dirname + "/static/" + "users.json", 'utf8', function (err, data) {
         var user = JSON.parse(data);
         var users ;
-        for (i=0; i<user.length; i++){
-            if (user[i].id == [req.params.id]){
+        for (let i=0; i<user.length; i++){
+            if (user[i].id === [req.params.id]){
                 users = user[i];
             }
         }
