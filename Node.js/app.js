@@ -45,7 +45,7 @@ app.get('/user/:id', async (req, res) => {
 });
 
 /*************************************************
- GET ALL USER
+ GET ALL USERS
  *************************************************/	// TEST OK
 
 app.get('/users', async (req, res) => {
@@ -94,6 +94,18 @@ app.get('/door/:id', async (req, res) => {
     return res.send(rows.rows);
   })
 });
+
+/*************************************************
+		GET ALL DOORS
+*************************************************/	// TEST OK
+
+app.get('/doors', async (req, res) => {
+    let sql = 'select * from door ';
+    pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+  });
 
 /*************************************************
 		GET DOOR BY TAG
