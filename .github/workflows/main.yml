@@ -24,4 +24,4 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           whoami
-          sudo mkdir /usr/src/test
+          mkdir /usr/src/test
