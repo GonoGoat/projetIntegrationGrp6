@@ -1,18 +1,33 @@
-import {StyleSheet, Text, TextInput, View, TouchableOpacity, Button} from "react-native";
+import {StyleSheet, Text, TextInput, View, TouchableOpacity} from "react-native";
 import React from "react";
-import { createStackNavigator } from '@react-navigation/stack';
 import Inscription from "./Inscription";
+import AsyncStorage from '@react-native-community/async-storage';
 
-import OAuth from '../services/oauth';
 
-
-const Stack = createStackNavigator();
 
 class Connection extends React.Component {
+  _storeData  = async (data) => {
+    try {
+      await AsyncStorage.setItem('user', data.mail);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      if (value !== null) {
+        // Our data is fetched successfully
+        console.log(value);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   constructor(props) {
     super(props);
-    this.oauth = new OAuth();
     this.mail = "";
     this.password = "";
     this.state={
@@ -34,7 +49,8 @@ class Connection extends React.Component {
       .then((json) => {
         for (let i = 0; i < json.length; i++) {
           if (json[i].mail === this.mail && json[i].password === this.password) {
-            console.log(json[i])
+            this._storeData(json[i]).then(r => console.log(r));
+            this._retrieveData().then(r => console.log(r));
           }
         }
         this.setState({errorMessage:'Verify mail or password'})
