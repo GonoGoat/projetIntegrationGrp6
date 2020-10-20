@@ -7,6 +7,10 @@ const cors = require('cors');
 var http = require('http');
 var fs = require('fs');
 
+// Password encryption for DB
+const bcrypt = require('bcrypt');
+const saltRounds = 5;
+
 
 const app = express();
 
@@ -37,8 +41,14 @@ pool.connect(function (err) {
  *************************************************/	// TEST OK
 
 app.get('/user/:id', async (req, res) => {
-    let userId = parseInt(req.url.split('/user/').pop());
-    let sql = 'select * from users where id = ' + userId;
+    let userId = req.url.split('/user/').pop();
+    let sql;
+    if (userId === "*") {
+        sql = 'select * from users'
+    }
+    else {
+        sql = 'select * from users where id = ' + parseInt(userId);
+    }
     pool.query(sql, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);
@@ -49,13 +59,22 @@ app.get('/user/:id', async (req, res) => {
  POST USER
  *************************************************/	// TEST OK
 
-app.post('/newuser', async (req, res) => {
-    const query = "INSERT INTO users (firstname, lastname, sexe, mail, password) VALUES ($1,$2,$3,$4,$5)";
-    let valeur = [req.query.firstname, req.query.lastname, req.query.sexe, req.query.mail, req.query.password];
-    await pool.query(query, valeur, (err) => {
-        if (err) return res.send(false);
-        return res.send(true);
-    });
+app.post('/newUsers', (req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.send(errors);
+    } else {
+        const query = "INSERT INTO users (firstname, lastname, sexe, mail, password) VALUES ($1,$2,$3,$4,$5)";
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(req.query.password, salt, async (err, hash) => {
+                let valeur = [req.query.firstname, req.query.lastname, req.query.sexe, req.query.email, hash, ];
+                await pool.query(query, valeur, (err) => {
+                    if (err) return res.send(false);
+                    return res.send(true);
+                });
+            });
+        })
+    }
 });
 
 /*************************************************
