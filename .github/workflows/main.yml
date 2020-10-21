@@ -27,13 +27,12 @@ jobs:
           
     - name: Copy repository contents via scp
       uses: appleboy/scp-action@master
-      env:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        PASSWORD: ${{ secrets.PASSWORD }}
       with:
         source: "./Node.js"
         target: "/usr/src/Node"
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
           
           
