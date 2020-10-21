@@ -14,9 +14,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    uses: appleboy/ssh-action@master
     steps:
     - name: STOP Node
-      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -26,9 +26,8 @@ jobs:
           sudo docker exec  node pm2 stop /home/app.js
           
     - name: Copy repository contents via scp
-      uses: appleboy/scp-action@master
       with:
-        source: "./Node.js"
+        source: "Node.js/"
         target: "/usr/src/Node"
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
