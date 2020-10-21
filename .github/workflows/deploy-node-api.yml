@@ -27,8 +27,6 @@ jobs:
           cd /usr/src/projet
           sudo git pull
           sudo cp /usr/src/projet/Node.js/* /var/porte/
-          sudo mkdir /usr/src/projet/foo
-          sudo rm -dr !(Node.js)
           sudo docker exec node npm install -g 
           sudo docker exec node pm2 start /home/app.js
           
