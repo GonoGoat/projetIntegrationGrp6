@@ -24,15 +24,6 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           sudo docker exec  node pm2 stop /home/app.js
-          
-    - name: Copy repository contents via scp
-      uses: appleboy/ssh-action@master
-      with:
-        source: "Node.js/"
-        target: "/var/porte"
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
+          sudo cd /usr/src
           
           
