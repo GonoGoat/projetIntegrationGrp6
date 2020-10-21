@@ -6,6 +6,7 @@ const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 var http = require('http');
 var fs = require('fs');
+const { check, validationResult} = require('express-validator');
 
 // Password encryption for DB
 const bcrypt = require('bcrypt');
@@ -64,13 +65,19 @@ app.post('/newUsers', (req, res) =>{
     if(!errors.isEmpty()){
         return res.send(errors);
     } else {
-        const query = "INSERT INTO users (firstname, lastname, sexe, mail, password) VALUES ($1,$2,$3,$4,$5)";
+        const query = "INSERT INTO users (id, firstname, lastname, sexe, mail, password) VALUES (5,$1,$2,$3,$4,$5)";
         bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(req.query.password, salt, async (err, hash) => {
-                let valeur = [req.query.firstname, req.query.lastname, req.query.sexe, req.query.email, hash, ];
+            bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
+                let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.gender,req.body.user.mail, hash, ];
+                console.log(valeur);
                 await pool.query(query, valeur, (err) => {
-                    if (err) return res.send(false);
-                    return res.send(true);
+                    if (err) {
+                        console.log(err);
+                        return res.send(false);
+                    }
+                    else {
+                        return res.send(true);
+                    }
                 });
             });
         })
@@ -84,6 +91,18 @@ app.post('/newUsers', (req, res) =>{
 app.get('/access/:door', async (req, res) => {
     let doorId = parseInt(req.url.split('/access/').pop());
     let sql = 'select * from access where door = ' + doorId;
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        return res.send(rows.rows);
+    })
+});
+
+/*************************************************
+ GET ALL TAG
+ *************************************************/	// TEST OK
+
+app.get('/accessAll', async (req, res) => {
+    let sql = 'select DISTINCT tag from access';
     pool.query(sql, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);

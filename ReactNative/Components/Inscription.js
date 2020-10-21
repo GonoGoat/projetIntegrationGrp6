@@ -44,9 +44,13 @@ class Inscription extends React.Component {
 
     send() {
 
+        const config = {
+            'Content-Type': 'application/json'
+        };
+
         const user = {
-            name: this.state.name,
             firstname : this.state.firstname,
+            name: this.state.name,
             gender : this.state.gender,
             mail : this.state.mail,
             password : this.state.password
@@ -67,21 +71,21 @@ class Inscription extends React.Component {
       <View style={styles.component}>
           <Text style={styles.warning}> </Text>
         <Text style={styles.text}>Nom : </Text>
-        <TextInput style={styles.input} onChangeText={text => this.setState({ name: text })}  placeholder='Nom de famille' />
+        <TextInput style={styles.input} onChangeText={text => this.setState({ name: text.trim() })}  placeholder='Nom de famille' />
         <Text style={styles.text}>Prénom : </Text>
-        <TextInput style={styles.input} onChangeText={text => this.setState({ firstname: text })}  placeholder='Prénom'/>
+        <TextInput style={styles.input} onChangeText={text => this.setState({ firstname: text.trim() })}  placeholder='Prénom'/>
         <Text style={styles.text}>Sexe : </Text>
-        <Picker style={styles.input} onValueChange={text => this.setState({ gender: text })} >
+        <Picker style={styles.input} onValueChange={value => this.setState({ gender: value })} >
           <Picker.Item label='' value=''/>
           <Picker.Item label='F' value='F'/>
           <Picker.Item label='M' value='M'/>
         </Picker>
         <Text style={styles.text}>E-mail : </Text>
-        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' onChangeText={text => this.setState({ mail: text })}  placeholder='E-mail'/>
+        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' onChangeText={text => this.setState({ mail: text.trim() })}  placeholder='E-mail'/>
         <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput style={styles.input} secureTextEntry={true} onChangeText={text => this.setState({ password: text })}  placeholder='Ecrivez votre mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} onChangeText={text => this.setState({ password: text.trim() })}  placeholder='Ecrivez votre mot de passe'/>
         <Text style={styles.text}>Confirmation : </Text>
-        <TextInput style={styles.input} secureTextEntry={true} onChangeText={text => this.setState({ confirm: text })} placeholder='Réécrivez le même mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} onChangeText={text => this.setState({ confirm: text.trim() })} placeholder='Réécrivez le même mot de passe'/>
         <TouchableOpacity style={styles.button}>
           <Text onPress={this.verify} style={styles.text}>Inscription</Text>
         </TouchableOpacity>
