@@ -2,16 +2,18 @@ import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
 const PorteDetail = ({navigation}) => {
-    return (
-      <View style={styles.container}>
-
-      </View>
-    );
+  drawerLabel: () => null
+  return (
+    <View style={styles.container}>
+      <Text>Ici</Text>
+    </View>
+  );
+  return null;
 };
 const styles = StyleSheet.create({
-    container: {
-      flex: 1, 
-    }
+  container: {
+    flex: 1, 
+  }
 })
 
 export default PorteDetail;

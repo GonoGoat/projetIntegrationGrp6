@@ -1,38 +1,43 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 
-let DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":1},{"id":3,"password":"test","status":0}];
+const DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":1},{"id":3,"password":"test","status":0}];
 
-const Item = ({ id, status }) => (
-  <View>
-    <TouchableOpacity onPress={() => {
-      if(status == 0) {
-        DATA[0].status=1;
-        alert('Ouverture...');
-      }
-      else {
-        status = 0;
-        alert('Fermeture...');
-      }}}>
-    <Text style={[(status == 0) ?  styles.porteFermee : styles.porteOuverte]}>Porte n°{id}</Text>
-    </TouchableOpacity>
-  </View>
-);
+class listePortes extends React.Component {
 
-const App = () => {
-  const renderItem = ({ item }) => (
-    <Item id={item.id} status={item.status}/>
-  );
+  constructor(props) {
+    super(props);
+    this.data ="";
+  }
+  
+  render() {
+    const Item = ({ id, status }) => (
+      <View>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('PorteDetail')}>
+        <Text style={[(status == 0) ?  styles.porteFermee : styles.porteOuverte]}>Porte n°{id}</Text>
+        </TouchableOpacity>
+      </View>
+    );
 
-  return (
-    <SafeAreaView>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
-  );
+    const renderItem = ({ item }) => {
+      return (
+        <Item id={item.id} status={item.status}
+        />
+        
+      );
+    };
+    return (
+      <SafeAreaView>
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+
+      </SafeAreaView>
+      
+    );
+  }
 }
 const styles = StyleSheet.create({
     container: {
@@ -59,6 +64,9 @@ const styles = StyleSheet.create({
       borderWidth: 0.75,
       borderTopWidth: 0,
       textAlign: "center"
+    },
+    bouton: {
+      color: '#D4FFD1'
     }
 })
-export default App;
+export default listePortes;
