@@ -1,31 +1,33 @@
-name: Deploy-Node-API
+# This is a basic workflow to help you get started with Actions
 
-on: [push]
+name: CI
 
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 jobs:
+
   build:
-
+    name: Intégration serveur PROD
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
-
-    - name: Copy repository contents via scp
-      uses: appleboy/scp-action@master
-      env:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-      with:
-        source: "/Node.js"
-        target: "/var/www/mywebsite"
-
-    - name: Executing remote command
+    - name: Update de l'API
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: npm start
+        script: |
+          sudo docker exec node pm2 stop /home/app.js
+          cd /usr/src/projet
+          sudo git pull
+          sudo cp /usr/src/projet/Node.js/* /var/porte/
+          sudo docker exec node npm install -g 
+          sudo docker exec node pm2 start /home/app.js
+          
+          
