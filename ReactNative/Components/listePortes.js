@@ -1,15 +1,22 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 
-
-var DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":true},{"id":3,"password":"test","status":false},{"id":1,"password":"test","status":false},{"id":2,"password":"test2","status":true},{"id":3,"password":"test","status":false},{"id":1,"password":"test","status":false},{"id":2,"password":"test2","status":true},{"id":3,"password":"test","status":false},{"id":1,"password":"test","status":false},{"id":2,"password":"test2","status":true},{"id":3,"password":"test","status":false}];
+let DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":1},{"id":3,"password":"test","status":0}];
 
 const Item = ({ id, status }) => (
   <View>
-    <Text style={styles.listeDoors}>Porte n°{id}</Text>
-    <View style={[(status == 0) ?  styles.circleFerme : styles.circleOuvert]} />
+    <TouchableOpacity onPress={() => {
+      if(status == 0) {
+        DATA[0].status=1;
+        alert('Ouverture...');
+      }
+      else {
+        status = 0;
+        alert('Fermeture...');
+      }}}>
+    <Text style={[(status == 0) ?  styles.porteFermee : styles.porteOuverte]}>Porte n°{id}</Text>
+    </TouchableOpacity>
   </View>
-  
 );
 
 const App = () => {
@@ -33,33 +40,25 @@ const styles = StyleSheet.create({
       alignItems: 'center', 
       justifyContent: 'center'
     },
-    listeDoors: {
+    porteFermee: {
       width: 411,
       height: 80,
-      backgroundColor: /*'#CAFDFF'*/ '#FFFFFF',
+      backgroundColor: '#FFC9C9',
       fontSize: 18,
       paddingTop: 25,
-      paddingLeft: 20,
       borderWidth: 0.75,
-      borderTopWidth: 0
+      borderTopWidth: 0,
+      textAlign: "center"
     },
-    circleOuvert: {
-      backgroundColor: 'green',
-      width: 40,
-      height: 40,
-      borderRadius: 40/2,
-      position: 'absolute',
-      marginTop: 20,
-      right: 10
-    },
-    circleFerme: {
-      backgroundColor: 'red',
-      width: 40,
-      height: 40,
-      borderRadius: 40/2,
-      position: 'absolute',
-      marginTop: 20,
-      right: 10
+    porteOuverte: {
+      width: 411,
+      height: 80,
+      backgroundColor: '#D4FFD1',
+      fontSize: 18,
+      paddingTop: 25,
+      borderWidth: 0.75,
+      borderTopWidth: 0,
+      textAlign: "center"
     }
 })
 export default App;
