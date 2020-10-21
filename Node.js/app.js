@@ -35,7 +35,7 @@ pool.connect(function (err) {
 		GET USER
 *************************************************/	// TEST OK
 
-app.get('/user/:id', async (req, res) => {
+app.get('/users/:id', async (req, res) => {
   let userId = parseInt(req.url.split('/user/').pop());
   let sql = 'select * from users where id = ' + userId;					
   pool.query(sql, (err, rows) => {
