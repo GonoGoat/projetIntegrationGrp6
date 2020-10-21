@@ -23,7 +23,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo docker exec -it node pm2 stop /home/app.js
+          sudo docker exec  node pm2 stop /home/app.js
           
     - name: Copy repository contents via scp
       uses: appleboy/scp-action@master
