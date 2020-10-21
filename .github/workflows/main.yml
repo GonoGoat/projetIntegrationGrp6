@@ -23,7 +23,11 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo docker exec  node pm2 stop /home/app.js
-          sudo cd /usr/src
+          sudo docker exec node pm2 stop /home/app.js
+          cd /usr/src/projet
+          sudo git pull
+          sudo cp /usr/src/projet/Node.js/* /var/porte/
+          sudo docker exec node npm install -g
+          sudo docker exec node pm2 start /home/app.js
           
           
