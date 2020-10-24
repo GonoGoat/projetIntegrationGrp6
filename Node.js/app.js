@@ -18,10 +18,10 @@ app.use(bodyParser.urlencoded({
 
 //connection avec la db
 let pool = new pg.Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'dbIntegration',
-  password: 'dbpassword$$$',
+  user: 'postgresArnaud',
+  host: '82.165.248.136',
+  database: 'projetIntegration',
+  password: 'zGwgD4he37QvL7YY',
   port: '5432'
 });
 pool.connect(function (err) {
@@ -181,6 +181,18 @@ app.all("/*", function(req, res, next){
   res.header('Access-Control-Allow-Methods', 'GET, PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   next();
+});
+
+/**
+ GET ALL ACCESS
+ **/    // TEST OK
+
+ app.get('/listTag', async (req, res) => {
+  let sql = 'select distinct tag from access';
+  pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+  })
 });
 
 //ecoute sur le port 8888
