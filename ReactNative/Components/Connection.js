@@ -1,30 +1,39 @@
-import {StyleSheet, Text, TextInput, View, TouchableOpacity} from "react-native";
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import Inscription from "./Inscription";
 import AsyncStorage from '@react-native-community/async-storage';
 
-
-
 class Connection extends React.Component {
-  _storeData  = async (data) => {
+  _storeData  = async (name, data) => {
     try {
-      await AsyncStorage.setItem('user', data.mail);
+      await AsyncStorage.setItem(name, JSON.stringify(data));
     } catch (error) {
       console.log(error);
+      return error
     }
   };
 
-  _retrieveData = async () => {
+  _retrieveData = async (key) => {
     try {
-      const value = await AsyncStorage.getItem('user');
+      const value = await AsyncStorage.getItem(key);
       if (value !== null) {
-        // Our data is fetched successfully
         console.log(value);
+        return value
       }
     } catch (error) {
-      console.log(error)
+      throw error;
     }
-  }
+  };
+
+  clearAll = async () => {
+    try {
+      await AsyncStorage.clear()
+    } catch(e) {
+      throw e;
+    }
+
+    console.log('Done.')
+  };
 
   constructor(props) {
     super(props);
@@ -49,15 +58,14 @@ class Connection extends React.Component {
       .then((json) => {
         for (let i = 0; i < json.length; i++) {
           if (json[i].mail === this.mail && json[i].password === this.password) {
-            this._storeData(json[i]).then(r => console.log(r));
-            this._retrieveData().then(r => console.log(r));
+            this._storeData('user', json[i]).then();
+            this._retrieveData('user').then(r => console.log(r));
+            return true;
           }
         }
         this.setState({errorMessage:'Verify mail or password'})
       })
   }
-
-
 
   render() {
     const nav = this.props.navigation.navigate;
