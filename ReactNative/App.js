@@ -114,6 +114,13 @@ const listePortesStackScreen = ({navigation}) => (
         onPress={() => navigation.openDrawer()}></Icon.Button>
       )
     }}></listePortesScreen.Screen>
+    <listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
+      doorIdParam: 0,
+      headerLeft: () => (
+        <Icon.Button name="md-menu" size={25}
+        onPress={() => navigation.openDrawer()}></Icon.Button>
+      )
+    }}></listePortesScreen.Screen>
     </listePortesScreen.Navigator>
 )
 const HistoriqueStackScreen = ({navigation}) => (
@@ -189,7 +196,6 @@ export default function App() {
         <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
         <Drawer.Screen name="PorteDetail" component={PorteDetailStackScreen} />
       </Drawer.Navigator>
-      
     </NavigationContainer>
   );
 }

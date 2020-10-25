@@ -1,25 +1,33 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import App from '../App';
+import PorteDetail from './PorteDetail';
+import { useBackButton, useNavigation } from '@react-navigation/native';
 
 const DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":1},{"id":3,"password":"test","status":0}];
 
 class listePortes extends React.Component {
-
   constructor(props) {
     super(props);
-    this.data ="";
+    this.state = {
+      isDetailed: true
+    }
   }
+
   
   render() {
-    const Item = ({ id, status }) => (
+    var Item = ({ id, status }) => (
       <View>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('PorteDetail')}>
+        <TouchableOpacity onPress={() => {
+          this.props.navigation.navigate(
+            'PorteDetail', {doorIdParam: id})
+        }}>
         <Text style={[(status == 0) ?  styles.porteFermee : styles.porteOuverte]}>Porte n°{id}</Text>
         </TouchableOpacity>
       </View>
     );
 
-    const renderItem = ({ item }) => {
+    var renderItem = ({ item }) => {
       return (
         <Item id={item.id} status={item.status}
         />
@@ -33,17 +41,15 @@ class listePortes extends React.Component {
           renderItem={renderItem}
           keyExtractor={item => item.id}
         />
-
       </SafeAreaView>
-      
     );
   }
 }
+
+
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      alignItems: 'center', 
-      justifyContent: 'center'
     },
     porteFermee: {
       width: 411,
@@ -67,6 +73,9 @@ const styles = StyleSheet.create({
     },
     bouton: {
       color: '#D4FFD1'
+    },
+    backButton: {
+
     }
 })
 export default listePortes;
