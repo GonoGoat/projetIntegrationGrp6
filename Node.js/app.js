@@ -57,6 +57,22 @@ app.get('/user/:id', async (req, res) => {
 });
 
 /*************************************************
+ GET USER BY MAIL
+ *************************************************/	// TEST OK
+
+app.get('/userMail/:mail', async (req, res) => {
+    let mail = req.url.split('/userMail/').pop();
+    let sql = 'select mail from users where mail =  \'' + mail + '\'' ;
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        if (res.send(rows.rows).length == 0) {
+            return true;
+        }
+        return false;
+    })
+});
+
+/*************************************************
  POST USER
  *************************************************/	// TEST OK
 
@@ -65,10 +81,10 @@ app.post('/newUsers', (req, res) =>{
     if(!errors.isEmpty()){
         return res.send(errors);
     } else {
-        const query = "INSERT INTO users (id, firstname, lastname, sexe, mail, password) VALUES (5,$1,$2,$3,$4,$5)";
+        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password) VALUES ($1,$2,$3,$4,$5,$6)";
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
-                let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.gender,req.body.user.mail, hash, ];
+                let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender,req.body.user.mail, hash, ];
                 console.log(valeur);
                 await pool.query(query, valeur, (err) => {
                     if (err) {
@@ -101,7 +117,7 @@ app.get('/access/:door', async (req, res) => {
  GET ALL TAG
  *************************************************/	// TEST OK
 
-app.get('/accessAll', async (req, res) => {
+app.get('/listTag', async (req, res) => {
     let sql = 'select DISTINCT tag from access';
     pool.query(sql, (err, rows) => {
         if (err) throw err;
