@@ -1,45 +1,86 @@
 import { BaseRouter } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import axios from 'axios';
 
-const DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":1},{"id":3,"password":"test","status":0}];
-
-function getDoorById(doorId) {
-  return Object.values(DATA[doorId-1]);
-}
-
-function getStatus(boolStatus) {
-  if(boolStatus == 1) {
-    return "Ouvert";
+export default class PorteDetail extends React.Component {
+  state = {
+    doors : [],
+    isLoading: true
   }
-  else {
-    return "Fermé";
-  }
-}
 
-class PorteDetail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      doorId: globalThis.doorId
+  getStatus(boolStatus) {
+    if(boolStatus == true) {
+      return "Ouvert";
+    }
+    else {
+      return "Fermé";
     }
   }
 
+  changeStatus(doorId, actualStatus) {
+    this.setState({isLoading: true})
+    var newStatus;
+    if(actualStatus == 0) {
+      newStatus = 1;
+    } else {
+      newStatus = 0;
+    }
+
+    const param = {id: doorId, status: newStatus};
+
+    axios.put(`http://192.168.0.28:8081/doorStatus`, {param})
+    .then(res => {
+      console.log(res.data);
+    })
+    .catch(err => console.log(err));
+
+    this.setState({isLoading: false})
+  }
+
+  getDoorById(doorId) {
+    for(var j=0; j<this.state.doors.length; j++) {
+      if(this.state.doors[j].id == doorId) {
+        return Object.values(this.state.doors[j]);
+      }
+    }
+  }
+
+  componentDidMount() {
+    axios.get(`http://192.168.0.28:8081/doors`)
+      .then(res => {
+        this.setState({isLoading: false, doors: res.data});
+      })
+      .catch(error => {
+        console.log(error)
+    })
+  }
+
   render() {
-    const { doorIdParam } = this.props.route.params; 
-    var dataDoor =  getDoorById(doorIdParam)
-    var statusString = getStatus(dataDoor[2])
-    return (
-      <View style={styles.container}>
-        <Text>Détails de la porte {doorIdParam} :</Text>
-        <Text>Mot de passe : {dataDoor[1]}</Text>
-        <Text>Status : {statusString}</Text>
-        <Button
-        title="Change state"
-        onPress={() => alert('To do')}
-      />
-      </View>
-    );
+    if(this.state.isLoading) {
+      return <Text>Loading...</Text>
+    } 
+    else {
+      const { doorIdParam } = this.props.route.params; 
+      var dataDoor =  this.getDoorById(doorIdParam);
+      var statusString = this.getStatus(dataDoor[2]);
+      return (
+        <View style={styles.container}>
+          <Button
+          title="Essai"
+          //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
+          onPress={() => alert('To do')}
+        />
+          <Text>Détails de la porte {doorIdParam} :</Text>
+          <Text>Mot de passe : {dataDoor[1]}</Text>
+          <Text>Status : {statusString}</Text>
+          <Button
+          title="Change state"
+          onPress={() => this.changeStatus(doorIdParam)}
+        />
+        </View>
+      );
+    }
   }
 }
 const styles = StyleSheet.create({
@@ -47,5 +88,3 @@ const styles = StyleSheet.create({
     flex: 1, 
   }
 })
-
-export default PorteDetail;

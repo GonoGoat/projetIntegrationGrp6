@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import App from '../App';
-import PorteDetail from './PorteDetail';
+import axios from 'axios';
 import { useBackButton, useNavigation } from '@react-navigation/native';
 
 const DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":1},{"id":3,"password":"test","status":0}];
@@ -10,39 +10,54 @@ class listePortes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDetailed: true
+      isLoading: true,
+      doors: []
     }
   }
 
+  componentDidMount() {
+    axios.get(`http://192.168.0.28:8081/doors`)
+      .then(res => {
+        this.setState({isLoading: false, doors: res.data});
+      })
+      .catch(error => {
+        console.log(error)
+    })
+  }
   
   render() {
-    var Item = ({ id, status }) => (
-      <View>
-        <TouchableOpacity onPress={() => {
-          this.props.navigation.navigate(
-            'PorteDetail', {doorIdParam: id})
-        }}>
-        <Text style={[(status == 0) ?  styles.porteFermee : styles.porteOuverte]}>Porte n°{id}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-
-    var renderItem = ({ item }) => {
-      return (
-        <Item id={item.id} status={item.status}
-        />
-        
+    if(this.state.isLoading) {
+      return <Text>Loading...</Text>
+    } 
+    else {
+      var Item = ({ id, status }) => (
+        <View>
+          <TouchableOpacity onPress={() => {
+            this.props.navigation.navigate(
+              'PorteDetail', {doorIdParam: id})
+          }}>
+          <Text style={[(status == 0) ?  styles.porteFermee : styles.porteOuverte]}>Porte n°{id}</Text>
+          </TouchableOpacity>
+        </View>
       );
-    };
-    return (
-      <SafeAreaView>
-        <FlatList
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
-      </SafeAreaView>
-    );
+
+      var renderItem = ({ item }) => {
+        return (
+          <Item id={item.id} status={item.status}
+          />
+          
+        );
+      };
+      return (
+        <SafeAreaView>
+          <FlatList
+            data={this.state.doors}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+        </SafeAreaView>
+      );
+    }
   }
 }
 

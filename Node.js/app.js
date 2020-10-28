@@ -100,12 +100,25 @@ app.get('/door/:id', async (req, res) => {
 *************************************************/	// TEST OK
 
 app.get('/doors', async (req, res) => {
-    let sql = 'select * from door ';
+    let sql = 'select * from door ORDER BY id';
     pool.query(sql, (err, rows) => {
       if (err) throw err;
       return res.send(rows.rows);
     })
   });
+
+/*************************************************
+		UPDATE DOOR STATUS
+*************************************************/
+
+app.put('/doorStatus', async (req, res) => {
+    console.log(req);
+    const query = "UPDATE door SET status = " + req.body.param.status + " WHERE id = " + req.body.param.id; 
+    await pool.query(query, valeur, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    });
+});
 
 /*************************************************
 		GET DOOR BY TAG

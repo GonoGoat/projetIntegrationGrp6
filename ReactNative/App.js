@@ -14,6 +14,7 @@ import listePortes from './Components/listePortes'
 import Historique from './Components/Historique'
 import OuvrirFermerPorte from './Components/OuvrirFermerPorte'
 import PorteDetail from './Components/PorteDetail';
+import axios from 'axios';
 
 const Drawer = createDrawerNavigator();
 const AccueilScreen= createStackNavigator();
@@ -28,7 +29,7 @@ const PorteDetailScreen = createStackNavigator();
 const AccueilStackScreen = ({navigation}) => (
   <AccueilScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+      //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -47,7 +48,7 @@ const AccueilStackScreen = ({navigation}) => (
 const ConnexionStackScreen = ({navigation}) => (
   <ConnexionScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+      //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -65,7 +66,7 @@ const ConnexionStackScreen = ({navigation}) => (
 const InscriptionStackScreen = ({navigation}) => (
   <InscriptionScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+      //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -83,7 +84,7 @@ const InscriptionStackScreen = ({navigation}) => (
 const AjoutPorteStackScreen = ({navigation}) => (
   <AjoutPorteScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+      //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -101,7 +102,7 @@ const AjoutPorteStackScreen = ({navigation}) => (
 const listePortesStackScreen = ({navigation}) => (
   <listePortesScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+      //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -126,7 +127,7 @@ const listePortesStackScreen = ({navigation}) => (
 const HistoriqueStackScreen = ({navigation}) => (
   <HistoriqueScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+      //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -144,7 +145,7 @@ const HistoriqueStackScreen = ({navigation}) => (
 const OuvrirFermerPorteStackScreen = ({navigation}) => (
   <OuvrirFermerPorteScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+      //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -162,7 +163,7 @@ const OuvrirFermerPorteStackScreen = ({navigation}) => (
 const PorteDetailStackScreen = ({navigation}) => (
   <PorteDetailScreen.Navigator screenOptions={{
     headerStyle: {
-      backgroundcolor: "blue",
+     // backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -184,6 +185,7 @@ const PorteDetailStackScreen = ({navigation}) => (
 const Stack = createStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Page1">
