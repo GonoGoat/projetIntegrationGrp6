@@ -14,6 +14,7 @@ import listePortes from './Components/listePortes'
 import Historique from './Components/Historique'
 import OuvrirFermerPorte from './Components/OuvrirFermerPorte'
 import PorteDetail from './Components/PorteDetail';
+import PorteParametres from './Components/PorteParametres';
 import axios from 'axios';
 
 const Drawer = createDrawerNavigator();
@@ -25,6 +26,7 @@ const listePortesScreen = createStackNavigator();
 const HistoriqueScreen = createStackNavigator();
 const OuvrirFermerPorteScreen = createStackNavigator();
 const PorteDetailScreen = createStackNavigator();
+const PorteParametresScreen = createStackNavigator();
 
 const AccueilStackScreen = ({navigation}) => (
   <AccueilScreen.Navigator screenOptions={{
@@ -182,6 +184,28 @@ const PorteDetailStackScreen = ({navigation}) => (
     </PorteDetailScreen.Navigator>
 )
 
+const PorteParametresStackScreen = ({navigation}) => (
+    <PorteParametresScreen.Navigator screenOptions={{
+    headerStyle: {
+        // backgroundcolor: "blue",
+    },
+    headerTintColor: '#fff',
+        headerTitleStyle: {
+        fontWeight:'bold'
+    }
+}}>
+<PorteParametresScreen.Screen name="PorteParametres" component={PorteParametres} options={{
+    headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25}
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+),
+    drawerLabel: () => null,
+        title: null,
+        drawerIcon: () => null
+}}></PorteParametresScreen.Screen>
+</PorteParametresScreen.Navigator>
+)
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -197,6 +221,7 @@ export default function App() {
         <Drawer.Screen name="Afficher l'historique des ouvertures" component={HistoriqueStackScreen} />
         <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
         <Drawer.Screen name="PorteDetail" component={PorteDetailStackScreen} />
+        <Drawer.Screen name="PorteParametres" component={PorteParametresStackScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
