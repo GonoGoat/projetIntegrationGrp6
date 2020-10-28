@@ -67,17 +67,21 @@ export default class PorteDetail extends React.Component {
       return (
         <View style={styles.container}>
           <Button
-          title="Essai"
-          //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
-          onPress={() => alert('To do')}
-        />
+            title="Essai"
+            //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
+            onPress={() => alert('To do')}
+          />
           <Text>Détails de la porte {doorIdParam} :</Text>
           <Text>Mot de passe : {dataDoor[1]}</Text>
           <Text>Status : {statusString}</Text>
           <Button
-          title="Change state"
-          onPress={() => this.changeStatus(doorIdParam)}
-        />
+            title="Change state"
+            onPress={() => this.changeStatus(doorIdParam)}
+          />
+          <Button
+            title="Historique"
+            onPress={() => navigation.navigate("Historique")}
+          />
         </View>
       );
     }
