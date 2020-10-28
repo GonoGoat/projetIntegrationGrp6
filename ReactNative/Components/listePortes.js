@@ -1,96 +1,105 @@
-import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
-import App from '../App';
+import React from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, Button, TouchableHighlight} from 'react-native';
 import axios from 'axios';
-import { useBackButton, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { FlatList } from 'react-native-gesture-handler';
 
-const DATA = [{"id":1,"password":"test","status":0},{"id":2,"password":"test2","status":1},{"id":3,"password":"test","status":0}];
+function _loadTag () {
+    return axios
+      .get('http://localhost:8888/listTag')
+      .catch(function(error) {
+        // handle error
+        alert(error.message);
+      })      
+  };
+function _loadDoor (tag) {
+  return axios
+    .get("http://localhost:8888/doorTag/" + tag)
+    .catch(function(error) {
+      alert(error.message);
+    })
+};
 
-class listePortes extends React.Component {
+class listPortes extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      isLoading: true,
-      doors: []
+      listeTag : [],
+      listeDoor : []
     }
-  }
-
-  componentDidMount() {
-    axios.get(`http://192.168.0.28:8081/doors`)
-      .then(res => {
-        this.setState({isLoading: false, doors: res.data});
+  }  
+  _getTag() {
+    _loadTag().then(data => {
+      this.setState({
+        listeTag : [ ...this.state.listeTag, ...data.data]
       })
-      .catch(error => {
-        console.log(error)
     })
   }
-  
-  render() {
-    if(this.state.isLoading) {
-      return <Text>Loading...</Text>
-    } 
-    else {
-      var Item = ({ id, status }) => (
-        <View>
-          <TouchableOpacity onPress={() => {
-            this.props.navigation.navigate(
-              'PorteDetail', {doorIdParam: id})
-          }}>
-          <Text style={[(status == 0) ?  styles.porteFermee : styles.porteOuverte]}>Porte n°{id}</Text>
-          </TouchableOpacity>
-        </View>
-      );
-
-      var renderItem = ({ item }) => {
-        return (
-          <Item id={item.id} status={item.status}
-          />
-          
-        );
-      };
-      return (
-        <SafeAreaView>
-          <FlatList
-            data={this.state.doors}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-          />
-        </SafeAreaView>
-      );
-    }
+  _getDoor = item => {
+    this.setState({
+      listeDoor: []
+    })
+    _loadDoor(item.tag).then(data => {
+      this.setState({
+        listeDoor : [ ...this.state.listeDoor, ...data.data]
+      })
+    })
   }
-}
-
+  _goToDetail = item => {
+    console.log(item)
+    //navigation vers le détail de la porte (voir avec Matthieu)
+  }
+componentDidMount() {
+    this._getTag()
+  }
+  render() {
+  return (
+    <View style={styles.MainContainer}>
+      <Text style={{ fontSize: 30, textAlign: 'center' }}>
+        Liste des portes
+      </Text>
+        <Text style={{ fontSize: 20, textAlign: 'center' }}>Cliquer sur un des tag ci-dessous pour afficher ses portes attribuées</Text>
+        <View>
+          <SafeAreaView>
+            <FlatList
+            data={this.state.listeTag}
+            keyExtractor={(item) => item.tag} 
+            renderItem={({item}) => <TouchableHighlight              
+            onPress={() => this._getDoor(item)}>
+              <View style={{backgroundColor: 'white'}}>
+              <Text>{item.tag}</Text>
+              </View>
+            </TouchableHighlight>}
+            />
+          </SafeAreaView>
+          <SafeAreaView>
+            <FlatList
+            data={this.state.listeDoor}
+            keyExtractor={(item) => item.door.toString()}
+            renderItem={({item}) => <TouchableHighlight
+            onPress={() => this._goToDetail(item)}>
+            <Text>{item.nickname}</Text>
+            </TouchableHighlight>}
+            />
+          </SafeAreaView>
+        </View>
+    </View>
+  )}
+};
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1, 
-    },
-    porteFermee: {
-      width: 411,
-      height: 80,
-      backgroundColor: '#FFC9C9',
-      fontSize: 18,
-      paddingTop: 25,
-      borderWidth: 0.75,
-      borderTopWidth: 0,
-      textAlign: "center"
-    },
-    porteOuverte: {
-      width: 411,
-      height: 80,
-      backgroundColor: '#D4FFD1',
-      fontSize: 18,
-      paddingTop: 25,
-      borderWidth: 0.75,
-      borderTopWidth: 0,
-      textAlign: "center"
-    },
-    bouton: {
-      color: '#D4FFD1'
-    },
-    backButton: {
+  MainContainer: {
+    justifyContent: 'center',
+    flex: 1,
+    padding: 16,
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#AAAAAA',
+    padding: 10,
+    width: '100%',
+    marginTop: 16,
+  },
+});
 
-    }
-})
-export default listePortes;
+export default listPortes;

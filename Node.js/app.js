@@ -437,5 +437,17 @@ app.all("/*", function(req, res, next){
   next();
 });
 
+/**
+ GET ALL ACCESS
+ **/    // TEST OK
+
+ app.get('/listTag', async (req, res) => {
+  let sql = 'select distinct tag from access';
+  pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+  })
+});
+
 //ecoute sur le port 8888
 app.listen(8081);
