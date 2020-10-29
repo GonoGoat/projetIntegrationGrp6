@@ -6,8 +6,8 @@ export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
-    this.doorIdParam = 1;
-    this.state={
+    
+    this.state={ 
       doors : [],
       isLoading: true
     }
@@ -51,10 +51,10 @@ export default class PorteDetail extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:8081/doors`)
+    axios.get(`http://192.168.0.28:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
-      var dataDoor =  this.getDoorById(this.doorIdParam);
+      var dataDoor =  this.getDoorById(doorIdParam);
       var statusString = this.getStatus(dataDoor[2]);
       })
       .catch(error => {
@@ -67,8 +67,8 @@ export default class PorteDetail extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
-      //const { doorIdParam } = this.props.route.params; MARCHE PAS NULOS
-      var dataDoor =  this.getDoorById(this.doorIdParam);
+      const { doorIdParam } = this.props.route.params;
+      var dataDoor =  this.getDoorById(doorIdParam);
       console.log(dataDoor);
       var statusString = this.getStatus(dataDoor[2]);
       return (
@@ -78,12 +78,12 @@ export default class PorteDetail extends React.Component {
             //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
             onPress={() => alert('To do')}
           />
-          <Text>Détails de la porte {this.doorIdParam} :</Text>
+          <Text>Détails de la porte {doorIdParam} :</Text>
           <Text>Mot de passe : {dataDoor[1]}</Text>
           <Text>Status : {statusString}</Text>
           <Button
             title="Change state"
-            onPress={() => this.changeStatus(this.doorIdParam, dataDoor[2])}
+            onPress={() => this.changeStatus(doorIdParam, dataDoor[2])}
           />
           <Button
             title="Historique"
