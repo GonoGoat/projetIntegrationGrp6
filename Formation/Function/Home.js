@@ -5,7 +5,7 @@ import FilmItem from './FilmItem'
 
 import { getFilmsFromApiWithSearchedText } from './TMDBApi'
 
-function Home() {
+function Home(props) {
 
   const [films, setfilms] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -23,6 +23,10 @@ function Home() {
     }
   }
 
+  function _displayDetailForFilm (idFilm) {
+    props.navigation.navigate("FilmDetail",  { idFilm: idFilm });
+  }
+
   return (
       <View style={styles.view}>
         <TextInput style={styles.textInput} placeholder='Titre du film'
@@ -32,7 +36,7 @@ function Home() {
           <FlatList
             data={films}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({item,index}) => <FilmItem films={films[index]}/>}
+            renderItem={({item,index}) => <FilmItem films={films[index]} displayDetailForFilm={_displayDetailForFilm}/>}
           />
         <View style={styles.loading_container}>
           <ActivityIndicator size='large' animating={isLoading}/>
@@ -52,7 +56,6 @@ const styles = StyleSheet.create({
   },
   view : {
     flex : 1,
-    marginTop : 50
   },
   loading_container: {
     position: 'absolute',
