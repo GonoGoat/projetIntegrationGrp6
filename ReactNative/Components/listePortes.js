@@ -1,20 +1,20 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Button, TouchableHighlight} from 'react-native';
+import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import axios from 'axios';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList } from 'react-native-gesture-handler';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {FlatList} from 'react-native-gesture-handler';
 
 function _loadTag () {
     return axios
-      .get('http://localhost:8888/listTag')
+      .get('http://localhost:8081/listTag')
       .catch(function(error) {
         // handle error
         alert(error.message);
-      })      
+      })
   };
 function _loadDoor (tag) {
   return axios
-    .get("http://localhost:8888/doorTag/" + tag)
+    .get("http://localhost:8081/doorTag/" + tag)
     .catch(function(error) {
       alert(error.message);
     })
@@ -27,9 +27,10 @@ class listPortes extends React.Component {
       listeTag : [],
       listeDoor : []
     }
-  }  
+  }
   _getTag() {
     _loadTag().then(data => {
+      console.log(data);
       this.setState({
         listeTag : [ ...this.state.listeTag, ...data.data]
       })
@@ -63,8 +64,8 @@ componentDidMount() {
           <SafeAreaView>
             <FlatList
             data={this.state.listeTag}
-            keyExtractor={(item) => item.tag} 
-            renderItem={({item}) => <TouchableHighlight              
+            keyExtractor={(item) => item.tag}
+            renderItem={({item}) => <TouchableHighlight
             onPress={() => this._getDoor(item)}>
               <View style={{backgroundColor: 'white'}}>
               <Text>{item.tag}</Text>

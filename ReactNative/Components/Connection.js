@@ -8,7 +8,6 @@ class Connection extends React.Component {
     try {
       await AsyncStorage.setItem(name, JSON.stringify(data));
     } catch (error) {
-      console.log(error);
       return error
     }
   };

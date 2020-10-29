@@ -4,8 +4,12 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
-const http = require('http');
+var http = require('http');
+var fs = require('fs');
+const { check, validationResult} = require('express-validator');
 
+const bcrypt = require('bcrypt');
+const saltRounds = 5;
 
 const app = express();
 
@@ -54,13 +58,44 @@ app.get('/user/:id', async (req, res) => {
 		POST USER
 *************************************************/	// TEST OK
 
-app.post('/newuser', async (req, res) => {
-  const query = "INSERT INTO users (firstname, lastname, sexe, mail, password) VALUES ($1,$2,$3,$4,$5)";
-  let valeur = [req.query.firstname, req.query.lastname, req.query.sexe, req.query.mail, req.query.password];
-  await pool.query(query, valeur, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
+app.post('/newUsers', (req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.send(errors);
+    } else {
+        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password) VALUES ($1,$2,$3,$4,$5,$6)";
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
+                let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender,req.body.user.mail, hash, ];
+                console.log(valeur);
+                await pool.query(query, valeur, (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.send(false);
+                    }
+                    else {
+                        return res.send(true);
+                    }
+                });
+            });
+        })
+    }
 });
+
+/*************************************************
+ GET USER BY MAIL
+ *************************************************/	// TEST OK
+
+ app.get('/userMail/:mail', async (req, res) => {
+    let mail = req.url.split('/userMail/').pop();
+    let sql = 'select mail from users where mail =  \'' + mail + '\'' ;
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        if (res.send(rows.rows).length == 0) {
+            return true;
+        }
+        return false;
+    })
 });
 
 /*************************************************
@@ -77,7 +112,20 @@ app.get('/access/:door', async (req, res) => {
 });
 
 /*************************************************
-		GET DOOR
+		GET ALL DOORS
+*************************************************/	// TEST OK
+
+app.get('/doors', async (req, res) => {
+    let sql = 'select * from door ';
+    pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+  });
+
+
+/*************************************************
+		GET DOOR by tag
 *************************************************/	// TEST OK
 
 app.get('/door/:id', async (req, res) => {
@@ -87,6 +135,19 @@ app.get('/door/:id', async (req, res) => {
     if (err) throw err;
     return res.send(rows.rows);
   })
+});
+
+/*************************************************
+		UPDATE DOOR STATUS
+*************************************************/
+
+app.put('/doorStatus', async (req, res) => {
+    console.log(req);
+    const query = "UPDATE door SET status = " + req.body.param.status + " WHERE id = " + req.body.param.id; 
+    await pool.query(query, valeur, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    });
 });
 
 /*************************************************
@@ -215,6 +276,19 @@ app.get('/listUsers/:id', function (req, res) {
         res.end( JSON.stringify(users));
     })
 });
+
+/**
+ GET ALL ACCESS
+ **/    // TEST OK
+
+ app.get('/listTag', async (req, res) => {
+    let sql = 'select distinct tag from access';
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        return res.send(rows.rows);
+    })
+  });
+  
 
 //LISTE DE TAG TRIER PAR USER
 

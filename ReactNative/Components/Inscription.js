@@ -1,8 +1,6 @@
-import {Picker, StyleSheet, Text, TextInput, View, TouchableOpacity,ScrollView} from "react-native";
+import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
-import Connection from "./Connection";
 import axios from 'axios';
-import {block} from "react-native-reanimated";
 
 class Inscription extends React.Component {
     state = {
@@ -18,7 +16,7 @@ class Inscription extends React.Component {
 
 
      getEmail() {
-          axios.get('http://192.168.1.23:8081/userMail/' + this.state.mail)
+          axios.get('http://localhost:8081/userMail/' + this.state.mail)
             .then(res => {
                 const verif = res.data;
                 if (verif.length != 0) {
@@ -89,7 +87,7 @@ class Inscription extends React.Component {
             password : this.state.password
         };
 
-        axios.post('http://192.168.1.23:8081/newUsers',{user})
+        axios.post('http://localhost:8081/newUsers',{user})
             .then(res => {
                 console.log(res.data);
                 console.log('test');

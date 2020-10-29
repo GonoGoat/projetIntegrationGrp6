@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { Button, View, StyleSheet } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createStackNavigator} from '@react-navigation/stack'
+import {StyleSheet} from 'react-native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -118,7 +118,7 @@ const listePortesStackScreen = ({navigation}) => (
       )
     }}></listePortesScreen.Screen>
     <listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
-      doorIdParam: 0,
+      doorIdParam: 1,
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
         onPress={() => navigation.openDrawer()}></Icon.Button>
