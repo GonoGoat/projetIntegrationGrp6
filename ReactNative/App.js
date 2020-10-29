@@ -173,6 +173,7 @@ const PorteDetailStackScreen = ({navigation}) => (
     }
     }}>
     <PorteDetailScreen.Screen name="PorteDetail" component={PorteDetail} options={{
+      doorIdParam: 0,
       headerLeft: () => (
         <Icon.Button name="ios-menu" size={25}
         onPress={() => navigation.openDrawer()}></Icon.Button>
