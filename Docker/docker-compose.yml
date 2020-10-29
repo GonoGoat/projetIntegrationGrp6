@@ -1,0 +1,25 @@
+version : '2'
+
+services :
+
+    node:
+        build : "."
+        container_name: node
+        tty: true
+        volumes:
+         - /var/porte/:/home
+        working_dir : /home
+        ports:
+         - "8081:8081"
+        networks:
+            integration6:
+                ipv4_address: 172.18.0.3
+
+networks:
+    integration6:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.18.0.0/24
+                  gateway: 172.18.0.1
