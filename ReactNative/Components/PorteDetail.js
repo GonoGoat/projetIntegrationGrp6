@@ -6,7 +6,6 @@ export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
-    
     this.state={ 
       doors : [],
       isLoading: true
@@ -51,7 +50,7 @@ export default class PorteDetail extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://192.168.0.28:8081/doors`)
+    axios.get(`http://localhost:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
       var dataDoor =  this.getDoorById(doorIdParam);
@@ -67,6 +66,7 @@ export default class PorteDetail extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
+      console.log(this.props.route);
       const { doorIdParam } = this.props.route.params;
       var dataDoor =  this.getDoorById(doorIdParam);
       console.log(dataDoor);

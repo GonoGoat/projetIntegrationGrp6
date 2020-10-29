@@ -6,7 +6,7 @@ import {FlatList} from 'react-native-gesture-handler';
 
 function _loadTag () {
     return axios
-      .get('http://192.168.0.28:8081/listTag')
+      .get('http://localhost:8081/listTag')
       .catch(function(error) {
         // handle error
         alert(error.message);
@@ -14,7 +14,7 @@ function _loadTag () {
   };
 function _loadDoor (tag) {
   return axios
-    .get("http://192.168.0.28:8081/doorTag/" + tag)
+    .get("http://localhost:8081/doorTag/" + tag)
     .catch(function(error) {
       alert(error.message);
     })
