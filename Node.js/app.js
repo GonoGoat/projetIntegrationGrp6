@@ -53,11 +53,20 @@ app.get('/user/:id', async (req, res) => {
 *************************************************/	// TEST OK
 
 app.get('/userConnection/', async (req, res) => {
-    let userId = req.url.split('/user/').pop();
-    let sql = 'select * from users where mail = "' + req.query.user.mail +'" AND ';
-    pool.query(sql, (err, rows) => {
-      if (err) throw err;
-      return res.send(rows.rows);
+    let sql = "select * from users WHERE mail = '" + req.query.mail + "'";
+    let id = false;
+    await pool.query(sql, async (error, rows) => {
+        if (error) throw error;
+        if (rows.rowCount == 1) {
+        await bcrypt.compare(req.query.password, rows.rows[0].password, (err, result) => {
+            if (err) throw err;
+            if(result) {
+                id = rows.rows[0].id;
+            }
+            return res.json(id);
+        });
+        
+    }    
     })
   });
 

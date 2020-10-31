@@ -67,22 +67,27 @@ class Connection extends React.Component {
   }
 
   _checkUser(){
-
-    const user = {
-      mail : this.state.mail,
-      password : this.state.password
-  };
-
-    fetch('http://localhost:8081/userConnection/', {use})
-      .then((response) => response.json())
-      .then((json) => {
-        for (let i = 0; i < json.length; i++) {
+    axios.get('http://localhost:8081/userConnection/', { 
+      params : {
+        mail: this.mail,
+        password : this.password
+      }
+    })
+      .then((response) => {
+        console.log(response.data);
+        if (!response.data) {
+          this.setState({errorMessage:'Verify mail or password'});
+        } 
+        else {
+          this._getHistory(response.data);
+        }
+        /* for (let i = 0; i < json.length; i++) {
           if (json[i].mail === this.mail && json[i].password === this.password) {
             this._getHistory(json[i].id);
             break;
           }
         }
-        this.setState({errorMessage:'Verify mail or password'})
+        this.setState({errorMessage:'Verify mail or password'})*/
       })
   }
 
