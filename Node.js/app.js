@@ -41,18 +41,25 @@ pool.connect(function (err) {
 
 app.get('/user/:id', async (req, res) => {
   let userId = req.url.split('/user/').pop();
-  let sql;
-  if (userId === "*") {
-    sql = 'select * from users'
-  }
-  else {
-    sql = 'select * from users where id = ' + parseInt(userId);
-  }
+  let sql = 'select * from users where id = ' + parseInt(userId);
   pool.query(sql, (err, rows) => {
     if (err) throw err;
     return res.send(rows.rows);
   })
 });
+
+/*************************************************
+		GET USER WITH MAIL AND PASSWORD
+*************************************************/	// TEST OK
+
+app.get('/userConnection/', async (req, res) => {
+    let userId = req.url.split('/user/').pop();
+    let sql = 'select * from users where mail = "' + req.query.user.mail +'" AND ';
+    pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+  });
 
 /*************************************************
 		POST USER
@@ -68,7 +75,7 @@ app.post('/newUsers', (req, res) =>{
             bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
                 let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender,req.body.user.mail, hash, ];
                 console.log(valeur);
-                await pool.query(query, valeur, (err) => {
+                pool.query(query, valeur, (err) => {
                     if (err) {
                         console.log(err);
                         return res.send(false);
@@ -144,8 +151,9 @@ app.get('/door/:id', async (req, res) => {
 app.put('/doorStatus', async (req, res) => {
     console.log(req);
     const query = "UPDATE door SET status = " + req.body.param.status + " WHERE id = " + req.body.param.id; 
-    await pool.query(query, valeur, (err) => {
-        if (err) return res.send(false);
+    pool.query(query, valeur, (err) => {
+        if (err)
+            return res.send(false);
         return res.send(true);
     });
 });
@@ -194,9 +202,22 @@ app.get('/userTag/:userId', async (req, res) => {
 		GET DOOR HISTORY BY DOOR ID
 *************************************************/	//TEST OK
 
-app.get('/doorHistory/:doorId', async (req, res) => {
-    let doorId = parseInt(req.url.split('/doorHistory/').pop());
+app.get('/doorHistory/door/:doorId', async (req, res) => {
+    let doorId = parseInt(req.url.split('/doorHistory/door/').pop());
     let sql = 'select * from history where door = ' + doorId ;
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        return res.send(rows.rows);
+    })
+});
+
+/*************************************************
+		GET DOOR HISTORY BY USER ID
+*************************************************/	//TEST OK
+
+app.get('/doorHistory/user/:userId', async (req, res) => {
+    let userId = parseInt(req.url.split('/doorHistory/user/').pop());
+    let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
     pool.query(sql, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);
@@ -210,10 +231,11 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 app.post('/newaccess', async (req, res) => {
   const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
   let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];
-  await pool.query(query, valeur, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
-});
+  pool.query(query, valeur, (err) => {
+        if (err)
+            return res.send(false);
+        return res.send(true);
+    });
 });
 
 /*************************************************
@@ -223,10 +245,11 @@ app.post('/newaccess', async (req, res) => {
 app.post('/newdoor', async (req, res) => {
   const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
   let valeur = [req.query.password, req.query.status];
-  await pool.query(query, valeur, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
-});
+  pool.query(query, valeur, (err) => {
+        if (err)
+            return res.send(false);
+        return res.send(true);
+    });
 });
 
 
@@ -237,16 +260,18 @@ app.post('/newdoor', async (req, res) => {
 app.post('/newhistory', async (req, res) => {
   const query = "INSERT INTO history (door, users, date, action) VALUES ($1,$2,$3,$4)";
   let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];
-  await pool.query(query, valeur, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
-	});
+  pool.query(query, valeur, (err) => {
+        if (err)
+            return res.send(false);
+        return res.send(true);
+    });
    const query2 = "UPDATE door set status = !status where id=door VALUES ($1)"
    let valeur2 = [req.query.door];
-   await pool.query(query2, valeur2, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
-	});
+   pool.query(query2, valeur2, (err) => {
+        if (err)
+            return res.send(false);
+        return res.send(true);
+    });
 });
 
 /*-----------------STATIC------------------*/

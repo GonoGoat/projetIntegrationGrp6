@@ -2,6 +2,7 @@ import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native"
 import React from "react";
 import Inscription from "./Inscription";
 import AsyncStorage from '@react-native-community/async-storage';
+import axios from "axios";
 
 class Connection extends React.Component {
   _storeData  = async (name, data) => {
@@ -24,7 +25,7 @@ class Connection extends React.Component {
     }
   };
 
-  clearAll = async () => {
+  clearAllData = async () => {
     try {
       await AsyncStorage.clear()
     } catch(e) {
@@ -32,6 +33,20 @@ class Connection extends React.Component {
     }
 
     console.log('Done.')
+  };
+
+  _getHistory = (id) => {
+    axios.get('http://localhost:8081/doorHistory/user/'+id)
+      .then(res => {
+        console.log(res.data);
+        let doors = [];
+        for(let i in res.data) {
+          doors.push(parseInt(i));
+        }
+        this._storeData('user', id).then();
+        this._storeData('doors', doors).then();
+      })
+      .catch(err => console.log(err));
   };
 
   constructor(props) {
@@ -52,14 +67,19 @@ class Connection extends React.Component {
   }
 
   _checkUser(){
-    fetch('http://localhost:8081/user/*')
+
+    const user = {
+      mail : this.state.mail,
+      password : this.state.password
+  };
+
+    fetch('http://localhost:8081/userConnection/', {use})
       .then((response) => response.json())
       .then((json) => {
         for (let i = 0; i < json.length; i++) {
           if (json[i].mail === this.mail && json[i].password === this.password) {
-            this._storeData('user', json[i]).then();
-            this._retrieveData('user').then(r => console.log(r));
-            return true;
+            this._getHistory(json[i].id);
+            break;
           }
         }
         this.setState({errorMessage:'Verify mail or password'})
