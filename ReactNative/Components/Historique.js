@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableHighlight} from 'react-native';
 import React from 'react';
 import axios from 'axios';
 
@@ -7,16 +7,62 @@ export default class Historique extends React.Component {
     super(props)
     
     this.state={ 
-    
+      isLoading: true,
+      histo: []
     }
   }
 
+  getData(doorId) {
+    axios.get(`http://192.168.0.28:8081/doorHistory/`+ doorId)
+    .then(res => {
+      this.setState({isLoading:false, histo: res.data})
+    })
+    .catch(error => {
+      console.log(error)
+  })
+  }
+
+  componentDidMount() {
+    
+  }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Historique des portes</Text>
-      </View>
-    );
+    const { doorIdParam } = this.props.route.params;
+    if(this.state.isLoading) {
+      this.getData(doorIdParam);
+      return <Text>Loading...</Text>
+    }
+    else {
+      return (
+        <View style={styles.container}>
+          <Text>Historique de la porte {doorIdParam}</Text>
+          <View>
+          <SafeAreaView>
+            <FlatList
+            data={this.state.histo}
+            keyExtractor={(item) => item.id}
+            renderItem={({item}) => <TouchableHighlight
+            onPress={() => alert('Ok')}>
+              <View style={{backgroundColor: 'white'}}>
+              <Text>{item.id}</Text>
+              </View>
+            </TouchableHighlight>}
+            />
+          </SafeAreaView>
+          <SafeAreaView>
+            <FlatList
+            data={this.state.listeDoor}
+            keyExtractor={(item) => item.door.toString()}
+            renderItem={({item}) => <TouchableHighlight
+            onPress={() => this._goToDetail(item)}>
+            <Text>{item.nickname}</Text>
+            </TouchableHighlight>}
+            />
+          </SafeAreaView>
+        </View>
+        </View>
+      );
+    }
   }
 }
 const styles = StyleSheet.create({

@@ -118,13 +118,14 @@ const listePortesStackScreen = ({navigation}) => (
       )
     }}></listePortesScreen.Screen>
     <listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
-      doorIdParam: 1,
+      doorIdParam: 0,
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
         onPress={() => navigation.openDrawer()}></Icon.Button>
       )
     }}></listePortesScreen.Screen>
     <listePortesScreen.Screen name="Historique" component={Historique} options={{
+      doorIdParam: 0,
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
         onPress={() => navigation.openDrawer()}></Icon.Button>

@@ -95,7 +95,7 @@ export default class PorteDetail extends React.Component {
           />
           <Button
             title="Historique"
-            onPress={() => this.props.navigation.navigate("Historique")}
+            onPress={() => this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam})}
           />
           <Button
             title="Paramètres"
