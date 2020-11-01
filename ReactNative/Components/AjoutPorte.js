@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View,Text} from 'react-native';
 
 const AjoutPorte = ({navigation}) => {
     return (
       <View style={styles.container}>
-          Ajout de porte
+          <Text>Ajout de porte</Text>
       </View>
     );
 };
