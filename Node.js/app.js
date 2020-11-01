@@ -141,10 +141,10 @@ app.get('/door/:id', async (req, res) => {
 		UPDATE DOOR STATUS
 *************************************************/
 
-app.put('/doorStatus', async (req, res) => {
+app.put('/doorStatus', (req, res) => {
     console.log(req);
-    const query = "UPDATE door SET status = " + req.body.param.status + " WHERE id = " + req.body.param.id; 
-    await pool.query(query, valeur, (err) => {
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
+    pool.query(query, (err) => {
         if (err) return res.send(false);
         return res.send(true);
     });

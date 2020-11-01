@@ -221,7 +221,6 @@ export default function App() {
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
         <Drawer.Screen name="Afficher l'historique des ouvertures" component={HistoriqueStackScreen} />
         <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
-        <Drawer.Screen name="PorteDetail" component={PorteDetailStackScreen} />
         <Drawer.Screen name="PorteParametres" component={PorteParametresStackScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
