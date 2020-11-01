@@ -46,12 +46,20 @@ export default class PorteDetail extends React.Component {
 
     axios.put('http://192.168.0.28:8081/doorStatus',{door})
     .then(res => {
-        console.log(res.data);
         this.setState({isLoading: false})
         this.componentDidMount();
     })
     .catch(err => console.log(err));
     this.setState({isLoading: false})
+  }
+
+  getTitle(status) {
+    if(status == 0) {
+      return("Ouvrir");
+    } else {
+      return("Fermer");
+    }
+
   }
 
   componentDidMount() {
@@ -82,7 +90,7 @@ export default class PorteDetail extends React.Component {
           <Text>Mot de passe : {dataDoor[1]}</Text>
           <Text>Status : {statusString}</Text>
           <Button
-            title="Change state"
+            title={this.getTitle(dataDoor[2])}
             onPress={() => this.send(doorIdParam, dataDoor[2])}
           />
           <Button
