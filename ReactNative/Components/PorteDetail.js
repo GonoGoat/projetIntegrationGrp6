@@ -95,11 +95,11 @@ export default class PorteDetail extends React.Component {
           />
           <Button
             title="Historique"
-            onPress={() => navigation.navigate("Historique")}
+            onPress={() => this.props.navigation.navigate("Historique")}
           />
           <Button
             title="Paramètres"
-            onPress={() => navigation.navigate("PorteParametres")}
+            onPress={() => this.props.navigation.navigate("PorteParametres")}
             />
         </View>
       );

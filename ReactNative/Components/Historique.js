@@ -1,18 +1,26 @@
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
+import React from 'react';
+import axios from 'axios';
 
-const Historique = ({navigation}) => {
+export default class Historique extends React.Component {
+  constructor(props){
+    super(props)
+    
+    this.state={ 
+    
+    }
+  }
+
+  render() {
     return (
       <View style={styles.container}>
-          Historique des portes
+        <Text>Historique des portes</Text>
       </View>
     );
-};
+  }
+}
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
-    }
+  container: {
+    flex: 1,
+  }
 })
-
-export default Historique;

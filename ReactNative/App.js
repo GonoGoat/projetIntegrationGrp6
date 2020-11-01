@@ -124,6 +124,12 @@ const listePortesStackScreen = ({navigation}) => (
         onPress={() => navigation.openDrawer()}></Icon.Button>
       )
     }}></listePortesScreen.Screen>
+    <listePortesScreen.Screen name="Historique" component={Historique} options={{
+      headerLeft: () => (
+        <Icon.Button name="md-menu" size={25}
+        onPress={() => navigation.openDrawer()}></Icon.Button>
+      )
+    }}></listePortesScreen.Screen>
     </listePortesScreen.Navigator>
 )
 const HistoriqueStackScreen = ({navigation}) => (
@@ -136,12 +142,6 @@ const HistoriqueStackScreen = ({navigation}) => (
       fontWeight:'bold'
     }
     }}>
-    <HistoriqueScreen.Screen name="Accueil" component={Historique} options={{
-      headerLeft: () => (
-        <Icon.Button name="md-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      )
-    }}></HistoriqueScreen.Screen>
     </HistoriqueScreen.Navigator>
 )
 const OuvrirFermerPorteStackScreen = ({navigation}) => (
@@ -172,16 +172,6 @@ const PorteDetailStackScreen = ({navigation}) => (
       fontWeight:'bold'
     }
     }}>
-    <PorteDetailScreen.Screen name="PorteDetail" component={PorteDetail} options={{
-      doorIdParam: 0,
-      headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      ),
-      drawerLabel: () => null,
-      title: null,
-      drawerIcon: () => null
-    }}></PorteDetailScreen.Screen>
     </PorteDetailScreen.Navigator>
 )
 
@@ -219,7 +209,6 @@ export default function App() {
         <Drawer.Screen name="Inscription" component={InscriptionStackScreen} />
         <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
-        <Drawer.Screen name="Afficher l'historique des ouvertures" component={HistoriqueStackScreen} />
         <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
         <Drawer.Screen name="PorteParametres" component={PorteParametresStackScreen} />
       </Drawer.Navigator>
