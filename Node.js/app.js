@@ -234,19 +234,12 @@ app.post('/newdoor', async (req, res) => {
 		POST HISTORY
 *************************************************/	//TEST OK
 
-app.post('/newhistory', async (req, res) => {
-  const query = "INSERT INTO history (door, users, date, action) VALUES ($1,$2,$3,$4)";
-  let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];
-  await pool.query(query, valeur, (err) => {
+app.post('/newhistory', (req, res) => {
+  const query = "INSERT INTO history (door, users, date, action) VALUES (" + req.body.history.door + "," + req.body.history.users + ",'" +  req.body.history.date + "'," +  req.body.history.action + ")";
+  pool.query(query, (err) => {
 	if (err) return res.send(false);
-	return res.send(true);
-	});
-   const query2 = "UPDATE door set status = !status where id=door VALUES ($1)"
-   let valeur2 = [req.query.door];
-   await pool.query(query2, valeur2, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
-	});
+    return res.send(true);
+  })
 });
 
 /*-----------------STATIC------------------*/

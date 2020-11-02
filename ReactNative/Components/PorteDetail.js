@@ -46,12 +46,40 @@ export default class PorteDetail extends React.Component {
 
     axios.put('http://192.168.0.28:8081/doorStatus',{door})
     .then(res => {
-        this.setState({isLoading: false})
-        this.componentDidMount();
+        this.sendHistory(doorId, status)
     })
-    .catch(err => console.log(err));
-    this.setState({isLoading: false})
+    .catch(err => {
+        console.log(err),
+        this.setState({isLoading: false})
+    });
   }
+
+  sendHistory(doorId, status) {
+    var newStatus;
+    if(status == 0) {
+      newStatus = 1
+    } else { 
+      newStatus = 0
+    }
+
+    const history = {
+      door: doorId,
+      users : 1,
+      date: new Date,
+      action: newStatus
+    }
+
+    axios.post('http://192.168.0.28:8081/newhistory',{history})
+      .then(res => {
+          this.setState({isLoading: false})
+          this.componentDidMount();
+      })
+      .catch(err => {
+          console.log(err),
+          this.setState({isLoading: false})
+      });
+  }
+  
 
   getTitle(status) {
     if(status == 0) {
@@ -59,15 +87,12 @@ export default class PorteDetail extends React.Component {
     } else {
       return("Fermer");
     }
-
   }
 
   componentDidMount() {
     axios.get(`http://192.168.0.28:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
-      var dataDoor =  this.getDoorById(doorIdParam);
-      var statusString = this.getStatus(dataDoor[2]);
       })
       .catch(error => {
         console.log(error)
@@ -79,10 +104,8 @@ export default class PorteDetail extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
-      console.log(this.props.route)
       const { doorIdParam } = this.props.route.params;
       var dataDoor =  this.getDoorById(doorIdParam);
-      console.log(dataDoor);
       var statusString = this.getStatus(dataDoor[2]);
       return (
         <View style={styles.container}>

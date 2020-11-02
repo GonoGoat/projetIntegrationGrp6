@@ -22,6 +22,14 @@ export default class Historique extends React.Component {
   })
   }
 
+  getActionString(action) {
+    if(action == 1) {
+      return "Ouverture"
+    } else {
+      return "Fermeture"
+    }
+  }
+
   componentDidMount() {
     
   }
@@ -41,12 +49,11 @@ export default class Historique extends React.Component {
             <FlatList
             data={this.state.histo}
             keyExtractor={(item) => item.id}
-            renderItem={({item}) => <TouchableHighlight
-            onPress={() => alert('Ok')}>
+            renderItem={({item}) => 
               <View style={{backgroundColor: 'white'}}>
-              <Text>{item.id}</Text>
+                <Text>{this.getActionString(item.action)} {item.date}</Text>
               </View>
-            </TouchableHighlight>}
+            }
             />
           </SafeAreaView>
           <SafeAreaView>
