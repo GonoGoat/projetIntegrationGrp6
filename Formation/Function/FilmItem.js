@@ -6,6 +6,26 @@ import { getImageFromApi } from './TMDBApi'
 
 function FilmItem(props) {
 
+  function _displayFavoriteImage() {
+    if (props.isFilmFavorite) {
+      // Si la props isFilmFavorite vaut true, on affiche le 🖤
+      return (
+        <Image
+          style={styles.favorite_image}
+          source={require('../Images/ic_favorite.png')}
+        />
+      )
+    }
+    else {
+      return (
+        <Image
+          style={styles.favorite_image}
+          source={require('../Images/ic_favorite_border.png')}
+        />
+      )
+    }
+  }
+
     return (
       <TouchableOpacity
         style={styles.main_container}
@@ -16,6 +36,7 @@ function FilmItem(props) {
           />
           <View style={styles.content_container}>
             <View style={styles.header_container}>
+              {_displayFavoriteImage()}
               <Text style={styles.title_text}>{props.films.title}</Text>
               <Text style={styles.vote_text}>{props.films.vote_average}</Text>
             </View>
@@ -55,7 +76,8 @@ function FilmItem(props) {
       fontSize: 20,
       flex: 1,
       flexWrap: 'wrap',
-      paddingRight: 5
+      paddingRight: 5,
+      alignItems : 'center'
     },
     vote_text: {
       fontWeight: 'bold',
@@ -75,6 +97,10 @@ function FilmItem(props) {
     date_text: {
       textAlign: 'right',
       fontSize: 14
+    },
+    favorite_image: {
+      width: 30,
+      height: 30
     }
   })
   

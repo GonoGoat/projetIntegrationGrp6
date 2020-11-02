@@ -1,5 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import {StyleSheet, View, TextInput, Button, FlatList,Text, ActivityIndicator} from "react-native"
+import { connect } from 'react-redux'
 
 import FilmItem from './FilmItem'
 
@@ -27,6 +28,16 @@ function Home(props) {
     props.navigation.navigate("FilmDetail",  { idFilm: idFilm });
   }
 
+  function _isFilmFavorite(idFilm) {
+    const favoriteFilmIndex = props.favoritesFilm.findIndex(item => item.id === idFilm)
+    if (favoriteFilmIndex != -1) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+
   return (
       <View style={styles.view}>
         <TextInput style={styles.textInput} placeholder='Titre du film'
@@ -35,8 +46,11 @@ function Home(props) {
         <Button title='Rechercher' onPress={() => {_loadFilms()}}/>
           <FlatList
             data={films}
+            extraData={props.favoritesFilm}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({item,index}) => <FilmItem films={films[index]} displayDetailForFilm={_displayDetailForFilm}/>}
+            renderItem={({item,index}) => <FilmItem films={films[index]}
+              isFilmFavorite={(props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
+              displayDetailForFilm={_displayDetailForFilm}/>}
           />
         <View style={styles.loading_container}>
           <ActivityIndicator size='large' animating={isLoading}/>
@@ -65,7 +79,10 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center'
-  }
-
+  },
 })
-export default Home;
+const mapStateToProps = (state) => {
+  return { favoritesFilm : state.favoritesFilm }
+}
+
+export default connect(mapStateToProps)(Home);
