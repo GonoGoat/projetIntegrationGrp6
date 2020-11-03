@@ -29,9 +29,7 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0",
-    "@react-native-community/async-storage": "^1.12.1",
-    "react-navigation-stack": "^2.8.4"
+    "@babel/core": "~7.9.0"
   },
   "private": true
 }
