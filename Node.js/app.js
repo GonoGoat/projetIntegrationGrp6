@@ -125,7 +125,7 @@ app.get('/doors', async (req, res) => {
 
 
 /*************************************************
-		GET DOOR by tag
+		GET DOOR by ID
 *************************************************/	// TEST OK
 
 app.get('/door/:id', async (req, res) => {
@@ -136,6 +136,28 @@ app.get('/door/:id', async (req, res) => {
     return res.send(rows.rows);
   })
 });
+
+/*************************************************
+		POST DOOR - Check si mot de passe OK pour cette porte
+*************************************************/
+
+app.post('/door/check', async (req, res) => {
+    let id = req.body.id;
+    let sql = 'select password from door where id = ' + id;
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        let response = rows.rows
+        if (response.length > 0) {
+            if (response[0].password === req.body.password) {
+                return res.send(true);
+            }
+            else {
+                return res.status(403).send("Bad password !")
+            }
+        }
+        return res.status(404).send("Invalid id");
+    })
+  });
 
 /*************************************************
 		UPDATE DOOR STATUS
@@ -213,7 +235,7 @@ app.post('/newaccess', async (req, res) => {
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
-});
+  });
 });
 
 /*************************************************
