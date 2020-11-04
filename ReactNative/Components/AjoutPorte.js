@@ -1,39 +1,25 @@
 import React from 'react';
-import {StyleSheet, View,Text,Button} from 'react-native';
-import axios from "axios"
+import {StyleSheet, View,Text,Button, TextInput} from 'react-native';
+import AjoutPorte_FormVerif from "./AjoutPorte_FormVerif"
+import AjoutPorte_FormAjout from "./AjoutPorte_FormAjout"
 
 function AjoutPorte() {
-    const [doorisExisting, setExistingDoor] = React.useState(false);
+    const [door, setDoor] = React.useState();
 
-    const axios = require('axios')
-
-    function render() {
-      if (!doorisExisting) {
-        return (
-          <View>
-            <Button title="Elle existe !" onPress={() => isDoorExisting()}/>
-          </View>
-        )
-      }
-      else {
-        return (
-          <View>
-            <Text>Elle existe bien</Text>
-          </View>
-        )
-      }
+    if (door === undefined) {
+      return (
+        <View style={styles.container}>
+            <AjoutPorte_FormVerif doorId={door} setDoor={(id) => setDoor(id)} />
+        </View>
+      );
     }
-
-    async function isDoorExisting() {
-      const res = await axios.post("http://localhost:8081/door/check", { password : "test", id : "6"});
-      console.log(res);
+    else {
+      return (
+        <View style={styles.container}>
+            <AjoutPorte_FormAjout doorId={door} setDoor={(id) => setDoor(id)} />
+        </View>
+      )
     }
-
-    return (
-      <View style={styles.container}>
-          {render()}
-      </View>
-    );
 };
 const styles = StyleSheet.create({
     container: {

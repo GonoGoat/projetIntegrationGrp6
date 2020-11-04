@@ -142,13 +142,24 @@ app.get('/door/:id', async (req, res) => {
 *************************************************/
 
 app.post('/door/check', async (req, res) => {
-    let id = req.body.id;
-    let sql = 'select password from door where id = ' + id;
+    let id = parseInt(req.body.id);
+    let sql = 'select (id,password) from door where id = ' + id;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
-        let response = rows.rows
-        if (response.length > 0) {
-            if (response[0].password === req.body.password) {
+        if (rows.rows.length > 0) {
+            let response = rows.rows[0].row
+            let index = []
+            for (let i = 0;i<response.length;i++) {
+                if (response[i] === ',') {
+                    index.push(i);
+                }
+                if (response[i] === ')') {
+                    index.push(i)
+                    break;
+                }
+            }
+            let pswd = response.substring(index[0]+1,index[1]);
+            if (pswd === req.body.password) {
                 return res.send(true);
             }
             else {
@@ -230,10 +241,11 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 *************************************************/	//TEST OK
 
 app.post('/newaccess', async (req, res) => {
-  const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
-  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];
-  await pool.query(query, valeur, (err) => {
-	if (err) return res.send(false);
+  const query = `INSERT INTO access (door, users, tag, name)
+    VALUES (${parseInt(req.body.door)},${parseInt(req.body.user)},${req.body.tag},${req.body.nickname})`;
+  await pool.query(query, (err) => {
+    if (err) return res.send(false);
+    console.log(res);
 	return res.send(true);
   });
 });
