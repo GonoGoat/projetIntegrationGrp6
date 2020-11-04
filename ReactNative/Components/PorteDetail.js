@@ -139,7 +139,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.histoButton}
-              onPress={() => this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam})}>
+              onPress={() => this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
               <View>
                 <Text style={{fontSize: 20}}>Historique</Text>
               </View>
