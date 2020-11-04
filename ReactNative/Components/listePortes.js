@@ -47,8 +47,8 @@ class listPortes extends React.Component {
     })
   }
   _goToDetail = item => {
-    console.log(item.door)
-    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door})
+    //console.log(item)
+    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})
     
   }
 componentDidMount() {

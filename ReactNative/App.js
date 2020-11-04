@@ -16,6 +16,7 @@ import OuvrirFermerPorte from './Components/OuvrirFermerPorte'
 import PorteDetail from './Components/PorteDetail';
 import PorteParametres from './Components/PorteParametres';
 import axios from 'axios';
+import { ScreenStackHeaderRightView } from 'react-native-screens';
 
 const Drawer = createDrawerNavigator();
 const AccueilScreen= createStackNavigator();
@@ -119,6 +120,8 @@ const listePortesStackScreen = ({navigation}) => (
     }}></listePortesScreen.Screen>
     <listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
       doorIdParam: 0,
+      nickname: "",
+      tagName: "",
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
         onPress={() => navigation.openDrawer()}></Icon.Button>
@@ -128,7 +131,7 @@ const listePortesStackScreen = ({navigation}) => (
       doorIdParam: 0,
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
+        onPress={ () => { navigation.openDrawer() }}></Icon.Button>
       )
     }}></listePortesScreen.Screen>
     </listePortesScreen.Navigator>
