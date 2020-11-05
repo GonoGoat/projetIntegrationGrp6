@@ -659,5 +659,10 @@ app.post('/addHistory/:id/:door/:users/:moment/:action', function (req, res) {
     })
 });
 
-//ecoute sur le port 8888
-app.listen(8081);
+// your express configuration here
+
+var httpServer = http.createServer(app);
+
+
+httpServer.listen(8080);
+
