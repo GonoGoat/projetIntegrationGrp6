@@ -260,8 +260,8 @@ app.all("/*", function(req, res, next){
 
 
 var httpsOptions = {
-    key: fs.readFileSync('../../home/lucas/conf/key.pem'),
-    cert: fs.readFileSync('../../home/lucas/conf/crt.pem')
+    key: fs.readFileSync('/home/lucas/conf/key.pem'),
+    cert: fs.readFileSync('/home/lucas/conf/cert.pem')
 };
 
 
