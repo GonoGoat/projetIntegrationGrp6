@@ -659,10 +659,16 @@ app.post('/addHistory/:id/:door/:users/:moment/:action', function (req, res) {
     })
 });
 
-// your express configuration here
+
+var httpsOptions = {
+    key: fs.readFileSync('/home/lucas/conf/key.pem'),
+    cert: fs.readFileSync('/home/lucas/conf/crt.pem')
+};
+
 
 var httpServer = http.createServer(app);
+var httpsServer = https.createServer(httpsOptions, app);
 
-
-httpServer.listen(8080);
+httpServer.listen(8081);
+httpsServer.listen(4433);
 
