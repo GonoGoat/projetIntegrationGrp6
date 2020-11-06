@@ -1,8 +1,6 @@
-import {Picker, StyleSheet, Text, TextInput, View, TouchableOpacity,ScrollView} from "react-native";
+import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
-import Connection from "./Connection";
 import axios from 'axios';
-import {block} from "react-native-reanimated";
 
 class Inscription extends React.Component {
     state = {

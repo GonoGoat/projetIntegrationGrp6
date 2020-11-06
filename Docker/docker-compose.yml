@@ -3,33 +3,17 @@ version : '2'
 services :
 
     node:
-        image: node
+        build : "."
         container_name: node
         tty: true
-        depends_on :
-          - postgres
-        user: "node"
         volumes:
-         - ./:/home/node/app
+         - /var/porte/:/home
+        working_dir : /home
         ports:
          - "8081:8081"
         networks:
             integration6:
                 ipv4_address: 172.18.0.3
-
-    postgres:
-        image: postgres
-        container_name: postgres
-        tty: true
-        ports:
-          - "5432:5432"
-        expose:
-          - "5432:5432"
-        environment:
-           POSTGRES_PASSWORD: Ephec123
-        networks:
-            integration6:
-                ipv4_address: 172.18.0.2
 
 networks:
     integration6:
