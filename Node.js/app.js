@@ -52,13 +52,13 @@ app.get('/user/:id', async (req, res) => {
 		GET USER WITH MAIL AND PASSWORD
 *************************************************/	// TEST OK
 
-app.get('/userConnection/', async (req, res) => {
-    let sql = "select * from users WHERE mail = '" + req.query.mail + "'";
+app.post('/userConnection/', async (req, res) => {
+    let sql = "select * from users WHERE mail = '" + req.body.user.mail + "'";
     let id = false;
     await pool.query(sql, async (error, rows) => {
         if (error) throw error;
         if (rows.rowCount == 1) {
-        await bcrypt.compare(req.query.password, rows.rows[0].password, (err, result) => {
+        await bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
             if (err) throw err;
             if(result) {
                 id = rows.rows[0].id;

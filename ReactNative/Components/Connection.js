@@ -5,11 +5,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
 
 class Connection extends React.Component {
+  /* Ajouter des données dans la mémoire locale de l'application */ 
   _storeData  = async (name, data) => {
     try {
       await AsyncStorage.setItem(name, JSON.stringify(data));
     } catch (error) {
-      return error
+      throw error
     }
   };
 
@@ -25,29 +26,23 @@ class Connection extends React.Component {
     }
   };
 
-  clearAllData = async () => {
-    try {
-      await AsyncStorage.clear()
-    } catch(e) {
-      throw e;
-    }
-
-    console.log('Done.')
-  };
-
   _getHistory = (id) => {
     axios.get('http://localhost:8081/doorHistory/user/'+id)
       .then(res => {
-        console.log(res.data);
         let doors = [];
         for(let i in res.data) {
           doors.push(parseInt(i));
         }
         this._storeData('user', id).then();
         this._storeData('doors', doors).then();
+        this.redirect();
       })
       .catch(err => console.log(err));
   };
+
+  redirect () {
+    this.props.navigation.navigate('Afficher la liste de vos portes');
+}
 
   constructor(props) {
     super(props);
@@ -58,37 +53,35 @@ class Connection extends React.Component {
     }
   }
 
-  _mailChanged(name, text) {
+  _mailChanged(text) {
     this.mail = text;
   }
 
-  _passwordChanged(name, text) {
+  _passwordChanged(text) {
     this.password = text;
   }
 
   _checkUser(){
-    axios.get('http://localhost:8081/userConnection/', { 
-      params : {
+    if(this.password.length > 0 && this.mail.length > 0){
+    axios.post('http://localhost:8081/userConnection/', {user : { 
         mail: this.mail,
         password : this.password
       }
     })
       .then((response) => {
-        console.log(response.data);
         if (!response.data) {
           this.setState({errorMessage:'Verify mail or password'});
-        } 
+        }
         else {
           this._getHistory(response.data);
         }
-        /* for (let i = 0; i < json.length; i++) {
-          if (json[i].mail === this.mail && json[i].password === this.password) {
-            this._getHistory(json[i].id);
-            break;
-          }
-        }
-        this.setState({errorMessage:'Verify mail or password'})*/
       })
+    }
+  }
+
+
+  test(value) {
+    console.log(value);
   }
 
   render() {
@@ -96,9 +89,9 @@ class Connection extends React.Component {
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
-        <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this._mailChanged(this.mail, text)}/>
+        <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this._mailChanged(text)}/>
         <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this._passwordChanged(this.password, text)}/>
+        <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this._passwordChanged(text)}/>
         <Text>{this.state.errorMessage}</Text>
         <TouchableOpacity style={styles.button} onPress={()=> this._checkUser()}>
           <Text style={styles.text}>Connexion</Text>
@@ -120,7 +113,6 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 25,
     padding: 5,
-    fontFamily: 'Consolas',
     justifyContent: 'center',
     alignContent: 'center'
   },
@@ -129,8 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     borderColor: '#000',
-    borderWidth: 1,
-    fontFamily: 'Consolas'
+    borderWidth: 1
   },
   button: {
     color: '#fff',
@@ -138,7 +129,6 @@ const styles = StyleSheet.create({
     margin: 50,
     padding: 10,
     backgroundColor: '#719ada',
-    fontFamily: 'Consolas',
     justifyContent: 'center',
     alignContent: 'center'
   },
@@ -147,7 +137,6 @@ const styles = StyleSheet.create({
     margin: 50,
     padding: 10,
     backgroundColor: '#efefef',
-    fontFamily: 'Consolas',
     justifyContent: 'center',
     alignContent: 'center'
   },
