@@ -258,10 +258,10 @@ app.all("/*", function(req, res, next){
   next();
 });
 
-/*
+
 var httpsOptions = {
-    key: fs.readFileSync('/home/lucas/conf/key.pem'),
-    cert: fs.readFileSync('/home/lucas/conf/cert.pem')
+    key: fs.readFileSync('./conf/key.pem'),
+    cert: fs.readFileSync('./conf/cert.pem')
 };
 
 
@@ -270,6 +270,6 @@ var httpsServer = https.createServer(httpsOptions, app);
 
 httpServer.listen(8080);
 httpsServer.listen(4433);
-*/
 
-app.listen(8081);
+
+//app.listen(8081);
