@@ -42,7 +42,7 @@ void loop(){
       delay(8); 
       i++;
     }
-    delay(1000);
+    delay(3000);
   }
   else{
     if(valFerm==HIGH){
@@ -78,7 +78,7 @@ void loop(){
         delay(8);
         i++;
       }
-      delay(1000);
+      delay(3000);
     }
   }
 }
