@@ -16,8 +16,8 @@ class Inscription extends React.Component {
     };
 
 
-     getEmail() {
-          axios.get('http://192.168.1.10:8080/userMail/' + this.state.mail)
+     getEmail(firstname, name, phone, gender, mail, password, mailVerified, confirm) {
+          axios.get('http://192.168.1.10:8081/userMail/' + mail)
             .then(res => {
                 const verif = res.data;
                 if (verif.length != 0) {
@@ -25,38 +25,40 @@ class Inscription extends React.Component {
                         mailVerified: false
                     });
                 }
-                console.log(this.state.mailVerified);
-                if (this.state.mailVerified) {
-                    if (this.state.password == this.state.confirm) {
-                        if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(this.state.password)) {
-                            if (/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(this.state.mail)) {
-                                if (/^[A-Za-z]+$/.test(this.state.firstname) && /^[A-Za-z]+$/.test(this.state.name)) {
-                                    if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(this.state.phone)) {
+                console.log(mailVerified);
+                let error = "";
+                if (mailVerified) {
+                    if (password == confirm) {
+                        if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(password)) {
+                            if (/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(mail)) {
+                                if (/^[A-Za-z]+$/.test(firstname) && /^[A-Za-z]+$/.test(name)) {
+                                    if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(phone)) {
                                         this.setState({error :''});
-                                        this.send();
+                                        this.send(firstname, name, phone, gender, mail, password);
                                         this.redirect();
                                     }
                                     else {
-                                        this.setState({error :'please only use number for phone '});
+                                        error = 'please only use number for phone ';
                                     }
                                 } else {
-                                    this.setState({error : 'please only use letter for firstname and lastname'});
+                                    error = 'please only use letter for firstname and lastname';
                                 }
                             } else {
-                                this.setState({error :'email not valid'});
+                                error = 'email not valid';
                             }
                         } else {
-                            this.setState({error : 'password need at least A / a / 1 / .'});
+                            error = 'password need at least A / a / 1 / .';
                         }
                     } else {
-                        this.setState({error : "enter twice the same password"});
+                        error = "enter twice the same password";
                     }
                 }
                 else {
-                    this.setState({error : "vous possédez déjà un compte avec cette adresse mail"});
-                    this.state.mailVerified = true;
+                    error =  "vous possédez déjà un compte avec cette adresse mail";
+                    this.setState( {mailVerified : true })
                 }
-                console.log(this.state.error);
+                this.setState( {error : error});
+                return error;
             })
     }
 
@@ -65,7 +67,7 @@ class Inscription extends React.Component {
 
         event.preventDefault();
 
-        this.getEmail();
+        this.getEmail(this.state.firstname, this.state.name, this.state.phone, this.state.gender, this.state.mail, this.state.password, this.state.mailVerified, this.state.confirm);
 
 
     };
@@ -74,22 +76,22 @@ class Inscription extends React.Component {
          this.props.navigation.navigate('Connexion');
      }
 
-    send() {
+    send(firstname, name, phone, gender, mail, password) {
 
         const config = {
             'Content-Type': 'application/json'
         };
 
         const user = {
-            firstname : this.state.firstname,
-            name: this.state.name,
-            phone : this.state.phone,
-            gender : this.state.gender,
-            mail : this.state.mail,
-            password : this.state.password
+            firstname : firstname,
+            name:  name,
+            phone : phone,
+            gender : gender,
+            mail : mail,
+            password : password
         };
 
-        axios.post('http://192.168.1.10:8080/newUsers',{user})
+        axios.post('http://192.168.1.10:8081/newUsers',{user})
             .then(res => {
                 console.log(res.data);
                 console.log('test');
