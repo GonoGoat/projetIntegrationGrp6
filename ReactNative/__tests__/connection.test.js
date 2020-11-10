@@ -1,12 +1,14 @@
+import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
-import renderer from 'react-test-renderer';
-import Connection from "../Components/Connection";
+import Enzyme, { shallow } from 'enzyme';
+import toJson from 'enzyme-to-json';
+import Connection from '../Components/Connection';
 
-test('update props mail', () => {
-  const myTest = Connection.test('string')
-  expect(test).toHaveBeenCalled();
-  const tree = renderer.create(<Connection />).toJSON();
-  let string = "mail_example";
-  tree._setMail(string);
-  expect(Connection.mail).toBe("mail_example");
+Enzyme.configure({ adapter: new Adapter() });
+
+describe("Connection Class Component", () => {
+  it("should call _storedata", () => {
+    const wrapper = shallow(<Connection />);
+    expect(wrapper.length).toBe(1);
+  });
 });

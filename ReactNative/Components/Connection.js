@@ -85,7 +85,7 @@ class Connection extends React.Component {
   }
 
   render() {
-    const nav = this.props.navigation.navigate;
+    const nav = this.props.navigation;
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
@@ -96,7 +96,7 @@ class Connection extends React.Component {
         <TouchableOpacity style={styles.button} onPress={()=> this._checkUser()}>
           <Text style={styles.text}>Connexion</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connect} onPress={() => nav("Inscription")} >
+        <TouchableOpacity style={styles.connect} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
           </TouchableOpacity>
       </View>
