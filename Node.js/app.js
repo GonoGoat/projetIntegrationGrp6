@@ -121,7 +121,7 @@ app.get('/doors', async (req, res) => {
       if (err) throw err;
       return res.send(rows.rows);
     })
-  });
+});
 
 
 /*************************************************
@@ -143,30 +143,39 @@ app.get('/door/:id', async (req, res) => {
 
 app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
-    let sql = 'select (id,password) from door where id = ' + id;
-    pool.query(sql, (err, rows) => {
+    let user = parseInt(req.body.user)
+    let isExisting = false;
+    let sql = `select * from access where door = ${id} and users = ${user}`
+    pool.query(sql, (err,rows) => {
         if (err) throw err;
         if (rows.rows.length > 0) {
-            let response = rows.rows[0].row
-            let index = []
-            for (let i = 0;i<response.length;i++) {
-                if (response[i] === ',') {
-                    index.push(i);
-                }
-                if (response[i] === ')') {
-                    index.push(i)
-                    break;
-                }
-            }
-            let pswd = response.substring(index[0]+1,index[1]);
-            if (pswd === req.body.password) {
-                return res.send(true);
-            }
-            else {
-                return res.status(403).send("Bad password !")
-            }
+            isExisting = true;
         }
-        return res.status(404).send("Invalid id");
+        let sql2 = 'select (id,password) from door where id = ' + id;
+        pool.query(sql2, (err, rows) => {
+            if (err) throw err;
+            if (rows.rows.length > 0) {
+                let response = rows.rows[0].row
+                let index = []
+                for (let i = 0;i<response.length;i++) {
+                    if (response[i] === ',') {
+                        index.push(i);
+                    }
+                    if (response[i] === ')') {
+                        index.push(i)
+                        break;
+                    }
+                }
+                let pswd = response.substring(index[0]+1,index[1]);
+                if (pswd === req.body.password) {
+                    return res.status(200).send({data : true, isExisting : isExisting})
+                }
+                else {
+                    return res.status(403).send("Bad password !")
+                }
+            }
+            return res.status(404).send("Invalid id");
+        })
     })
   });
 
@@ -241,13 +250,12 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 *************************************************/	//TEST OK
 
 app.post('/newaccess', async (req, res) => {
-  const query = `INSERT INTO access (door, users, tag, name)
-    VALUES (${parseInt(req.body.door)},${parseInt(req.body.user)},${req.body.tag},${req.body.nickname})`;
-  await pool.query(query, (err) => {
-    if (err) return res.send(false);
-    console.log(res);
-	return res.send(true);
-  });
+    const query = 'INSERT INTO access (door, users, tag, nickname) VALUES ($1,$2,$3,$4)';
+    let values = [parseInt(req.body.door),parseInt(req.body.user),req.body.tag, req.body.nickname];
+    await pool.query(query, values, (err) => {
+        if (err) return res.send(false);
+	    return res.send(true);
+    });
 });
 
 /*************************************************

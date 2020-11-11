@@ -11,13 +11,16 @@ function AjoutPorte_FormAjout(props) {
     async function addNewAccess() {
       let valeurs = {
           door : props.doorId,
-          user : 4,
+          user : 8,
           tag : tag,
           nickname : nickname,
       }
       const res = await axios.post("http://localhost:8081/newaccess", valeurs);
       if (res.data === true) {
-        console.log("porte ajoutée !")
+        props.setMessage({
+          message : `La porte "${nickname}" a bien été ajoutée !`,
+          type : "success"});
+        props.setDoor(undefined);
       }
     }
 
