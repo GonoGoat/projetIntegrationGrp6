@@ -1,0 +1,26 @@
+###### Mise en place de tous les composantes pour le fonctionnement ##########
+
+On place le motor shield sur l'arduino Uno. Pour brancher le moteur au motor shield, on utilise l'encoche bleue prévue à cet effet. Dans l'ordre en commençant par le haut: Rouge, jaune, vert, gris.
+On relie le module wifi à notre µControleur. Pour ça, Rx sur Tx, Tx sur Rx, Vcc à 3v3, GPIO0 sur pin 7, Reset à rien, CH_PD à 3v3, GPIO2 sur pin 4, Gnd à Gnd.
+
+
+######## Pour téléverser le code #############
+
+### code d'arduino ####
+
+On branche l'arduino au pc avec l'usb 2.0, ensuite on sélectionne board --> arduino uno et on appuie sur téléverser.
+
+
+### code esp8266 ###
+
+On ajoute la librairie esp8266, puis dans préférences, url cartes supplémentaires on met ça : http://arduino.esp8266.com/stable/package_esp8266com_index.json
+Puis outil, type de cartes generic esp8266 module.
+
+Après on retire GPIO0 et on le branche a GND. On connecte la pin reset de l'arduino à vcc, on appuie sur le bouton reset. On déconnecte la pin reset. 
+
+Puis on clique sur téléverser et après ça on peut remettre GPIO0 sur la pin 7.
+
+
+
+
+

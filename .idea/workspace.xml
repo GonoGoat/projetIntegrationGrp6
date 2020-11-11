@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/projetIntegrationGrp6.iml" />
+        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
+        <option value="$PROJECT_DIR$/.idea/misc.xml" />
+        <option value="$PROJECT_DIR$/.idea/modules.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1jVgOQYN5ffw3qCEqqHxFchkhGP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="jsx.switch.disabled" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/ReactNative" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="React Native.React Native">
+    <configuration name="listePortes.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="listePortes.js" working-dir="$PROJECT_DIR$/ReactNative/Components">
+      <method v="2" />
+    </configuration>
+    <configuration name="React Native" type="ReactNative" factoryName="React Native">
+      <working-dir value="C:\Pro\Ephec\3TI\Projet d'Intégration\Projet\projetIntegrationGrp6\ReactNative" />
+      <node-interpreter value="project" />
+      <react-native value="$PROJECT_DIR$/ReactNative/node_modules/react-native" />
+      <platform value="ANDROID" />
+      <envs />
+      <only-packager />
+      <browser value="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" />
+      <method v="2">
+        <option name="ReactNativePackager" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.listePortes.js" />
+      <item itemvalue="React Native.React Native" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.listePortes.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="" />
+      <created>1603037652303</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603037652303</updated>
+      <workItem from="1603037653974" duration="1822000" />
+      <workItem from="1603096631240" duration="3931000" />
+      <workItem from="1603124720253" duration="205000" />
+      <workItem from="1603124954101" duration="33000" />
+      <workItem from="1603125013923" duration="9000" />
+      <workItem from="1603125058688" duration="1139000" />
+      <workItem from="1603184860623" duration="27000" />
+      <workItem from="1603894644551" duration="1721000" />
+      <workItem from="1605085216953" duration="8506000" />
+      <workItem from="1605124124089" duration="1645000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

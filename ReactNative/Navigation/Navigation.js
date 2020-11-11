@@ -1,5 +1,4 @@
-
-import { createStackNavigator } from 'react-navigation-stack'
+import {createStackNavigator} from 'react-navigation-stack'
 import Inscription from '../Components/Inscription'
 import {createAppContainer} from "react-navigation";
 import Connection from "../Components/Connection";

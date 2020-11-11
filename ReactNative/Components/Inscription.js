@@ -19,8 +19,10 @@ class Inscription extends React.Component {
     };
 
 
+
     getEmail(firstname, name, phone, gender, mail, password, mailVerified, confirm) {
         axios.get('http://82.165.248.136:8081/userMail/' + mail)
+
             .then(res => {
                 const verif = res.data;
                 if (verif.length != 0) {
@@ -72,6 +74,7 @@ class Inscription extends React.Component {
         this.getEmail(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.state.mailVerified, this.confirm);
 
 
+
     };
 
     redirect (test) {
@@ -93,7 +96,9 @@ class Inscription extends React.Component {
             password : password
         };
 
+
         axios.post('http://82.165.248.136:8081/newUsers',{user})
+
             .then(res => {
                 console.log(res.data);
                 console.log('test');

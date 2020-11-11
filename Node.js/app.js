@@ -5,13 +5,12 @@ const bodyParser = require('body-parser');
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 var http = require('http');
+var https = require('https');
 var fs = require('fs');
 const { check, validationResult} = require('express-validator');
 
-// Password encryption for DB
 const bcrypt = require('bcrypt');
 const saltRounds = 5;
-
 
 const app = express();
 
@@ -19,7 +18,7 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true
 }));
 
 //connection avec la db
@@ -31,50 +30,34 @@ let pool = new pg.Pool({
   port: '5432'
 });
 pool.connect(function (err) {
-    if (err) throw err;
-    else {
-        console.log('Connection with database done.');
-    }
+  if (err) throw err;
+  else {
+    console.log('Connection with database done.');
+  }
 });
 
 /*************************************************
- GET USER
- *************************************************/	// TEST OK
+		GET USER
+*************************************************/	// TEST OK
 
 app.get('/user/:id', async (req, res) => {
-    let userId = req.url.split('/user/').pop();
-    let sql;
-    if (userId === "*") {
-        sql = 'select * from users'
-    }
-    else {
-        sql = 'select * from users where id = ' + parseInt(userId);
-    }
-    pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        return res.send(rows.rows);
-    })
+  let userId = req.url.split('/user/').pop();
+  let sql;
+  if (userId === "*") {
+    sql = 'select * from users'
+  }
+  else {
+    sql = 'select * from users where id = ' + parseInt(userId);
+  }
+  pool.query(sql, (err, rows) => {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
 });
 
 /*************************************************
- GET USER BY MAIL
- *************************************************/	// TEST OK
-
-app.get('/userMail/:mail', async (req, res) => {
-    let mail = req.url.split('/userMail/').pop();
-    let sql = 'select mail from users where mail =  \'' + mail + '\'' ;
-    pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        if (res.send(rows.rows).length == 0) {
-            return true;
-        }
-        return false;
-    })
-});
-
-/*************************************************
- POST USER
- *************************************************/	// TEST OK
+		POST USER
+*************************************************/	// TEST OK
 
 app.post('/newUsers', (req, res) =>{
     const errors = validationResult(req);
@@ -101,73 +84,115 @@ app.post('/newUsers', (req, res) =>{
 });
 
 /*************************************************
- GET ACCESS
+ GET USER BY MAIL
  *************************************************/	// TEST OK
+
+ app.get('/userMail/:mail', async (req, res) => {
+    let mail = req.url.split('/userMail/').pop();
+    let sql = 'select mail from users where mail =  \'' + mail + '\'' ;
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        if (res.send(rows.rows).length == 0) {
+            return true;
+        }
+        return false;
+    })
+});
+
+/*************************************************
+		GET ACCESS
+*************************************************/	// TEST OK
 
 app.get('/access/:door', async (req, res) => {
-    let doorId = parseInt(req.url.split('/access/').pop());
-    let sql = 'select * from access where door = ' + doorId;
-    pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        return res.send(rows.rows);
-    })
+  let doorId = parseInt(req.url.split('/access/').pop());
+  let sql = 'select * from access where door = ' + doorId;
+  pool.query(sql, (err, rows) => {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
 });
 
 /*************************************************
- GET ALL TAG
- *************************************************/	// TEST OK
+		GET ALL DOORS
+*************************************************/	// TEST OK
 
-app.get('/listTag', async (req, res) => {
-    let sql = 'select DISTINCT tag from access';
+app.get('/doors', async (req, res) => {
+    let sql = 'select * from door ';
     pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        return res.send(rows.rows);
+      if (err) throw err;
+      return res.send(rows.rows);
     })
-});
+  });
+
 
 /*************************************************
- GET DOOR
- *************************************************/	// TEST OK
+		GET DOOR by tag
+*************************************************/	// TEST OK
 
 app.get('/door/:id', async (req, res) => {
-    let doorId = parseInt(req.url.split('/door/').pop());
-    let sql = 'select * from door where id = ' + doorId;
-    pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        return res.send(rows.rows);
-    })
+  let doorId = parseInt(req.url.split('/door/').pop());
+  let sql = 'select * from door where id = ' + doorId;
+  pool.query(sql, (err, rows) => {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
 });
 
 /*************************************************
- GET DOOR BY TAG
- *************************************************/	//TEST OK
+		DELETE ACCESS
+*************************************************/	// TEST OK
+
+app.post('/access/delete', async (req, res) => {
+    const query = "DELETE FROM access WHERE door=" + req.body.params.door + " AND users=" + req.body.params.users;
+    await pool.query(query, (err) => {
+      if (err) return res.send(false);
+      return res.send(true);
+  });
+  });
+
+/*************************************************
+		UPDATE DOOR STATUS
+*************************************************/
+
+app.put('/doorStatus', (req, res) => {
+    console.log(req);
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
+    pool.query(query, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    });
+});
+
+/*************************************************
+		GET DOOR BY TAG
+*************************************************/	//TEST OK
 
 app.get('/doorTag/:tag', async (req, res) => {
-    let doorTag = req.url.split('/doorTag/').pop();
-    let sql = 'select * from access where tag = \'' + doorTag + '\'';
-    pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        return res.send(rows.rows);
-    })
+  let doorTag = req.url.split('/doorTag/').pop();
+  let sql = 'select * from access where tag = \'' + doorTag + '\'';
+  pool.query(sql, (err, rows) => {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
 });
 
 /*************************************************
- GET DOORS BY SPECIFIC TAG & USER
- *************************************************/	//TEST OK
+		GET DOORS BY SPECIFIC TAG & USER
+*************************************************/	//TEST OK
 
 app.get('/doorTagUser/:tag/:users', async (req, res) => {
-    let tag=req.params.tag;
-    let users=req.params.users;
-    let sql = 'select * from access where tag = \'' + tag + '\' AND users = \'' + users + '\'';
-    pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        return res.send(rows.rows);
-    })
+  let tag=req.params.tag;
+  let users=req.params.users;
+  let sql = 'select * from access where tag = \'' + tag + '\' AND users = \'' + users + '\'';
+  pool.query(sql, (err, rows) => {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
 });
 
 /*************************************************
- GET TAGS BY USER
- *************************************************/	//TEST OK
+		GET TAGS BY USER
+*************************************************/	//TEST OK
 
 app.get('/userTag/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/userTag/').pop());
@@ -179,12 +204,12 @@ app.get('/userTag/:userId', async (req, res) => {
 });
 
 /*************************************************
- GET DOOR HISTORY BY DOOR ID
- *************************************************/	//TEST OK
+		GET DOOR HISTORY BY DOOR ID
+*************************************************/	//TEST OK
 
 app.get('/doorHistory/:doorId', async (req, res) => {
     let doorId = parseInt(req.url.split('/doorHistory/').pop());
-    let sql = 'select * from history where door = ' + doorId ;
+    let sql = 'select * from history where door = ' + doorId + ' order by date desc' ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);
@@ -192,29 +217,29 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 });
 
 /*************************************************
- POST ACCESS
- *************************************************/	//TEST OK
+		POST ACCESS
+*************************************************/	//TEST OK
 
 app.post('/newaccess', async (req, res) => {
-    const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
-    let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];
-    await pool.query(query, valeur, (err) => {
-        if (err) return res.send(false);
-        return res.send(true);
-    });
+  const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
+  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];
+  await pool.query(query, valeur, (err) => {
+	if (err) return res.send(false);
+	return res.send(true);
+});
 });
 
 /*************************************************
- POST DOOR
- *************************************************/	//TEST OK
+		POST DOOR
+*************************************************/	//TEST OK
 
 app.post('/newdoor', async (req, res) => {
-    const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
-    let valeur = [req.query.password, req.query.status];
-    await pool.query(query, valeur, (err) => {
-        if (err) return res.send(false);
-        return res.send(true);
-    });
+  const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
+  let valeur = [req.query.password, req.query.status];
+  await pool.query(query, valeur, (err) => {
+	if (err) return res.send(false);
+	return res.send(true);
+});
 });
 
 
@@ -222,33 +247,26 @@ app.post('/newdoor', async (req, res) => {
 		POST HISTORY
 *************************************************/	//TEST OK
 
-app.post('/newhistory', async (req, res) => {
-  const query = "INSERT INTO history (door, users, date, action) VALUES ($1,$2,$3,$4)";
-  let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];		
-  await pool.query(query, valeur, (err) => {
+app.post('/newhistory', (req, res) => {
+  const query = "INSERT INTO history (door, users, date, action) VALUES (" + req.body.history.door + "," + req.body.history.users + ",'" +  req.body.history.date + "'," +  req.body.history.action + ")";
+  pool.query(query, (err) => {
 	if (err) return res.send(false);
-	return res.send(true);
-	});
-   const query2 = "UPDATE door set status = !status where id=door VALUES ($1)"
-   let valeur2 = [req.query.door];
-   await pool.query(query2, valeur2, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
-	});
+    return res.send(true);
+  })
 });
 
 
 app.all("/*", function(req, res, next){
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    next();
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  next();
 });
 
 
 var httpsOptions = {
-    key: fs.readFileSync('/home/lucas/conf/key.pem'),
-    cert: fs.readFileSync('/home/lucas/conf/crt.pem')
+    key: fs.readFileSync('./conf/key.pem'),
+    cert: fs.readFileSync('./conf/cert.pem')
 };
 
 
@@ -258,3 +276,5 @@ var httpsServer = https.createServer(httpsOptions, app);
 httpServer.listen(8081);
 httpsServer.listen(4433);
 
+
+//app.listen(8081);
