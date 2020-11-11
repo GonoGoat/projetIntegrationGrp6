@@ -1,7 +1,6 @@
 import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Historique extends React.Component {
   constructor(props){
@@ -14,7 +13,7 @@ export default class Historique extends React.Component {
   }
 
   getData(doorId) {
-    axios.get(`http://192.168.0.28:8081/doorHistory/`+ doorId)
+    axios.get(`http://192.168.0.29:8081/doorHistory/`+ doorId)
     .then(res => {
       this.setState({isLoading:false, histo: res.data})
     })
@@ -24,7 +23,7 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://192.168.0.28:8081/user/*`)
+    axios.get(`http://192.168.0.29:8081/user/*`)
     .then(res => {
       this.setState({users: res.data})
     })
@@ -131,13 +130,14 @@ export default class Historique extends React.Component {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   title: {
     alignSelf: "center",
     fontSize: 25,
     textDecorationLine: 'underline',
-    top: 20
+    top: 20,
+    
   },
   itemHistoPair: {
     backgroundColor: '#719ada',

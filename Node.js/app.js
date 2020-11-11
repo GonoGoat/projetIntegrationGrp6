@@ -138,6 +138,19 @@ app.get('/door/:id', async (req, res) => {
 });
 
 /*************************************************
+		DELETE ACCESS
+*************************************************/	// TEST OK
+
+app.post('/access/delete', async (req, res) => {
+    const query = "DELETE FROM access WHERE door=" + req.body.params.door + " AND users=" + req.body.params.users;
+    console.log(query)
+    await pool.query(query, (err) => {
+      if (err) return res.send(false);
+      return res.send(true);
+  });
+  });
+
+/*************************************************
 		UPDATE DOOR STATUS
 *************************************************/
 
@@ -196,7 +209,7 @@ app.get('/userTag/:userId', async (req, res) => {
 
 app.get('/doorHistory/:doorId', async (req, res) => {
     let doorId = parseInt(req.url.split('/doorHistory/').pop());
-    let sql = 'select * from history where door = ' + doorId ;
+    let sql = 'select * from history where door = ' + doorId + ' order by date desc' ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);

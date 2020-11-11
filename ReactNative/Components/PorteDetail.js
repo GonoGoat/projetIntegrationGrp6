@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class PorteDetail extends React.Component {
 
@@ -44,7 +45,7 @@ export default class PorteDetail extends React.Component {
       status : newStatus
     };
 
-    axios.put('http://192.168.0.28:8081/doorStatus',{door})
+    axios.put('http://192.168.0.29:8081/doorStatus',{door})
     .then(res => {
         this.sendHistory(doorId, status)
     })
@@ -69,10 +70,25 @@ export default class PorteDetail extends React.Component {
       action: newStatus
     }
 
-    axios.post('http://192.168.0.28:8081/newhistory',{history})
+    axios.post('http://192.168.0.29:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
+      })
+      .catch(err => {
+          console.log(err),
+          this.setState({isLoading: false})
+      });
+  }
+
+  deleteAccess(userId, doorId) {
+    const params = {
+      door: doorId,
+      users : userId,
+    }
+    axios.post('http://192.168.0.29:8081/access/delete',{params})
+      .then(res => {
+        this.props.navigation.navigate("Accueil")
       })
       .catch(err => {
           console.log(err),
@@ -90,7 +106,7 @@ export default class PorteDetail extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://192.168.0.28:8081/doors`)
+    axios.get(`http://192.168.0.29:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
       })
@@ -113,8 +129,18 @@ export default class PorteDetail extends React.Component {
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
+            <View style={styles.delete}>
+              <Icon.Button  
+              name="ios-trash" 
+              size={30} 
+              onPress={() => this.deleteAccess(1,doorIdParam)}
+              style={{backgroundColor: "#719ada",}} >
+                Delete door
+              </Icon.Button>
+            </View>
             <Text style={styles.title}>Détails</Text>
           </View>
+
           <View style={{flex: 3}}>
             <View style={{top:20}}>
               <Text style={{left: 30, fontSize: 20}}>Statut : </Text>
@@ -168,9 +194,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  delete: {
+    width: 125,
+    alignSelf: "flex-end"
+  },
   title: {
     alignSelf: "center",
-    top: 20,
+    top: -10,
     fontSize: 25,
     textDecorationLine: 'underline'
   },
