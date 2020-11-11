@@ -56,21 +56,18 @@ class Connection extends React.Component {
 }
 
   checkUser(){
-      if(this.password.length > 0 && this.mail.length > 0){
-        axios.post('http://localhost:8081/userConnection/', {user : { 
-            mail: this.mail,
-            password : this.password
-          }
-        })
-        .then((response) => {
-          while (AsyncStorage.getItem('user') === null ){
-          if (response.data != false) {
-            console.log(response.data);
-            this.getHistory(response.data);
-          }
+    if(this.password.length > 0 && this.mail.length > 0){
+    axios.post('http://localhost:8081/userConnection/', {user : { 
+        mail: this.mail,
+        password : this.password
+      }
+    })
+      .then((response) => {
+        if (response.data != false) {
+          this.getHistory(response.data);
         }
-        })
-      } 
+      })
+    } 
     this.setState({errorMessage:'Verify mail or password'});
   }
 

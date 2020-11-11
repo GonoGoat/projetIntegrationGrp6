@@ -59,7 +59,7 @@ describe("Connection Class Component", () => {
     componentInstance.mail = "a@a.a";
     componentInstance.password = "Azerty2@";
     componentInstance.checkUser();
-    expect(spy).toHaveBeenCalled()
+    expect(AsyncStorage.setItem).toHaveBeenCalledTimes(2);
   });
 
 });
