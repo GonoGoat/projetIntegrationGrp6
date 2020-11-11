@@ -57,15 +57,16 @@ app.post('/userConnection/', async (req, res) => {
     let id = false;
     await pool.query(sql, async (error, rows) => {
         if (error) throw error;
-        if (rows.rowCount == 1) {
+        if (rows.rowCount != 1) {
+            return res.send(false);
+        } else {
         await bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
-            if (err) throw err;
+            if (err) return res.send(err);
             if(result) {
                 id = rows.rows[0].id;
             }
             return res.json(id);
         });
-        
     }    
     })
   });
@@ -226,6 +227,7 @@ app.get('/doorHistory/door/:doorId', async (req, res) => {
 
 app.get('/doorHistory/user/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/doorHistory/user/').pop());
+    console.log('door : '+userId)
     let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
     pool.query(sql, (err, rows) => {
         if (err) throw err;

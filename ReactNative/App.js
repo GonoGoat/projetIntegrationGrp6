@@ -84,7 +84,7 @@ const listePortesStackScreen = ({navigation}) => (
       )
     }}></listePortesScreen.Screen>
     <listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
-      doorIdParam: 1,
+      doorIdParam: AsyncStorage.getItem('user'),
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
         onPress={() => navigation.openDrawer()}></Icon.Button>
@@ -182,6 +182,7 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Page1">
         <Drawer.Screen name="Connexion" component={Connection}/>
+        <Drawer.Screen name="Inscription" component={Inscription}/>
         <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
         <Drawer.Screen name="Afficher l'historique des ouvertures" component={HistoriqueStackScreen} />
