@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 25,
     padding: 5,
-    fontFamily: 'Consolas',
     justifyContent: 'center',
     alignContent: 'center'
   },
@@ -105,7 +104,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     borderColor: '#000',
     borderWidth: 1,
-    fontFamily: 'Consolas'
   },
   button: {
     color: '#fff',
@@ -113,7 +111,6 @@ const styles = StyleSheet.create({
     margin: 50,
     padding: 10,
     backgroundColor: '#719ada',
-    fontFamily: 'Consolas',
     justifyContent: 'center',
     alignContent: 'center'
   },
@@ -122,7 +119,6 @@ const styles = StyleSheet.create({
     margin: 50,
     padding: 10,
     backgroundColor: '#efefef',
-    fontFamily: 'Consolas',
     justifyContent: 'center',
     alignContent: 'center'
   },
