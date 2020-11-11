@@ -4,7 +4,6 @@
     <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteParametres.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteParametres.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/package.json" afterDir="false" />
     </list>
@@ -100,7 +99,7 @@
       <workItem from="1603125058688" duration="1139000" />
       <workItem from="1603184860623" duration="27000" />
       <workItem from="1603894644551" duration="1721000" />
-      <workItem from="1605085216953" duration="7635000" />
+      <workItem from="1605085216953" duration="8506000" />
     </task>
     <servers />
   </component>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {Button, StyleSheet, Text, View, Modal, TextInput, TouchableOpacity, TouchableHighlight} from 'react-native';
+import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
 import axios from 'axios';
+import Modal from 'modal-react-native-web';
 export default class PorteDetail extends React.Component {
 
   constructor(props){
@@ -109,7 +110,7 @@ export default class PorteDetail extends React.Component {
         Alert.alert("Modal fermé.");
       }}
     >
-    <View style={styles.centeredView}>
+    <View style={styles.centeredView,styles.containerO}>
           <View style={styles.modalView}>
       <Text style={styles.text}>Nom : </Text>
       <TextInput placeholder='Nom' style={styles.input}/>
@@ -123,6 +124,14 @@ export default class PorteDetail extends React.Component {
     >
     <Text style={styles.textStyle}>Sauver </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+      style={styles.button}
+      onPress={() => {
+        this.setModalVisible(!this.state.modalVisible);
+      }}
+    >
+    <Text style={styles.textStyle}>Annuler </Text>
+          </TouchableOpacity>
           </View>
 
       </View>
@@ -135,6 +144,11 @@ export default class PorteDetail extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  containerO : {
+    flex: 1,
+    backgroundColor:"rgba(110,189,254,0.9)",
+    blurRadius :1
   },
   component: {
     justifyContent: 'center',

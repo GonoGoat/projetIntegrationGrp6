@@ -15,6 +15,7 @@
     "axios": "^0.21.0",
     "expo": "^39.0.3",
     "expo-status-bar": "~1.0.2",
+    "modal-react-native-web": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
