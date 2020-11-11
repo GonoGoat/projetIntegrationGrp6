@@ -6,7 +6,7 @@ export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
-    this.state={ 
+    this.state={
       doors : [],
       isLoading: true,
       modalVisible: false
@@ -38,10 +38,10 @@ export default class PorteDetail extends React.Component {
     const param = {id: doorId, status: newStatus};
 
     axios.put(`http://82.165.248.136:8081/doorStatus`, {param})
-    .then(res => {
-      console.log(res.data);
-    })
-    .catch(err => console.log(err));
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => console.log(err));
 
     this.setState({isLoading: false})
   }
@@ -56,14 +56,14 @@ export default class PorteDetail extends React.Component {
 
   componentDidMount() {
     axios.get(`http://82.165.248.136:8081/doors`)
-      .then(res => {
-        this.setState({isLoading: false, doors: res.data});
-      var dataDoor =  this.getDoorById(1);
-      var statusString = this.getStatus(dataDoor[2]);
-      })
-      .catch(error => {
-        console.log(error)
-    })
+        .then(res => {
+          this.setState({isLoading: false, doors: res.data});
+          var dataDoor =  this.getDoorById(doorId);
+          var statusString = this.getStatus(dataDoor[2]);
+        })
+        .catch(error => {
+          console.log(error)
+        })
   }
 
   render() {
@@ -71,58 +71,57 @@ export default class PorteDetail extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
+
       console.log(this.props.route);
       const { doorIdParam } = 1;
       const nav = this.props.navigation.navigate;
       var dataDoor =  this.getDoorById(doorIdParam);
-      console.log(dataDoor);
+      console.log("dorr"+dataDoor);
       var statusString = this.getStatus(dataDoor[2]);
       return (
-        <View style={styles.container}>
+          <View style={styles.container}>
           <Button
-            title="Essai"
-            //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
-            onPress={() => alert('To do')}
-          />
-          <Text>Détails de la porte {doorIdParam} :</Text>
-          <Text>Mot de passe : {dataDoor[1]}</Text>
-          <Text>Status : {statusString}</Text>
-          <Button
-            title="Change state"
-            onPress={() => this.changeStatus(doorIdParam, dataDoor[2])}
-          />
-          <Button
-            title="Historique"
-            onPress={() => nav("Historique")}
-          />
-          <Button
-            title="Paramètres"
+      title="Essai"
+      //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
+      onPress={() => alert('To do')}
+      />
+      <Text>Détails de la porte {doorIdParam} :</Text>
+      <Text>Mot de passe : {dataDoor[1]}</Text>
+      <Text>Status : {statusString}</Text>
+      <Button
+      title="Change state"
+      onPress={() => this.changeStatus(doorIdParam, dataDoor[2])}
+      />
+      <Button
+      title="Historique"
+      onPress={() => nav("Historique")}
+      />
+      <Button
+      title="Paramètres"
       onPress={() => {
         this.setModalVisible(true);
       }}
-            />
+      />
 
-          <Modal
+      <Modal
       animationType="slide"
-      transparent={true}
+      transparent={false}
       visible={this.state.modalVisible}
-      onRequestClose={() => {
-        Alert.alert("Modal fermé.");
-      }}
-    >
-    <View style={styles.centeredView,styles.containerO}>
+      ariaHideApp={false}
+          >
+          <View style={styles.centeredView,styles.containerO}>
           <View style={styles.modalView}>
-      <Text style={styles.text}>Nom : </Text>
-      <TextInput placeholder='Nom' style={styles.input}/>
+          <Text style={styles.text}>Nom : </Text>
+      <TextInput placeholder={nickname} style={styles.input}/>
       <Text style={styles.text}>Tag : </Text>
-      <TextInput placeholder='Tag' style={styles.input}/>
+      <TextInput placeholder={tagName} style={styles.input}/>
       <TouchableOpacity
       style={styles.button}
       onPress={() => {
         this.setModalVisible(!this.state.modalVisible);
       }}
     >
-    <Text style={styles.textStyle}>Sauver </Text>
+    <Text style={styles.textStyleSave}>Sauver </Text>
           </TouchableOpacity>
           <TouchableOpacity
       style={styles.button}
@@ -130,14 +129,14 @@ export default class PorteDetail extends React.Component {
         this.setModalVisible(!this.state.modalVisible);
       }}
     >
-    <Text style={styles.textStyle}>Annuler </Text>
+    <Text style={styles.textStyleReturn}>Annuler </Text>
           </TouchableOpacity>
           </View>
 
-      </View>
-      </Modal>
-        </View>
-      );
+          </View>
+          </Modal>
+          </View>
+    );
     }
   }
 }
@@ -170,13 +169,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontFamily: 'Consolas'
   },
-  button: {
+  textStyleSave: {
     color: '#fff',
     textAlign: 'center',
     margin: 50,
     padding: 10,
     backgroundColor: '#719ada',
-    fontFamily: 'Consolas',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  textStyleReturn: {
+    color: '#000000',
+    textAlign: 'center',
+    margin: 50,
+    padding: 10,
+    backgroundColor: '#979797',
     justifyContent: 'center',
     alignContent: 'center'
   },
@@ -209,12 +216,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5
-  },
-  openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
   },
   textStyle: {
     color: "white",
