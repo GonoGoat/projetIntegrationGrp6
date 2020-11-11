@@ -13,7 +13,7 @@ export default class Historique extends React.Component {
   }
 
   getData(doorId) {
-    axios.get(`http://192.168.0.29:8081/doorHistory/`+ doorId)
+    axios.get(`http://82.165.248.136:8081/doorHistory/`+ doorId)
     .then(res => {
       this.setState({isLoading:false, histo: res.data})
     })
@@ -23,7 +23,7 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://192.168.0.29:8081/user/*`)
+    axios.get(`http://82.165.248.136:8081/user/*`)
     .then(res => {
       this.setState({users: res.data})
     })
@@ -96,14 +96,31 @@ export default class Historique extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
-      return (
-        <View style={styles.container}>
-          <View style={{flex: 1}}>
-            <Text style={styles.title}>{nickname}</Text>
+      if(this.state.histo == "") {
+        return (
+          <View style={styles.container}>
+            <View style={{flex: 1}}>
+              <Text style={styles.title}>{nickname}</Text>
+            </View>
+            <SafeAreaView style={{flex: 8}}>
+                <Text style={{alignSelf: "center", top: 50}}>Aucun historique n'a été enregistré pour cette porte.</Text>
+            </SafeAreaView>
+            <View style={{flex: 1}}>
+              <TouchableOpacity style={styles.backButton}
+                onPress={() => this.props.navigation.goBack()}>
+                <Text>Retour</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <SafeAreaView style={{flex: 8}}>
-            <ScrollView>
+        );
+      }
+      else {
+        return (
+          <View style={styles.container}>
+            <View style={{flex: 1}}>
+              <Text style={styles.title}>{nickname}</Text>
+            </View>
+            <SafeAreaView style={{flex: 8}}>
               <FlatList
               data={this.state.histo}
               keyExtractor={(item) => item.id}
@@ -115,18 +132,19 @@ export default class Historique extends React.Component {
                 </View>
               }
               />
-              </ScrollView>
             </SafeAreaView>
-            <View style={{flex: 1}}>
-              <TouchableOpacity style={styles.backButton}
-                onPress={() => this.props.navigation.goBack()}>
-                <Text>Retour</Text>
-              </TouchableOpacity>
+              <View style={{flex: 1}}>
+                <TouchableOpacity style={styles.backButton}
+                  onPress={() => this.props.navigation.goBack()}>
+                  <Text>Retour</Text>
+                </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      );
+        );
+      }
     }
   }
+
 }
 const styles = StyleSheet.create({
   container: {

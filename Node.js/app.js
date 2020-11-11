@@ -143,7 +143,6 @@ app.get('/door/:id', async (req, res) => {
 
 app.post('/access/delete', async (req, res) => {
     const query = "DELETE FROM access WHERE door=" + req.body.params.door + " AND users=" + req.body.params.users;
-    console.log(query)
     await pool.query(query, (err) => {
       if (err) return res.send(false);
       return res.send(true);

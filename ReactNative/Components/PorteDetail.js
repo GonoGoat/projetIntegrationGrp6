@@ -45,7 +45,7 @@ export default class PorteDetail extends React.Component {
       status : newStatus
     };
 
-    axios.put('http://192.168.0.29:8081/doorStatus',{door})
+    axios.put('http://82.165.248.136:8081/doorStatus',{door})
     .then(res => {
         this.sendHistory(doorId, status)
     })
@@ -70,7 +70,7 @@ export default class PorteDetail extends React.Component {
       action: newStatus
     }
 
-    axios.post('http://192.168.0.29:8081/newhistory',{history})
+    axios.post('http://82.165.248.136:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -86,9 +86,10 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://192.168.0.29:8081/access/delete',{params})
+    axios.post('http://82.165.248.136:8081/access/delete',{params})
       .then(res => {
-        this.props.navigation.navigate("Accueil")
+        //this.props.navigation.navigate("Accueil")
+        alert('Porte supprimée. To do : confirmation avant de supprimer')
       })
       .catch(err => {
           console.log(err),
@@ -106,7 +107,7 @@ export default class PorteDetail extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://192.168.0.29:8081/doors`)
+    axios.get(`http://82.165.248.136:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
       })
@@ -133,7 +134,7 @@ export default class PorteDetail extends React.Component {
               <Icon.Button  
               name="ios-trash" 
               size={30} 
-              onPress={() => this.deleteAccess(1,doorIdParam)}
+              onPress={() => /*this.deleteAccess(1,doorIdParam)}*/ alert('En construction...')}
               style={{backgroundColor: "#719ada",}} >
                 Delete door
               </Icon.Button>
