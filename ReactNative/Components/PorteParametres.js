@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
+
 const PorteParametres = ({navigation}) => {
     return (
         <View style={styles.container}>

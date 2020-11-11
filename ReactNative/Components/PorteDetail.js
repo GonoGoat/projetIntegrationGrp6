@@ -1,17 +1,24 @@
-import React from 'react';
-import {Button, StyleSheet, Text, View, TouchableHighlight} from 'react-native';
-import axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
 
+import React, { Component } from 'react';
+import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
+import Modal from 'modal-react-native-web';
 export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
-    
-    this.state={ 
+
+    this.state={
       doors : [],
-      isLoading: true
+      isLoading: true,
+      modalVisible: false
     }
+  }
+
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+
   }
 
   getStatus(boolStatus) {
@@ -45,6 +52,7 @@ export default class PorteDetail extends React.Component {
       status : newStatus
     };
 
+
     axios.put('http://82.165.248.136:8081/doorStatus',{door})
     .then(res => {
         this.sendHistory(doorId, status)
@@ -54,6 +62,7 @@ export default class PorteDetail extends React.Component {
         this.setState({isLoading: false})
     });
   }
+
 
   sendHistory(doorId, status) {
     var newStatus;
@@ -104,9 +113,18 @@ export default class PorteDetail extends React.Component {
     } else {
       return("Fermer");
     }
+
+  getDoorById(doorId) {
+    for(var j=0; j<this.state.doors.length; j++) {
+      if(this.state.doors[j].id == 1) {
+        return Object.values(this.state.doors[j]);
+      }
+
+    }
   }
 
   componentDidMount() {
+
     axios.get(`http://82.165.248.136:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
@@ -114,6 +132,7 @@ export default class PorteDetail extends React.Component {
       .catch(error => {
         console.log(error)
     })
+
   }
 
   render() {
@@ -125,6 +144,9 @@ export default class PorteDetail extends React.Component {
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
 
+
+      const nav = this.props.navigation.navigate;
+      
       var dataDoor =  this.getDoorById(doorIdParam);
       var statusString = this.getStatus(dataDoor[2]);
       return (
@@ -188,6 +210,42 @@ export default class PorteDetail extends React.Component {
           </View>
         </View>
       );
+
+
+      <Modal
+      animationType="slide"
+      transparent={false}
+      visible={this.state.modalVisible}
+      ariaHideApp={false}
+          >
+          <View style={styles.centeredView,styles.containerO}>
+          <View style={styles.modalView}>
+          <Text style={styles.text}>Nom : </Text>
+      <TextInput placeholder={nickname} style={styles.input}/>
+      <Text style={styles.text}>Tag : </Text>
+      <TextInput placeholder={tagName} style={styles.input}/>
+      <TouchableOpacity
+      style={styles.button}
+      onPress={() => {
+        this.setModalVisible(!this.state.modalVisible);
+      }}
+    >
+    <Text style={styles.textStyleSave}>Sauver </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+      style={styles.button}
+      onPress={() => {
+        this.setModalVisible(!this.state.modalVisible);
+      }}
+    >
+    <Text style={styles.textStyleReturn}>Annuler </Text>
+          </TouchableOpacity>
+          </View>
+
+          </View>
+          </Modal>
+          </View>
+    );
     }
   }
 }
@@ -244,5 +302,89 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginTop: 15,
     marginBottom: 25
+
+
+  },
+  containerO : {
+    flex: 1,
+    backgroundColor:"rgba(110,189,254,0.9)",
+    blurRadius :1
+  },
+  component: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    margin: 75
+  },
+  text: {
+    marginTop: 25,
+    padding: 5,
+    fontFamily: 'Consolas',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  input: {
+    padding: 5,
+    justifyContent: 'center',
+    alignContent: 'center',
+    borderColor: '#000',
+    borderWidth: 1,
+    fontFamily: 'Consolas'
+  },
+  textStyleSave: {
+    color: '#fff',
+    textAlign: 'center',
+    margin: 50,
+    padding: 10,
+    backgroundColor: '#719ada',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  textStyleReturn: {
+    color: '#000000',
+    textAlign: 'center',
+    margin: 50,
+    padding: 10,
+    backgroundColor: '#979797',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  connect: {
+    textAlign: 'center',
+    margin: 50,
+    padding: 10,
+    backgroundColor: '#efefef',
+    fontFamily: 'Consolas',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
   }
 })
