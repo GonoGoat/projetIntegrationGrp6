@@ -11,6 +11,7 @@ services :
         working_dir : /home
         ports:
          - "8081:8081"
+         - "4433:4433"
         networks:
             integration6:
                 ipv4_address: 172.18.0.3

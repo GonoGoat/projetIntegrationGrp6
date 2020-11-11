@@ -6,7 +6,7 @@ import {Snackbar} from 'react-native-paper';
 
 function AjoutPorte(props) {
     const [door, setDoor] = React.useState();
-    const [message, setMessage] = React.useState();
+    const [message, setMessage] = React.useState({type : "fail"});
 
     function displayComponent() {
       if (door === undefined) {
@@ -26,19 +26,15 @@ function AjoutPorte(props) {
     }
     
     return (
-      <View>
+      <View style={styles.container}>
           {displayComponent()}
           <Snackbar
-            visible={message != undefined}
-            onDismiss={() => setMessage(undefined)}
-            action={
-              {
-                label : "Fermer",
-                onPress : () => {setMessage(undefined)}
-              }
-            }
+            visible={message.message != undefined}
+            onDismiss={() => setMessage({type : message.type})}
+            style = {message.type === "success" ? styles.success : styles.fail}
+            duration={2000}
           >
-            {message != undefined ? message.message : ""}
+            {message.message != undefined ? message.message : ""}
           </Snackbar>
       </View>
     )
@@ -49,6 +45,12 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center'
+    },
+    success : {
+      backgroundColor : "green",
+    },
+    fail : {
+      backgroundColor : "red",
     }
 })
 
