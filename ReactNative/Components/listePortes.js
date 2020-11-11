@@ -99,20 +99,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft : 20 ,
   textDecorationLine: "underline"
+
   },
   tagContainer : {
     padding: 20
   },
+
   tagList: {
     flex : 1,
     backgroundColor: 'rgb(33, 150, 243)',
     padding: 10,
     margin : 4,
     textAlign: "center"
+
   },
   tagText : {
     color: 'rgb(255, 255, 255)',
   },
+
   contentDoor : {
     flex : 1,
     borderWidth : 3,
