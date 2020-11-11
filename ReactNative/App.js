@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { Button, View, StyleSheet } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createStackNavigator} from '@react-navigation/stack'
+import {StyleSheet} from 'react-native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -118,7 +118,7 @@ const listePortesStackScreen = ({navigation}) => (
       )
     }}></listePortesScreen.Screen>
     <listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
-      doorIdParam: 0,
+      doorIdParam: 1,
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
         onPress={() => navigation.openDrawer()}></Icon.Button>
@@ -162,27 +162,7 @@ const OuvrirFermerPorteStackScreen = ({navigation}) => (
     }}></OuvrirFermerPorteScreen.Screen>
     </OuvrirFermerPorteScreen.Navigator>
 )
-const PorteDetailStackScreen = ({navigation}) => (
-  <PorteDetailScreen.Navigator screenOptions={{
-    headerStyle: {
-     // backgroundcolor: "blue",
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
-    }
-    }}>
-    <PorteDetailScreen.Screen name="PorteDetail" component={PorteDetail} options={{
-      headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      ),
-      drawerLabel: () => null,
-      title: null,
-      drawerIcon: () => null
-    }}></PorteDetailScreen.Screen>
-    </PorteDetailScreen.Navigator>
-)
+
 
 const PorteParametresStackScreen = ({navigation}) => (
     <PorteParametresScreen.Navigator screenOptions={{
@@ -220,7 +200,6 @@ export default function App() {
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
         <Drawer.Screen name="Afficher l'historique des ouvertures" component={HistoriqueStackScreen} />
         <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
-        <Drawer.Screen name="PorteDetail" component={PorteDetailStackScreen} />
         <Drawer.Screen name="PorteParametres" component={PorteParametresStackScreen} />
       </Drawer.Navigator>
     </NavigationContainer>

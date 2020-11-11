@@ -1,11 +1,14 @@
+
 import React, { Component } from 'react';
 import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
+
 import axios from 'axios';
 import Modal from 'modal-react-native-web';
 export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
+
     this.state={
       doors : [],
       isLoading: true,
@@ -15,6 +18,7 @@ export default class PorteDetail extends React.Component {
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
+
   }
 
   getStatus(boolStatus) {
@@ -37,11 +41,13 @@ export default class PorteDetail extends React.Component {
 
     const param = {id: doorId, status: newStatus};
 
+
     axios.put(`http://82.165.248.136:8081/doorStatus`, {param})
         .then(res => {
           console.log(res.data);
         })
         .catch(err => console.log(err));
+
 
     this.setState({isLoading: false})
   }
@@ -55,6 +61,7 @@ export default class PorteDetail extends React.Component {
   }
 
   componentDidMount() {
+
     axios.get(`http://82.165.248.136:8081/doors`)
         .then(res => {
           this.setState({isLoading: false, doors: res.data});
@@ -64,6 +71,7 @@ export default class PorteDetail extends React.Component {
         .catch(error => {
           console.log(error)
         })
+
   }
 
   render() {
@@ -72,14 +80,28 @@ export default class PorteDetail extends React.Component {
     }
     else {
 
-      console.log(this.props.route);
-      const { doorIdParam } = 1;
       const nav = this.props.navigation.navigate;
+
+      console.log(this.props.route);
+      const { doorIdParam } = this.props.route.params;
       var dataDoor =  this.getDoorById(doorIdParam);
-      console.log("dorr"+dataDoor);
+      console.log(dataDoor);
       var statusString = this.getStatus(dataDoor[2]);
       return (
-          <View style={styles.container}>
+        <View style={styles.container}>
+          <Button
+            title="Essai"
+            //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
+            onPress={() => alert('To do')}
+          />
+          <Text>Détails de la porte {doorIdParam} :</Text>
+          <Text>Mot de passe : {dataDoor[1]}</Text>
+          <Text>Status : {statusString}</Text>
+          <Button
+            title="Change state"
+            onPress={() => this.changeStatus(doorIdParam, dataDoor[2])}
+          />
+
           <Button
       title="Essai"
       //onPress={() => this.changeStatus(doorIdParam, this.state.doors[doorIdParam].status)}
@@ -143,6 +165,7 @@ export default class PorteDetail extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
   },
   containerO : {
     flex: 1,

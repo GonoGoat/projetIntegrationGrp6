@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 
 const PorteParametres = ({navigation}) => {

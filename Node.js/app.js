@@ -5,7 +5,12 @@ const bodyParser = require('body-parser');
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
+const { check, validationResult} = require('express-validator');
 
+const bcrypt = require('bcrypt');
+const saltRounds = 5;
 
 const app = express();
 
@@ -36,8 +41,14 @@ pool.connect(function (err) {
 *************************************************/	// TEST OK
 
 app.get('/user/:id', async (req, res) => {
-  let userId = parseInt(req.url.split('/user/').pop());
-  let sql = 'select * from users where id = ' + userId;					
+  let userId = req.url.split('/user/').pop();
+  let sql;
+  if (userId === "*") {
+    sql = 'select * from users'
+  }
+  else {
+    sql = 'select * from users where id = ' + parseInt(userId);
+  }
   pool.query(sql, (err, rows) => {
     if (err) throw err;
     return res.send(rows.rows);
@@ -45,28 +56,47 @@ app.get('/user/:id', async (req, res) => {
 });
 
 /*************************************************
- GET ALL USERS
- *************************************************/	// TEST OK
-
-app.get('/users', async (req, res) => {
-    let sql = 'select * from users';
-    pool.query(sql, (err, rows) => {
-        if (err) throw err;
-        return res.send(rows.rows);
-    })
-});
-
-/*************************************************
 		POST USER
 *************************************************/	// TEST OK
 
-app.post('/newuser', async (req, res) => {
-  const query = "INSERT INTO users (firstname, lastname, sexe, mail, password) VALUES ($1,$2,$3,$4,$5)";
-  let valeur = [req.query.firstname, req.query.lastname, req.query.sexe, req.query.mail, req.query.password];		
-  await pool.query(query, valeur, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
+app.post('/newUsers', (req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.send(errors);
+    } else {
+        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password) VALUES ($1,$2,$3,$4,$5,$6)";
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
+                let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender,req.body.user.mail, hash, ];
+                console.log(valeur);
+                await pool.query(query, valeur, (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.send(false);
+                    }
+                    else {
+                        return res.send(true);
+                    }
+                });
+            });
+        })
+    }
 });
+
+/*************************************************
+ GET USER BY MAIL
+ *************************************************/	// TEST OK
+
+ app.get('/userMail/:mail', async (req, res) => {
+    let mail = req.url.split('/userMail/').pop();
+    let sql = 'select mail from users where mail =  \'' + mail + '\'' ;
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        if (res.send(rows.rows).length == 0) {
+            return true;
+        }
+        return false;
+    })
 });
 
 /*************************************************
@@ -75,20 +105,7 @@ app.post('/newuser', async (req, res) => {
 
 app.get('/access/:door', async (req, res) => {
   let doorId = parseInt(req.url.split('/access/').pop());
-  let sql = 'select * from access where door = ' + doorId;					
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
-});
-
-/*************************************************
-		GET DOOR
-*************************************************/	// TEST OK
-
-app.get('/door/:id', async (req, res) => {
-  let doorId = parseInt(req.url.split('/door/').pop());
-  let sql = 'select * from door where id = ' + doorId;
+  let sql = 'select * from access where door = ' + doorId;
   pool.query(sql, (err, rows) => {
     if (err) throw err;
     return res.send(rows.rows);
@@ -100,12 +117,26 @@ app.get('/door/:id', async (req, res) => {
 *************************************************/	// TEST OK
 
 app.get('/doors', async (req, res) => {
-    let sql = 'select * from door ORDER BY id';
+    let sql = 'select * from door ';
     pool.query(sql, (err, rows) => {
       if (err) throw err;
       return res.send(rows.rows);
     })
   });
+
+
+/*************************************************
+		GET DOOR by tag
+*************************************************/	// TEST OK
+
+app.get('/door/:id', async (req, res) => {
+  let doorId = parseInt(req.url.split('/door/').pop());
+  let sql = 'select * from door where id = ' + doorId;
+  pool.query(sql, (err, rows) => {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
+});
 
 /*************************************************
 		UPDATE DOOR STATUS
@@ -179,7 +210,7 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 
 app.post('/newaccess', async (req, res) => {
   const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
-  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];		
+  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
@@ -192,7 +223,7 @@ app.post('/newaccess', async (req, res) => {
 
 app.post('/newdoor', async (req, res) => {
   const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
-  let valeur = [req.query.password, req.query.status];		
+  let valeur = [req.query.password, req.query.status];
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
@@ -206,7 +237,7 @@ app.post('/newdoor', async (req, res) => {
 
 app.post('/newhistory', async (req, res) => {
   const query = "INSERT INTO history (door, users, date, action) VALUES ($1,$2,$3,$4)";
-  let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];		
+  let valeur = [req.query.door, req.query.users, req.query.date, req.query.action];
   await pool.query(query, valeur, (err) => {
 	if (err) return res.send(false);
 	return res.send(true);
@@ -219,216 +250,6 @@ app.post('/newhistory', async (req, res) => {
 	});
 });
 
-/*-----------------STATIC------------------*/
-
-// LISTE DES USERS
-
-app.get('/listUsers', function (req, res) {
-    fs.readFile( __dirname + "/static/" + "users.json", 'utf8', function (err, data) {
-        console.log( data );
-        res.end( data );
-    })
-});
-
-//USER TRIER PAR ID
-
-app.get('/listUsers/:id', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "users.json", 'utf8', function (err, data) {
-        var user = JSON.parse(data);
-        var users ;
-        for (i=0; i<user.length; i++){
-            if (user[i].id == [req.params.id]){
-                users = user[i];
-            }
-        }
-        console.log( users);
-        res.end( JSON.stringify(users));
-    })
-});
-
-//LISTE DE TAG TRIER PAR USER
-
-app.get('/listTagByUser/:id', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
-        var user = JSON.parse(data);
-        var users =[];
-        for (i=0; i<user.length; i++){
-            if (user[i].users == [req.params.id]){
-                users += " - " +  user[i].tag + "\n";
-            }
-        }
-        console.log( users);
-        res.end("liste des tags pour l'utilisateur ayant l'id " + [req.params.id] + " : \n" + users);
-    })
-});
-
-//RAJOUT D UN USER
-
-app.post('/addUser/:id/:firstname/:lastname/:sexe/:mail/:password', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "users.json", 'utf8', function (err, data) {
-        let newUser = {
-            "id":parseInt([req.params.id]),
-            "firstname":[req.params.firstname],
-            "lastname":[req.params.lastname],
-            "sexe":[req.params.sexe],
-            "mail":[req.params.mail],
-            "password":[req.params.password]
-        };
-        data = JSON.parse( data );
-        data += newUser;
-        console.log( data );
-        res.end( JSON.stringify(data));
-    })
-});
-
-// LISTE DES ACCESS PAR DOOR
-
-app.get('/listAccessByDoor/:DoorId', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
-        var user = JSON.parse(data);
-        var users = [];
-        for (i=0; i<user.length; i++){
-            if (user[i].door == [req.params.DoorId]){
-                users[i] =  user[i];
-            }
-        }
-        console.log(users);
-        res.end(JSON.stringify(users));
-    })
-});
-
-//DOOR TRIER PAR ID
-
-app.get('/listDoors/:id', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "doors.json", 'utf8', function (err, data) {
-        var door = JSON.parse(data);
-        var doors ;
-        for (i=0; i<door.length; i++){
-            if (door[i].id == [req.params.id]){
-                doors = door[i];
-            }
-        }
-        console.log( doors);
-        res.end( JSON.stringify(doors));
-    })
-});
-
-//DOORS TRIER PAR TAG
-
-app.get('/listDoorsByTag/:tag', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
-        var access = JSON.parse(data);
-        var doors ;
-        for (i=0; i<access.length; i++){
-            if (access[i].tag == [req.params.tag]){
-                doors = access[i];
-            }
-        }
-        console.log( doors);
-        res.end( JSON.stringify(doors));
-    })
-});
-
-//DOOR BY TAG AND USER
-
-app.get('/listDoorsByTagAndUser/:tag/:user', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
-        var access = JSON.parse(data);
-        var doors ;
-        for (i=0; i<access.length; i++){
-            if (access[i].tag == [req.params.tag] && access[i].users == [req.params.user]){
-                doors = access[i];
-            }
-        }
-        console.log(doors);
-        res.end( JSON.stringify(doors));
-    })
-});
-
-//LISTE HISTORY PAR DOOR
-
-app.get('/listHistoryByDoor/:door', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "history.json", 'utf8', function (err, data) {
-        var history = JSON.parse(data);
-        var doors ;
-        for (i=0; i<history.length; i++){
-            if (history[i].door == [req.params.door]){
-                doors = history[i];
-            }
-        }
-        console.log(doors);
-        res.end( JSON.stringify(doors));
-    })
-});
-
-//RAJOUT D'UNE DOOR
-
-app.post('/addDoor/:id/:password/:statut', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "doors.json", 'utf8', function (err, data) {
-        let newDoor = {
-            "id":parseInt([req.params.id]),
-            "password":[req.params.password],
-            "statut":parseInt([req.params.statut])
-        };
-        data = JSON.parse( data );
-        data += newDoor;
-        console.log( data );
-        res.end( JSON.stringify(data));
-    })
-});
-
-//RAJOUT D'UN ACCESS
-
-app.post('/addAccess/:id/:user/:tag/:nickname', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
-        let newAccess = {
-            "id":parseInt([req.params.id]),
-            "user":parseInt([req.params.user]),
-            "tag":[req.params.tag],
-            "nickname":[req.params.nickname]
-        };
-        data = JSON.parse( data );
-        data += newAccess;
-        console.log( data );
-        res.end( JSON.stringify(data));
-    })
-});
-
-//RAJOUT D'UN HISTORY
-
-app.post('/addHistory/:id/:door/:users/:moment/:action', function (req, res) {
-    // First read existing users.
-    fs.readFile( __dirname + "/static/" + "history.json", 'utf8', function (err, data) {
-        let newHistory = {
-            "id":parseInt([req.params.id]),
-            "door":parseInt([req.params.door]),
-            "users":parseInt([req.params.users]),
-            "moment":[req.params.moment],
-            "action":[req.params.action]
-        };
-        data = JSON.parse( data );
-        data += newHistory;
-        console.log( data );
-        res.end( JSON.stringify(data));
-    })
-});
-
-
-
-
-
-
-
 
 app.all("/*", function(req, res, next){
   res.header('Access-Control-Allow-Origin', '*');
@@ -437,5 +258,18 @@ app.all("/*", function(req, res, next){
   next();
 });
 
-//ecoute sur le port 8888
-app.listen(8081);
+
+var httpsOptions = {
+    key: fs.readFileSync('./conf/key.pem'),
+    cert: fs.readFileSync('./conf/cert.pem')
+};
+
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(httpsOptions, app);
+
+httpServer.listen(8081);
+httpsServer.listen(4433);
+
+
+//app.listen(8081);
