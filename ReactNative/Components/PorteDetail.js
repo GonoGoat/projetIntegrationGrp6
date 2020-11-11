@@ -113,6 +113,7 @@ export default class PorteDetail extends React.Component {
     } else {
       return("Fermer");
     }
+  }
 
   getDoorById(doorId) {
     for(var j=0; j<this.state.doors.length; j++) {
@@ -220,17 +221,17 @@ export default class PorteDetail extends React.Component {
           >
           <View style={styles.centeredView,styles.containerO}>
           <View style={styles.modalView}>
-          <Text style={styles.text}>Nom : </Text>
-      <TextInput placeholder={nickname} style={styles.input}/>
-      <Text style={styles.text}>Tag : </Text>
-      <TextInput placeholder={tagName} style={styles.input}/>
-      <TouchableOpacity
-      style={styles.button}
-      onPress={() => {
-        this.setModalVisible(!this.state.modalVisible);
-      }}
-    >
-    <Text style={styles.textStyleSave}>Sauver </Text>
+            <Text style={styles.text}>Nom : </Text>
+            <TextInput placeholder={nickname} style={styles.input}/>
+            <Text style={styles.text}>Tag : </Text>
+            <TextInput placeholder={tagName} style={styles.input}/>
+            <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+            this.setModalVisible(!this.state.modalVisible);
+            }}
+          >
+            <Text style={styles.textStyleSave}>Sauver </Text>
           </TouchableOpacity>
           <TouchableOpacity
       style={styles.button}
@@ -244,8 +245,6 @@ export default class PorteDetail extends React.Component {
 
           </View>
           </Modal>
-          </View>
-    );
     }
   }
 }

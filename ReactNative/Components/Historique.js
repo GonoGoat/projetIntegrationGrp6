@@ -1,19 +1,5 @@
 
 
-
-const Historique = ({navigation}) => {
-    return (
-      <View style={styles.container}>
-          Historique des portes
-      </View>
-    );
-};
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
-
 import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import axios from 'axios';
