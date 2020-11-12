@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/Connection.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/Connection.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

@@ -52,7 +52,7 @@ class Connection extends React.Component {
   }
 
   _checkUser(){
-    fetch('http://localhost:8081/user/*')
+    fetch('http://82.165.248.136:8081/user/*')
       .then((response) => response.json())
       .then((json) => {
         for (let i = 0; i < json.length; i++) {

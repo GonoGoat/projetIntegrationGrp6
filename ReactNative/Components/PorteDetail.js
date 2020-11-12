@@ -331,22 +331,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Consolas'
   },
   textStyleSave: {
-    color: '#fff',
-    textAlign: 'center',
-    margin: 50,
-    padding: 10,
-    backgroundColor: '#719ada',
+    flex:1,
+    alignItems: "center",
     justifyContent: 'center',
-    alignContent: 'center'
+    backgroundColor: "#719ada",
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 15,
+    marginBottom: 15
   },
   textStyleReturn: {
-    color: '#000000',
-    textAlign: 'center',
-    margin: 50,
-    padding: 10,
-    backgroundColor: '#979797',
+    flex:1,
+    alignItems: "center",
     justifyContent: 'center',
-    alignContent: 'center'
+    backgroundColor: "#d0d0d0",
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 15,
+    marginBottom: 25
   },
   connect: {
     textAlign: 'center',
