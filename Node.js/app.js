@@ -42,18 +42,35 @@ pool.connect(function (err) {
 
 app.get('/user/:id', async (req, res) => {
   let userId = req.url.split('/user/').pop();
-  let sql;
-  if (userId === "*") {
-    sql = 'select * from users'
-  }
-  else {
-    sql = 'select * from users where id = ' + parseInt(userId);
-  }
+  let sql = 'select * from users where id = ' + parseInt(userId);
   pool.query(sql, (err, rows) => {
     if (err) throw err;
     return res.send(rows.rows);
   })
 });
+
+/*************************************************
+		GET USER WITH MAIL AND PASSWORD
+*************************************************/	// TEST OK
+
+app.post('/userConnection/', async (req, res) => {
+    let sql = "select * from users WHERE mail = '" + req.body.user.mail + "'";
+    let id = false;
+    await pool.query(sql, async (error, rows) => {
+        if (error) throw error;
+        if (rows.rowCount != 1) {
+            return res.send(false);
+        } else {
+        await bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
+            if (err) return res.send(err);
+            if(result) {
+                id = rows.rows[0].id;
+            }
+            return res.json(id);
+        });
+    }    
+    })
+  });
 
 /*************************************************
 		POST USER
@@ -69,7 +86,7 @@ app.post('/newUsers', (req, res) =>{
             bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
                 let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender,req.body.user.mail, hash, ];
                 console.log(valeur);
-                await pool.query(query, valeur, (err) => {
+                pool.query(query, valeur, (err) => {
                     if (err) {
                         console.log(err);
                         return res.send(false);
@@ -261,6 +278,20 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 });
 
 /*************************************************
+		GET DOOR HISTORY BY USER ID
+*************************************************/	//TEST OK
+
+app.get('/doorHistory/user/:userId', async (req, res) => {
+    let userId = parseInt(req.url.split('/doorHistory/user/').pop());
+    console.log('door : '+userId)
+    let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        return res.send(rows.rows);
+    })
+});
+
+/*************************************************
 		POST ACCESS
 *************************************************/	//TEST OK
 
@@ -280,10 +311,11 @@ app.post('/newaccess', async (req, res) => {
 app.post('/newdoor', async (req, res) => {
   const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
   let valeur = [req.query.password, req.query.status];
-  await pool.query(query, valeur, (err) => {
-	if (err) return res.send(false);
-	return res.send(true);
-});
+  pool.query(query, valeur, (err) => {
+        if (err)
+            return res.send(false);
+        return res.send(true);
+    });
 });
 
 
