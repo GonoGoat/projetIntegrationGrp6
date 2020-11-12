@@ -112,6 +112,20 @@ app.get('/access/:door', async (req, res) => {
   })
 });
 
+
+
+/*************************************************
+ GET ALL TAG
+ *************************************************/	// TEST OK
+
+ app.get('/listTag', async (req, res) => {
+  let sql = 'select DISTINCT tag from access';
+  pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+  })
+});
+
 /*************************************************
 		GET ALL DOORS
 *************************************************/	// TEST OK
