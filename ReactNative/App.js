@@ -17,6 +17,7 @@ import PorteParametres from './Components/PorteParametres';
 import Deconnection from './Components/Deconnection';
 import axios from 'axios';
 import { ScreenStackHeaderRightView } from 'react-native-screens';
+import AsyncStorage from '@react-native-community/async-storage'
 
 const Drawer = createDrawerNavigator();
 const AccueilScreen= createStackNavigator();
