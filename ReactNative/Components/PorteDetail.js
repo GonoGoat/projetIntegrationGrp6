@@ -220,33 +220,32 @@ export default class PorteDetail extends React.Component {
       transparent={false}
       visible={this.state.modalVisible}
       ariaHideApp={false}
-          >
+      >
           <View style={styles.centeredView,styles.containerO}>
-          <View style={styles.modalView}>
-            <Text style={styles.text}>Nom : </Text>
-            <TextInput placeholder={nickname} style={styles.input}/>
-            <Text style={styles.text}>Tag : </Text>
-            <TextInput placeholder={tagName} style={styles.input}/>
-            <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-            this.setModalVisible(!this.state.modalVisible);
-            }}
-          >
-            <Text style={styles.textStyleSave}>Sauver </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-      style={styles.button}
-      onPress={() => {
-        this.setModalVisible(!this.state.modalVisible);
-      }}
-    >
-    <Text style={styles.textStyleReturn}>Annuler </Text>
-          </TouchableOpacity>
+            <View style={styles.modalView}>
+              <Text style={styles.text}>Nom : </Text>
+              <TextInput placeholder={nickname} style={styles.input}/>
+              <Text style={styles.text}>Tag : </Text>
+              <TextInput placeholder={tagName} style={styles.input}/>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                this.setModalVisible(!this.state.modalVisible);
+                }}
+              >
+                <Text style={styles.textStyleSave}>Sauver </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                this.setModalVisible(!this.state.modalVisible);
+                }}
+              >
+                <Text style={styles.textStyleReturn}>Annuler </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          </View>
-          </Modal>
+       </Modal>
     }
   }
 }
