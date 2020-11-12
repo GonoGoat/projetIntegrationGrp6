@@ -196,7 +196,9 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.editButton}
-              onPress={() => alert('To do')}>
+              onPress={() => {
+        this.setModalVisible(true);
+      }}>
               <View>
                 <Text style={{fontSize: 20, color: "white"}}>Édition</Text>
               </View>

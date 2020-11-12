@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReactNative/Components/Historique.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/Historique.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReactNative/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReactNative/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/package.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
