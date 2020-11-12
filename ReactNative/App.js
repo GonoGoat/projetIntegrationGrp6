@@ -167,18 +167,7 @@ const OuvrirFermerPorteStackScreen = ({navigation}) => (
     }}></OuvrirFermerPorteScreen.Screen>
     </OuvrirFermerPorteScreen.Navigator>
 )
-const PorteDetailStackScreen = ({navigation}) => (
-  <PorteDetailScreen.Navigator screenOptions={{
-    headerStyle: {
-     // backgroundcolor: "blue",
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
-    }
-    }}>
-    </PorteDetailScreen.Navigator>
-)
+
 
 const PorteParametresStackScreen = ({navigation}) => (
     <PorteParametresScreen.Navigator screenOptions={{

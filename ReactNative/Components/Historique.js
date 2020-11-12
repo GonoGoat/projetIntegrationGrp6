@@ -1,3 +1,5 @@
+
+
 import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import axios from 'axios';
@@ -9,6 +11,7 @@ export default class Historique extends React.Component {
       isLoading: true,
       histo: [],
       users: []
+
     }
   }
 
@@ -23,8 +26,9 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://82.165.248.136:8081/user/*`)
+    axios.get(`http://82.165.248.136:8081/user/fullname/*`)
     .then(res => {
+      console.log(res.data)
       this.setState({users: res.data})
     })
     .catch(error => {

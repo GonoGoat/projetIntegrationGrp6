@@ -1,17 +1,17 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Accueil = ({navigation}) => {
+const Accueil = (props) => {
     return (
       <View style={styles.container}>
         <Text style={styles.Text}>Accueil</Text>
         <Button
         title="Aller à la page de connexion"
-        onPress={() => navigation.navigate("Connexion")}
+        onPress={() => props.navigation.navigate("Connexion")}
       />
       <Button
         title="Aller à la page des inscriptions"
-        onPress={() => navigation.navigate("Inscription")}
+        onPress={() => props.navigation.navigate("Inscription")}
       />
       </View>
     );
