@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginHorizontal: 50,
         padding: 10,
-        backgroundColor: '#efefef',
+        backgroundColor: '#d0d0d0',
         justifyContent: 'center',
         alignContent: 'center'
     },

@@ -6,6 +6,7 @@ import React from 'react';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import Accueil from './Components/Accueil'
 import Inscription from './Components/Inscription'
 import Connection from './Components/Connection'
 import AjoutPorte from './Components/AjoutPorte'
@@ -14,10 +15,10 @@ import Historique from './Components/Historique'
 import OuvrirFermerPorte from './Components/OuvrirFermerPorte'
 import PorteDetail from './Components/PorteDetail';
 import PorteParametres from './Components/PorteParametres';
-import Deconnection from './Components/Deconnection';
+import MotDePasseOublie from './Components/MotDePasseOublie';
+import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios';
 import { ScreenStackHeaderRightView } from 'react-native-screens';
-import AsyncStorage from '@react-native-community/async-storage'
 
 const Drawer = createDrawerNavigator();
 const AccueilScreen= createStackNavigator();
@@ -27,111 +28,149 @@ const AjoutPorteScreen = createStackNavigator();
 const listePortesScreen = createStackNavigator();
 const HistoriqueScreen = createStackNavigator();
 const OuvrirFermerPorteScreen = createStackNavigator();
+const PorteDetailScreen = createStackNavigator();
 const PorteParametresScreen = createStackNavigator();
-const DeconnectionScreen = createStackNavigator();
+const MotDePasseOublieScreen = createStackNavigator();
 
-
-const InscriptionStackScreen = ({navigation}) => (
-  <InscriptionScreen.Navigator screenOptions={{
+const AccueilStackScreen = ({navigation}) => (
+    <AccueilScreen.Navigator screenOptions={{
     headerStyle: {
-      //backgroundcolor: "blue",
+        //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
+        headerTitleStyle: {
+        fontWeight:'bold'
     }
-    }}>
-    <InscriptionScreen.Screen name="Inscription" component={Inscription} options={{
-      headerLeft: () => (
+}}>
+<AccueilScreen.Screen name="Accueil" component={Accueil} options={{
+    title:"Overview",
+        headerLeft: () => (
+        <Icon.Button name="md-menu" size={25}
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></AccueilScreen.Screen>
+</AccueilScreen.Navigator>
+)
+const ConnexionStackScreen = ({navigation}) => (
+    <ConnexionScreen.Navigator screenOptions={{
+    headerStyle: {
+        //backgroundcolor: "blue",
+    },
+    headerTintColor: '#fff',
+        headerTitleStyle: {
+        fontWeight:'bold'
+    }
+}}>
+<ConnexionScreen.Screen name="Connexion" component={Connection} options={{
+    headerLeft: () => (
         <Icon.Button name="ios-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      )
-    }}></InscriptionScreen.Screen>
-    </InscriptionScreen.Navigator>
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></ConnexionScreen.Screen>
+<MotDePasseOublieScreen.Screen name="MotDePasseOublie" component={MotDePasseOublie} options={{
+    headerLeft: () => (
+        <Icon.Button name="md-menu" size={25}
+    onPress={ () => { navigation.openDrawer() }}></Icon.Button>
+)
+}}></MotDePasseOublieScreen.Screen>
+</ConnexionScreen.Navigator>
+)
+const InscriptionStackScreen = ({navigation}) => (
+    <InscriptionScreen.Navigator screenOptions={{
+    headerStyle: {
+        //backgroundcolor: "blue",
+    },
+    headerTintColor: '#fff',
+        headerTitleStyle: {
+        fontWeight:'bold'
+    }
+}}>
+<InscriptionScreen.Screen name="Inscription" component={Inscription} options={{
+    headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25}
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></InscriptionScreen.Screen>
+</InscriptionScreen.Navigator>
 )
 const AjoutPorteStackScreen = ({navigation}) => (
-  <AjoutPorteScreen.Navigator screenOptions={{
+    <AjoutPorteScreen.Navigator screenOptions={{
     headerStyle: {
-      //backgroundcolor: "blue",
+        //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
+        headerTitleStyle: {
+        fontWeight:'bold'
     }
-    }}>
-    <AjoutPorteScreen.Screen name="Ajouter une porte" component={AjoutPorte} options={{
-      headerLeft: () => (
+}}>
+<AjoutPorteScreen.Screen name="Ajouter une porte" component={AjoutPorte} options={{
+    headerLeft: () => (
         <Icon.Button name="ios-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      )
-    }}></AjoutPorteScreen.Screen>
-    </AjoutPorteScreen.Navigator>
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></AjoutPorteScreen.Screen>
+</AjoutPorteScreen.Navigator>
 )
 const listePortesStackScreen = ({navigation}) => (
-  <listePortesScreen.Navigator screenOptions={{
-    headerStyle: {
-      //backgroundcolor: "blue",
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
-    }
-    }}>
-    <listePortesScreen.Screen name="Accueil" component={listePortes} options={{
-      headerLeft: () => (
+    <listePortesScreen.Navigator screenOptions={{
+    headerShown: false
+}}>
+<listePortesScreen.Screen name="Accueil" component={listePortes} options={{
+    headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      )
-    }}></listePortesScreen.Screen>
-    <listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
-      doorIdParam: 0,
-      nickname: "",
-      tagName: "",
-      headerLeft: () => (
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></listePortesScreen.Screen>
+<listePortesScreen.Screen name="PorteDetail" component={PorteDetail} options={{
+    doorIdParam: 0,
+        nickname: "",
+        tagName: "",
+        headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      )
-    }}></listePortesScreen.Screen>
-    <listePortesScreen.Screen name="Historique" component={Historique} options={{
-      doorIdParam: 0,
-      nickname: "",
-      headerLeft: () => (
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></listePortesScreen.Screen>
+<listePortesScreen.Screen name="Historique" component={Historique} options={{
+    doorIdParam: 0,
+        nickname: "",
+        headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
-        onPress={ () => { navigation.openDrawer() }}></Icon.Button>
-      )
-    }}></listePortesScreen.Screen>
-    </listePortesScreen.Navigator>
+    onPress={ () => { navigation.openDrawer() }}></Icon.Button>
+)
+}}></listePortesScreen.Screen>
+</listePortesScreen.Navigator>
 )
 const HistoriqueStackScreen = ({navigation}) => (
-  <HistoriqueScreen.Navigator screenOptions={{
+    <HistoriqueScreen.Navigator screenOptions={{
     headerStyle: {
-      //backgroundcolor: "blue",
+        //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
+        headerTitleStyle: {
+        fontWeight:'bold'
     }
-    }}>
-    </HistoriqueScreen.Navigator>
+}}>
+</HistoriqueScreen.Navigator>
 )
 const OuvrirFermerPorteStackScreen = ({navigation}) => (
-  <OuvrirFermerPorteScreen.Navigator screenOptions={{
+    <OuvrirFermerPorteScreen.Navigator screenOptions={{
     headerStyle: {
-      //backgroundcolor: "blue",
+        //backgroundcolor: "blue",
     },
     headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
+        headerTitleStyle: {
+        fontWeight:'bold'
     }
-    }}>
-    <OuvrirFermerPorteScreen.Screen name="Connexion" component={OuvrirFermerPorte} options={{
-      headerLeft: () => (
+}}>
+<OuvrirFermerPorteScreen.Screen name="Connexion" component={OuvrirFermerPorte} options={{
+    headerLeft: () => (
         <Icon.Button name="ios-menu" size={25}
-        onPress={() => navigation.openDrawer()}></Icon.Button>
-      )
-    }}></OuvrirFermerPorteScreen.Screen>
-    </OuvrirFermerPorteScreen.Navigator>
+    onPress={() => navigation.openDrawer()}></Icon.Button>
 )
+}}></OuvrirFermerPorteScreen.Screen>
+</OuvrirFermerPorteScreen.Navigator>
+)
+
 
 const PorteParametresStackScreen = ({navigation}) => (
     <PorteParametresScreen.Navigator screenOptions={{
@@ -155,53 +194,30 @@ const PorteParametresStackScreen = ({navigation}) => (
 </PorteParametresScreen.Navigator>
 )
 
-const DeconnectionStackScreen = ({navigation}) => (
-  <DeconnectionScreen.Navigator screenOptions={{
-  headerStyle: {
-      // backgroundcolor: "blue",
-  },
-  headerTintColor: '#fff',
-      headerTitleStyle: {
-      fontWeight:'bold'
-  }
-}}>
-<DeconnectionScreen.Screen name="Deconnexion" component={Deconnection} options={{
-  headerLeft: () => (
-      <Icon.Button name="ios-menu" size={25}
-  onPress={() => clearAllData}></Icon.Button>
-),
-  drawerLabel: () => null,
-      title: null,
-      drawerIcon: () => null
-}}></DeconnectionScreen.Screen>
-</DeconnectionScreen.Navigator>
-)
-
 const Stack = createStackNavigator();
 
 export default function App() {
-  let user = null;
-  AsyncStorage.getItem('user').then((result) => {user = result})
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Page1">
-        <Drawer.Screen name="Connexion" component={Connection}/>
-        <Drawer.Screen name="Inscription" component={Inscription}/>
-        <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
-        <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
-        <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
-        <Drawer.Screen name="PorteParametres" component={PorteParametresStackScreen} />
-        <Drawer.Screen name="Deconnexion" component={DeconnectionStackScreen} />
-      </Drawer.Navigator>
+
+    return (
+        <NavigationContainer>
+        <Drawer.Navigator initialRouteName="Page1">
+        <Drawer.Screen name="Accueil" component={Accueil} />
+    <Drawer.Screen name="Connexion" component={ConnexionStackScreen} />
+    <Drawer.Screen name="Inscription" component={InscriptionStackScreen} />
+    <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
+    <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
+    <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
+    <Drawer.Screen name="PorteParametres" component={PorteParametresStackScreen} />
+    </Drawer.Navigator>
     </NavigationContainer>
-  );  
+);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });

@@ -307,8 +307,7 @@ const styles = StyleSheet.create({
   },
   containerO : {
     flex: 1,
-    backgroundColor:"rgba(110,189,254,0.9)",
-    blurRadius :1
+    backgroundColor:"rgba(110,189,254,0.9)"
   },
   component: {
     justifyContent: 'center',
