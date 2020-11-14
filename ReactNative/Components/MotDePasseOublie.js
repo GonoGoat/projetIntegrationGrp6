@@ -8,19 +8,48 @@ class MotDePasseOublie extends React.Component {
         super(props);
         this.mail = "";
         this.state = {
+            mailVerif : false,
             error : ""
         }
     }
 
+    _verifyMail(mail){
+        axios.get('http://82.165.248.136:8081/userMail/' + mail)
+            .then(res => {
+                const verif = res.data;
+                if (verif.length !== 0) {
+                    this.setState({mailVerif: true});
+                }
+                if (this.state.mailVerif) {
+                    console.log('le mail existe');
+                }
+                if (!this.state.mailVerif){
+                    console.log('Ce mail n\'existe pas');
+                }
+                this.setState({mailVerif : false});
+        })
+    }
+
+    Submit = event => {
+
+        event.preventDefault();
+
+        console.log(this.mail);
+        this._verifyMail(this.mail);
+
+
+
+    };
 
 
     render() {
          const nav = this.props.navigation;
         return (
             <View style={styles.component}>
+            <Text style={styles.text}>Veuillez rentrer votre addresse mail, nous allons vous envoyer un mail contenant un mot de passe a utiliser temporairement, nous vous conseillons de directement modifer votre nouveau mot de passe une fois connecter dans la section prévue a cet effet dans 'profil'.</Text>
             <Text style={styles.text}>E-mail : </Text>
-            <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
-            <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
+            <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text.trim().toLowerCase()}/>
+            <TouchableOpacity style={styles.connect} onPress={()=> this._verifyMail(this.mail)}>
                 <Text style={styles.textConnection}>Envoyer</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.text} onPress={() => nav.goBack()}>
@@ -37,6 +66,12 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         margin: 75,
         marginTop: 100
+    },
+    pave: {
+        paddingVertical : 10,
+        alignContent : "center",
+        textAlign : 'center'
+
     },
     text: {
         padding: 5,

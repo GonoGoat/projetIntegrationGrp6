@@ -14,7 +14,7 @@ class Inscription extends React.Component {
         this.confirm = "";
     }
     state = {
-        mailVerified : true,
+        mailVerified : false,
         error : ""
     };
 
@@ -25,9 +25,9 @@ class Inscription extends React.Component {
 
             .then(res => {
                 const verif = res.data;
-                if (verif.length != 0) {
+                if (verif.length !== 0) {
                     this.setState({
-                        mailVerified: false
+                        mailVerified: true
                     });
                 }
                 let error = "";
@@ -59,7 +59,7 @@ class Inscription extends React.Component {
                 }
                 else {
                     error =  "vous possédez déjà un compte avec cette adresse mail";
-                    this.setState( {mailVerified : true })
+                    this.setState( {mailVerified : false })
                 }
                 this.setState( {error : error});
                 return error;
