@@ -75,7 +75,7 @@ function ModificationInfos(props) {
         >
             <View style={styles.centeredView,styles.containerO}>
                 <View style={styles.modalView}>
-                    <Text style={styles.titleM}>Modification infos</Text>
+                    <Text style={styles.title}>Modification infos</Text>
                     <Text style={{fontSize: 15}}>Nom : </Text>
                     <TextInput placeholder={nickname} style={styles.input} onChangeText={(text)=> setNickname(text)}/>
                     <Text style={{fontSize: 15}}>Tag : </Text>
@@ -85,15 +85,15 @@ function ModificationInfos(props) {
                         <TouchableOpacity
                         style={styles.saveButton}
                         onPress={() => {
-        updateAccess() ? setTimeout(() => {
+                            check() ? updateAccess() ? setTimeout(() => {
                                setVisible(!visible)
-                           }, 2000) : setVisible(visible);
+                           }, 2000) : setVisible(visible) : setVisible(visible);
                         }}
                         >
                             <Text style={{fontSize: 20, color: "white"}}>Sauver </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                        style={styles.textStyleReturn}
+                        style={styles.returnButton}
                         onPress={() => {
                             setVisible(!visible);
                         }}
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    titleM: {
+    title: {
         alignSelf: "center",
         top: -10,
         fontSize: 25,
@@ -150,9 +150,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         padding: 22,
     },
-    containerO : {
+    container : {
         flex: 1,
-        //backgroundColor:"rgba(110,189,254,0.9)",
         blurRadius :1
     },
     component: {
@@ -178,7 +177,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 15
     },
-    textStyleReturn: {
+    returnButton: {
         flex:1,
         alignItems: "center",
         justifyContent: 'center',
@@ -187,15 +186,6 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginTop: 15,
         marginBottom: 15
-    },
-    connect: {
-        textAlign: 'center',
-        margin: 50,
-        padding: 10,
-        backgroundColor: '#efefef',
-        fontFamily: 'Consolas',
-        justifyContent: 'center',
-        alignContent: 'center'
     },
     centeredView: {
         flex: 1,
