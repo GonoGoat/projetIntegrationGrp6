@@ -129,6 +129,22 @@ app.get('/access/:door', async (req, res) => {
   })
 });
 
+/*************************************************
+ PATCH ACCESS
+ *************************************************/	// TEST OK
+
+app.patch('/access/update', (req, res) => {
+    let door = parseInt(req.body.door);
+    let tag = parseInt(req.body.user);
+    let nickname = parseInt(req.body.user)
+
+    let query = `UPDATE access SET nickname = ${nickname}, tag =${tag} WHERE door = ${door}`;
+    pool.query(query, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    });
+});
+
 
 
 /*************************************************

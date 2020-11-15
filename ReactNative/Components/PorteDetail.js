@@ -4,22 +4,25 @@ import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHig
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Modal from 'modal-react-native-web';
+import ModificationInfos from "./ModificationInfos";
 export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
-
     this.state={
       doors : [],
       isLoading: true,
-      modalVisible: false
+      modalVisible: false,
     }
   }
+
+
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
 
   }
+
 
   getStatus(boolStatus) {
     if(boolStatus == true) {
@@ -141,15 +144,17 @@ export default class PorteDetail extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
+
       const doorIdParam = this.props.route.params.doorIdParam;
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
-
+      let modalVisible = this.state.modalVisible;
 
       const nav = this.props.navigation.navigate;
       
       var dataDoor =  this.getDoorById(doorIdParam);
       var statusString = this.getStatus(dataDoor[2]);
+      console.log(this.props.route.params);
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
@@ -158,7 +163,7 @@ export default class PorteDetail extends React.Component {
               name="ios-trash" 
               size={30} 
               onPress={() => /*this.deleteAccess(1,doorIdParam)}*/ alert('En construction...')}
-              style={{backgroundColor: "#719ada",}} >
+              style={{backgroundColor: "#719ada"}} >
                 Delete door
               </Icon.Button>
             </View>
@@ -195,14 +200,12 @@ export default class PorteDetail extends React.Component {
               </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.editButton}
-              onPress={() => {
-        this.setModalVisible(true);
-      }}>
-              <View>
-                <Text style={{fontSize: 20, color: "white"}}>Édition</Text>
-              </View>
-            </TouchableHighlight>
+            <ModificationInfos
+              nickname={nickname}
+              tagName={tagName}
+              doorIdParam={doorIdParam}
+              visible={modalVisible}
+            />
 
             <TouchableHighlight style={styles.backButton}
               onPress={() => this.props.navigation.goBack()}>
@@ -212,40 +215,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
-      );
-
-
-      <Modal
-      animationType="slide"
-      transparent={false}
-      visible={this.state.modalVisible}
-      ariaHideApp={false}
-      >
-          <View style={styles.centeredView,styles.containerO}>
-            <View style={styles.modalView}>
-              <Text style={styles.text}>Nom : </Text>
-              <TextInput placeholder={nickname} style={styles.input}/>
-              <Text style={styles.text}>Tag : </Text>
-              <TextInput placeholder={tagName} style={styles.input}/>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-                }}
-              >
-                <Text style={styles.textStyleSave}>Sauver </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-                }}
-              >
-                <Text style={styles.textStyleReturn}>Annuler </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-       </Modal>
+      )
     }
   }
 }
@@ -283,16 +253,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15
   },
-  editButton: {
-    flex:1,
-    alignItems: "center",
-    justifyContent: 'center',
-    backgroundColor: "#719ada",
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
-    marginBottom: 15
-  },
   backButton: {
     flex:1,
     alignItems: "center",
@@ -305,88 +265,4 @@ const styles = StyleSheet.create({
 
 
   },
-  containerO : {
-    flex: 1,
-    backgroundColor:"rgba(110,189,254,0.9)",
-    blurRadius :1
-  },
-  component: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    margin: 75
-  },
-  text: {
-    marginTop: 25,
-    padding: 5,
-    fontFamily: 'Consolas',
-    justifyContent: 'center',
-    alignContent: 'center'
-  },
-  input: {
-    padding: 5,
-    justifyContent: 'center',
-    alignContent: 'center',
-    borderColor: '#000',
-    borderWidth: 1,
-    fontFamily: 'Consolas'
-  },
-  textStyleSave: {
-    flex:1,
-    alignItems: "center",
-    justifyContent: 'center',
-    backgroundColor: "#719ada",
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
-    marginBottom: 15
-  },
-  textStyleReturn: {
-    flex:1,
-    alignItems: "center",
-    justifyContent: 'center',
-    backgroundColor: "#d0d0d0",
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
-    marginBottom: 25
-  },
-  connect: {
-    textAlign: 'center',
-    margin: 50,
-    padding: 10,
-    backgroundColor: '#efefef',
-    fontFamily: 'Consolas',
-    justifyContent: 'center',
-    alignContent: 'center'
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
 })
