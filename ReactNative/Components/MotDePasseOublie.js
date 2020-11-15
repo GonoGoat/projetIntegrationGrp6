@@ -14,20 +14,24 @@ class MotDePasseOublie extends React.Component {
     }
 
     _verifyMail(mail){
-        axios.get('http://82.165.248.136:8081/userMail/' + mail)
+        axios.get('http://192.168.1.10:8081/userMail/' + mail)
             .then(res => {
                 const verif = res.data;
                 if (verif.length !== 0) {
                     this.setState({mailVerif: true});
                 }
                 if (this.state.mailVerif) {
-                    console.log('le mail existe');
+                    this._changePassword(mail);
                 }
                 if (!this.state.mailVerif){
                     console.log('Ce mail n\'existe pas');
                 }
                 this.setState({mailVerif : false});
         })
+    }
+
+    _changePassword(mail){
+        axios.put('http://192.168.1.10:8081/resetPassword/' + mail)
     }
 
     Submit = event => {

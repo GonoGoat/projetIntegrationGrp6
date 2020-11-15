@@ -7,6 +7,8 @@ const cors = require('cors');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
+const nodemailer = require("nodemailer");
+var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
 
 const bcrypt = require('bcrypt');
@@ -35,6 +37,20 @@ pool.connect(function (err) {
     console.log('Connection with database done.');
   }
 });
+
+/*************************************************
+ *     RESET PASSWORD
+ *************************************************/
+
+app.put('/resetPassword/:mail', async (req, res) => {
+    let mail = req.url.split('/resetPassword/').pop();
+    let values = [password(2), mail];
+    let sql = 'update users set password = $1 where mail = $2';
+    pool.query(sql, values, (err, rows) => {
+            if (err) throw err;
+            return res.send(rows.rows);
+    })
+})
 
 /*************************************************
 		GET USER
@@ -68,7 +84,7 @@ app.post('/userConnection/', async (req, res) => {
             }
             return res.json(id);
         });
-    }    
+    }
     })
   });
 
@@ -217,7 +233,7 @@ app.post('/door/check', async (req, res) => {
 
 app.put('/doorStatus', (req, res) => {
     console.log(req);
-    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id;
     pool.query(query, (err) => {
         if (err) return res.send(false);
         return res.send(true);
