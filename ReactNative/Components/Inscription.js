@@ -25,13 +25,16 @@ class Inscription extends React.Component {
 
             .then(res => {
                 const verif = res.data;
-                if (verif.length !== 0) {
+                console.log(verif);
+                console.log(verif.length);
+                if (verif.length === 0) {
                     this.setState({
                         mailVerified: true
                     });
                 }
                 let error = "";
-                if (mailVerified) {
+                console.log(this.state.mailVerified);
+                if (this.state.mailVerified) {
                     if (password == confirm) {
                         if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(password)) {
                             if (/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(mail)) {

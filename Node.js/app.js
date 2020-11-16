@@ -38,20 +38,53 @@ pool.connect(function (err) {
   }
 });
 
+var transporter = nodemailer.createTransport({              //Compte gmail envoyant les mails
+    host: 'smtp.gmail.com',
+    auth: {
+        user: 'doorzapp@gmail.com',
+        pass: 'Passw0rd!123'
+    },
+});
+
+var mailOptions = {                         //Création du mail
+    from: 'doorzapp@gmail.com',
+    to: "",
+    subject: 'DoorzApp : Réinitialisation de mot de passe',
+    text: 'That was easy!'
+};
+
+
+function CreateMail(mail, password) {
+    mailOptions.to = mail;
+    mailOptions.text = "Votre mot de passe temporaire est : '" + password + "'. Veuillez le changer le plus rapidement possible dans l'onglet prévu à cet effet de la section 'profil'";
+
+    transporter.sendMail(mailOptions, function(error, info){  // Envoie le mail
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
 /*************************************************
  *     RESET PASSWORD
  *************************************************/
-
 app.put('/resetPassword/:mail', async (req, res) => {
     let mail = req.url.split('/resetPassword/').pop();
-    let values = [password(2), mail];
+    let newPass = password(2);
     let sql = 'update users set password = $1 where mail = $2';
-    pool.query(sql, values, (err, rows) => {
-            if (err) throw err;
-            return res.send(rows.rows);
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(newPass, salt, async (err, hash) => {
+            let values = [hash, mail];
+            pool.query(sql, values, (err, rows) => {
+                if (err) throw err;
+                CreateMail(mail, newPass);
+                return res.send(rows.rows);
+            })
+        })
     })
-})
-
+});
 /*************************************************
 		GET USER
 *************************************************/	// TEST OK
