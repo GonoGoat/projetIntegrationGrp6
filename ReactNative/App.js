@@ -104,14 +104,8 @@ const AjoutPorteStackScreen = ({navigation}) => (
 )
 const listePortesStackScreen = ({navigation}) => (
   <listePortesScreen.Navigator screenOptions={{
-    headerStyle: {
-      //backgroundcolor: "blue",
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight:'bold'
-    }
-    }}>
+    headerShown: false
+  }}>
     <listePortesScreen.Screen name="Accueil" component={listePortes} options={{
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25}
@@ -198,7 +192,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Page1">
-        <Drawer.Screen name="Accueil" component={AccueilStackScreen} />
+        <Drawer.Screen name="Accueil" component={Accueil} />
         <Drawer.Screen name="Connexion" component={ConnexionStackScreen} />
         <Drawer.Screen name="Inscription" component={InscriptionStackScreen} />
         <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />

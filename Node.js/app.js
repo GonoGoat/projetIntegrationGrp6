@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 var http = require('http');
-var https = require('https');
 var fs = require('fs');
 const { check, validationResult} = require('express-validator');
 
@@ -48,25 +47,6 @@ app.get('/user/:id', async (req, res) => {
   }
   else {
     sql = 'select * from users where id = ' + parseInt(userId);
-  }
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
-});
-
-/*************************************************
-		GET USER FULL NAME BY ID
-*************************************************/
-
-app.get('/user/fullname/:id', async (req, res) => {
-  let userId = req.url.split('/user/fullname/').pop();
-  let sql;
-  if (userId === "*") {
-    sql = 'select id, firstname, lastname from users'
-  }
-  else {
-    sql = 'select id, firstname, lastname from users where id = ' + parseInt(userId);
   }
   pool.query(sql, (err, rows) => {
     if (err) throw err;
@@ -131,20 +111,6 @@ app.get('/access/:door', async (req, res) => {
   })
 });
 
-
-
-/*************************************************
- GET ALL TAG
- *************************************************/	// TEST OK
-
- app.get('/listTag', async (req, res) => {
-  let sql = 'select DISTINCT tag from access';
-  pool.query(sql, (err, rows) => {
-      if (err) throw err;
-      return res.send(rows.rows);
-  })
-});
-
 /*************************************************
 		GET ALL DOORS
 *************************************************/	// TEST OK
@@ -155,11 +121,11 @@ app.get('/doors', async (req, res) => {
       if (err) throw err;
       return res.send(rows.rows);
     })
-});
+  });
 
 
 /*************************************************
-		GET DOOR by ID
+		GET DOOR by tag
 *************************************************/	// TEST OK
 
 app.get('/door/:id', async (req, res) => {
@@ -172,45 +138,15 @@ app.get('/door/:id', async (req, res) => {
 });
 
 /*************************************************
-		POST DOOR - Check si mot de passe OK pour cette porte
-*************************************************/
+		DELETE ACCESS
+*************************************************/	// TEST OK
 
-app.post('/door/check', async (req, res) => {
-    let id = parseInt(req.body.id);
-    let user = parseInt(req.body.user)
-    let isExisting = false;
-    let sql = `select * from access where door = ${id} and users = ${user}`
-    pool.query(sql, (err,rows) => {
-        if (err) throw err;
-        if (rows.rows.length > 0) {
-            isExisting = true;
-        }
-        let sql2 = 'select (id,password) from door where id = ' + id;
-        pool.query(sql2, (err, rows) => {
-            if (err) throw err;
-            if (rows.rows.length > 0) {
-                let response = rows.rows[0].row
-                let index = []
-                for (let i = 0;i<response.length;i++) {
-                    if (response[i] === ',') {
-                        index.push(i);
-                    }
-                    if (response[i] === ')') {
-                        index.push(i)
-                        break;
-                    }
-                }
-                let pswd = response.substring(index[0]+1,index[1]);
-                if (pswd === req.body.password) {
-                    return res.send(isExisting);
-                }
-                else {
-                    return res.status(403).send("Bad password !")
-                }
-            }
-            return res.status(404).send("Invalid id");
-        })
-    })
+app.post('/access/delete', async (req, res) => {
+    const query = "DELETE FROM access WHERE door=" + req.body.params.door + " AND users=" + req.body.params.users;
+    await pool.query(query, (err) => {
+      if (err) return res.send(false);
+      return res.send(true);
+  });
   });
 
 /*************************************************
@@ -218,7 +154,6 @@ app.post('/door/check', async (req, res) => {
 *************************************************/
 
 app.put('/doorStatus', (req, res) => {
-    console.log(req);
     const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
     pool.query(query, (err) => {
         if (err) return res.send(false);
@@ -284,12 +219,12 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 *************************************************/	//TEST OK
 
 app.post('/newaccess', async (req, res) => {
-    const query = 'INSERT INTO access (door, users, tag, nickname) VALUES ($1,$2,$3,$4)';
-    let values = [parseInt(req.body.door),parseInt(req.body.user),req.body.tag, req.body.nickname];
-    await pool.query(query, values, (err) => {
-        if (err) return res.send(false);
-	    return res.send(true);
-    });
+  const query = "INSERT INTO access (door, users, tag, name) VALUES ($1,$2,$3,$4)";
+  let valeur = [req.query.door, req.query.users, req.query.tag, req.query.name];
+  await pool.query(query, valeur, (err) => {
+	if (err) return res.send(false);
+	return res.send(true);
+});
 });
 
 /*************************************************
@@ -318,6 +253,229 @@ app.post('/newhistory', (req, res) => {
   })
 });
 
+/*-----------------STATIC------------------*/
+
+// LISTE DES USERS
+
+app.get('/listUsers', function (req, res) {
+    fs.readFile( __dirname + "/static/" + "users.json", 'utf8', function (err, data) {
+        console.log( data );
+        res.end( data );
+    })
+});
+
+//USER TRIER PAR ID
+
+app.get('/listUsers/:id', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "users.json", 'utf8', function (err, data) {
+        var user = JSON.parse(data);
+        var users ;
+        for (let i=0; i<user.length; i++){
+            if (user[i].id === [req.params.id]){
+                users = user[i];
+            }
+        }
+        console.log( users);
+        res.end( JSON.stringify(users));
+    })
+});
+
+/**
+ GET ALL ACCESS
+ **/    // TEST OK
+
+ app.get('/listTag', async (req, res) => {
+    let sql = 'select distinct tag from access';
+    pool.query(sql, (err, rows) => {
+        if (err) throw err;
+        return res.send(rows.rows);
+    })
+  });
+  
+
+//LISTE DE TAG TRIER PAR USER
+
+app.get('/listTagByUser/:id', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
+        var user = JSON.parse(data);
+        var users =[];
+        for (i=0; i<user.length; i++){
+            if (user[i].users == [req.params.id]){
+                users += " - " +  user[i].tag + "\n";
+            }
+        }
+        console.log( users);
+        res.end("liste des tags pour l'utilisateur ayant l'id " + [req.params.id] + " : \n" + users);
+    })
+});
+
+//RAJOUT D UN USER
+
+app.post('/addUser/:id/:firstname/:lastname/:sexe/:mail/:password', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "users.json", 'utf8', function (err, data) {
+        let newUser = {
+            "id":parseInt([req.params.id]),
+            "firstname":[req.params.firstname],
+            "lastname":[req.params.lastname],
+            "sexe":[req.params.sexe],
+            "mail":[req.params.mail],
+            "password":[req.params.password]
+        };
+        data = JSON.parse( data );
+        data += newUser;
+        console.log( data );
+        res.end( JSON.stringify(data));
+    })
+});
+
+// LISTE DES ACCESS PAR DOOR
+
+app.get('/listAccessByDoor/:DoorId', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
+        var user = JSON.parse(data);
+        var users = [];
+        for (i=0; i<user.length; i++){
+            if (user[i].door == [req.params.DoorId]){
+                users[i] =  user[i];
+            }
+        }
+        console.log(users);
+        res.end(JSON.stringify(users));
+    })
+});
+
+//DOOR TRIER PAR ID
+
+app.get('/listDoors/:id', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "doors.json", 'utf8', function (err, data) {
+        var door = JSON.parse(data);
+        var doors ;
+        for (i=0; i<door.length; i++){
+            if (door[i].id == [req.params.id]){
+                doors = door[i];
+            }
+        }
+        console.log( doors);
+        res.end( JSON.stringify(doors));
+    })
+});
+
+//DOORS TRIER PAR TAG
+
+app.get('/listDoorsByTag/:tag', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
+        var access = JSON.parse(data);
+        var doors ;
+        for (i=0; i<access.length; i++){
+            if (access[i].tag == [req.params.tag]){
+                doors = access[i];
+            }
+        }
+        console.log( doors);
+        res.end( JSON.stringify(doors));
+    })
+});
+
+//DOOR BY TAG AND USER
+
+app.get('/listDoorsByTagAndUser/:tag/:user', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
+        var access = JSON.parse(data);
+        var doors ;
+        for (i=0; i<access.length; i++){
+            if (access[i].tag == [req.params.tag] && access[i].users == [req.params.user]){
+                doors = access[i];
+            }
+        }
+        console.log(doors);
+        res.end( JSON.stringify(doors));
+    })
+});
+
+//LISTE HISTORY PAR DOOR
+
+app.get('/listHistoryByDoor/:door', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "history.json", 'utf8', function (err, data) {
+        var history = JSON.parse(data);
+        var doors ;
+        for (i=0; i<history.length; i++){
+            if (history[i].door == [req.params.door]){
+                doors = history[i];
+            }
+        }
+        console.log(doors);
+        res.end( JSON.stringify(doors));
+    })
+});
+
+//RAJOUT D'UNE DOOR
+
+app.post('/addDoor/:id/:password/:statut', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "doors.json", 'utf8', function (err, data) {
+        let newDoor = {
+            "id":parseInt([req.params.id]),
+            "password":[req.params.password],
+            "statut":parseInt([req.params.statut])
+        };
+        data = JSON.parse( data );
+        data += newDoor;
+        console.log( data );
+        res.end( JSON.stringify(data));
+    })
+});
+
+//RAJOUT D'UN ACCESS
+
+app.post('/addAccess/:id/:user/:tag/:nickname', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "access.json", 'utf8', function (err, data) {
+        let newAccess = {
+            "id":parseInt([req.params.id]),
+            "user":parseInt([req.params.user]),
+            "tag":[req.params.tag],
+            "nickname":[req.params.nickname]
+        };
+        data = JSON.parse( data );
+        data += newAccess;
+        console.log( data );
+        res.end( JSON.stringify(data));
+    })
+});
+
+//RAJOUT D'UN HISTORY
+
+app.post('/addHistory/:id/:door/:users/:moment/:action', function (req, res) {
+    // First read existing users.
+    fs.readFile( __dirname + "/static/" + "history.json", 'utf8', function (err, data) {
+        let newHistory = {
+            "id":parseInt([req.params.id]),
+            "door":parseInt([req.params.door]),
+            "users":parseInt([req.params.users]),
+            "moment":[req.params.moment],
+            "action":[req.params.action]
+        };
+        data = JSON.parse( data );
+        data += newHistory;
+        console.log( data );
+        res.end( JSON.stringify(data));
+    })
+});
+
+
+
+
+
+
+
 
 app.all("/*", function(req, res, next){
   res.header('Access-Control-Allow-Origin', '*');
@@ -326,18 +484,5 @@ app.all("/*", function(req, res, next){
   next();
 });
 
-
-var httpsOptions = {
-    key: fs.readFileSync('./conf/key.pem'),
-    cert: fs.readFileSync('./conf/cert.pem')
-};
-
-
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(httpsOptions, app);
-
-httpServer.listen(8081);
-httpsServer.listen(4433);
-
-
-//app.listen(8081);
+//ecoute sur le port 8888
+app.listen(8081);
