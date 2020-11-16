@@ -1,5 +1,3 @@
-
-
 import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import axios from 'axios';
@@ -11,14 +9,13 @@ export default class Historique extends React.Component {
       isLoading: true,
       histo: [],
       users: []
-
     }
   }
 
   getData(doorId) {
-    axios.get(`http://82.165.248.136:8081/doorHistory/`+ doorId)
+    axios.get(`http://192.168.0.29:8081/doorHistory/`+ doorId)
     .then(res => {
-      this.setState({isLoading:false, histo: res.data})
+      this.setState({histo: res.data})
     })
     .catch(error => {
       console.log(error)
@@ -26,10 +23,10 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://82.165.248.136:8081/user/fullname/*`)
+    axios.get(`http://192.168.0.29:8081/user/*`)
     .then(res => {
-      console.log(res.data)
-      this.setState({users: res.data})
+      
+      this.setState({isLoading:false, users: res.data})
     })
     .catch(error => {
       console.log(error)
@@ -60,7 +57,7 @@ export default class Historique extends React.Component {
   getNomPrenom(id) {
     for(var i=0; i<this.state.users.length; i++) {
       if(this.state.users[i].id == id) {
-        var nomPrenom = this.state.users[i].lastname + " " + this.state.users[i].firstname
+        var nomPrenom = this.state.users[i].lastname + " " + this.state.users[i].firstname;
         return nomPrenom;
       }
     }
@@ -127,7 +124,7 @@ export default class Historique extends React.Component {
             <SafeAreaView style={{flex: 8}}>
               <FlatList
               data={this.state.histo}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id.toString()}
               renderItem={({item, index}) => 
                 <View style={styles.itemHisto, this.getStyleByIntex(index)}>
                   <Text style={{fontSize: 15}}>{this.getNomPrenom(item.users)}</Text>
