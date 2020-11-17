@@ -1,7 +1,5 @@
 import 'react-native';
-import React from 'react';
 import { getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString } from '../Functions/functionsHistorique'
-import { state } from "../Components/Historique";
 
 it('Send correct date format', () => {
   let sendedDate = '2000-01-01T00:00:00.000Z';
