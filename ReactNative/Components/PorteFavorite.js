@@ -1,23 +1,19 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Accueil = (props) => {
+class PorteFavorite extends React.Component {
+  render() {
+    console.log(AsyncStorage.getItem('doors'))
     return (
       <View style={styles.container}>
         <Text style={styles.Text}>Accueil</Text>
-        <Button
-        title="Aller à la page de connexion"
-        onPress={() => props.navigation.navigate("Connexion")}
-      />
-      <Button
-        title="Aller à la page des inscriptions"
-        onPress={() => props.navigation.navigate("Inscription")}
-      />
+        
       </View>
-    );
-};
+    )}
+}
 
-export default Accueil;
+export default PorteFavorite;
 
 const styles = StyleSheet.create({
   container: {
