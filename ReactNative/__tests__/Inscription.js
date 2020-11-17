@@ -1,28 +1,45 @@
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { shallow, mount } from 'enzyme';
-import toJson from 'enzyme-to-json';
-import React from 'react';
-import {
-    Text,
-    TextInput,
-    TouchableOpacity,
-} from 'react-native';
-import renderer from 'react-test-renderer';
-import { waitFor } from 'react-native-testing-library';
-import Inscription from '../Components/Inscription';
-import AsyncStorage from '@react-native-community/async-storage';
+import 'react-native';
+import { _verify, _redirect} from '../Functions/functionsInscription'
 
-Enzyme.configure({ adapter: new Adapter() });
-
-describe("Inscription Class Component", () => {
-
-    const navigation = { navigate: jest.fn() };
-
-    it("call getEmail without value", () => {
-        const wrapper = shallow(<Inscription navigation={navigation}/>);
-        const componentInstance = wrapper.instance();
-        componentInstance.getEmail("","","","","","","","");
-        expect(wrapper.state('error')).toBe('vous possédez déjà un compte avec cette adresse mail');
-    });
-
+it('Returns -true- and no error when everything is fine', () => {
+    let answer = _verify("lucas","pastori","arle060620@gmail.com", "0476090014", "Passw0rd!", "Passw0rd!");
+    expect(answer.state).toBe(true);
+    expect(answer.msg).toBe("");
 });
+
+it('Returns -false- and an error when password and confirm aren\'t the same', () => {
+    let answer = _verify("lucas","pastori","arle060620@gmail.com", "0476090014", "Passw0rd!", "Passw0rd!1");
+    expect(answer.state).toBe(false);
+    expect(answer.msg).toBe("Le mot de passe et celui de confirmation doivent être identique");
+});
+
+it('Returns -false- and an error when the password is not valid', () => {
+    let answer = _verify("lucas","pastori","arle060620@gmail.com", "0476090014", "Passw0rd", "Passw0rd");
+    expect(answer.state).toBe(false);
+    expect(answer.msg).toBe("Le mot de passe nécessite au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial");
+});
+
+it('Returns -false- and an error when the mail is not valid', () => {
+    let answer = _verify("lucas","pastori","lol", "0476090014", "Passw0rd!", "Passw0rd!");
+    expect(answer.state).toBe(false);
+    expect(answer.msg).toBe('l\'email n\'est pas valide');
+});
+
+it('Returns -false- and an error when the firstname is not valid', () => {
+    let answer = _verify("lucas1","pastori","arle060620@gmail.com", "0476090014", "Passw0rd!", "Passw0rd!");
+    expect(answer.state).toBe(false);
+    expect(answer.msg).toBe("Le nom et le prénom ne peuvent contenir que des lettres");
+});
+
+it('Returns -false- and an error when the firstname and the lastname are not valid', () => {
+    let answer = _verify("lucas1","pastori1","arle060620@gmail.com", "0476090014", "Passw0rd!", "Passw0rd!");
+    expect(answer.state).toBe(false);
+    expect(answer.msg).toBe("Le nom et le prénom ne peuvent contenir que des lettres");
+});
+
+it('Returns -false- and an error when the lastname is not valid', () => {
+    let answer = _verify("lucas","pastori1","arle060620@gmail.com", "0476090014", "Passw0rd!", "Passw0rd!");
+    expect(answer.state).toBe(false);
+    expect(answer.msg).toBe("Le nom et le prénom ne peuvent contenir que des lettres");
+});
+

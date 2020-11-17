@@ -45,7 +45,7 @@ class Inscription extends React.Component {
                 if (/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(mail)) {
                     if (/^[A-Za-z]+$/.test(firstname) && /^[A-Za-z]+$/.test(name)) {
                         if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(phone)) {
-                            return true;
+                            return {"state" : true, "msg" : error};
                         }
                         else {
                             error = 'please only use number for phone ';
@@ -63,7 +63,7 @@ class Inscription extends React.Component {
             error = "enter twice the same password";
         }
         this.setState({error : error});
-        return false;
+        return {"state" : false, "msg" : error};
     }
 
      _submit(){
