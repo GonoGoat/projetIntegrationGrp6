@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import Modal from 'modal-react-native-web';
+import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
 export default class PorteDetail extends React.Component {
 
   constructor(props){
@@ -16,28 +16,6 @@ export default class PorteDetail extends React.Component {
     }
   }
 
-  setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });
-
-  }
-
-  getStatus(boolStatus) {
-    if(boolStatus == true) {
-      return "Ouvert";
-    }
-    else {
-      return "Fermé";
-    }
-  }
-
-  getDoorById(doorId) {
-    for(var j=0; j<this.state.doors.length; j++) {
-      if(this.state.doors[j].id == doorId) {
-        return Object.values(this.state.doors[j]);
-      }
-    }
-  }
-
   send(doorId, status) {
     this.setState({isLoading: true})
     var newStatus;
@@ -46,13 +24,10 @@ export default class PorteDetail extends React.Component {
     } else { 
       newStatus = 0
     }
-
     const door = {
       id : doorId,
       status : newStatus
     };
-
-
     axios.put('http://82.165.248.136:8081/doorStatus',{door})
     .then(res => {
         this.sendHistory(doorId, status)
@@ -104,23 +79,6 @@ export default class PorteDetail extends React.Component {
           this.setState({isLoading: false})
       });
   }
-  
-
-  getTitle(status) {
-    if(status == 0) {
-      return("Ouvrir");
-    } else {
-      return("Fermer");
-    }
-
-  getDoorById(doorId) {
-    for(var j=0; j<this.state.doors.length; j++) {
-      if(this.state.doors[j].id == 1) {
-        return Object.values(this.state.doors[j]);
-      }
-
-    }
-  }
 
   componentDidMount() {
 
@@ -131,7 +89,6 @@ export default class PorteDetail extends React.Component {
       .catch(error => {
         console.log(error)
     })
-
   }
 
   render() {
@@ -146,8 +103,8 @@ export default class PorteDetail extends React.Component {
 
       const nav = this.props.navigation.navigate;
       
-      var dataDoor =  this.getDoorById(doorIdParam);
-      var statusString = this.getStatus(dataDoor[2]);
+      var dataDoor =  getDoorById(doorIdParam, this.state.doors);
+      var statusString = getStatus(dataDoor[2]);
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
@@ -182,7 +139,7 @@ export default class PorteDetail extends React.Component {
             <TouchableHighlight style={styles.openButton}
               onPress={() => this.send(doorIdParam, dataDoor[2])}>
               <View>
-                <Text style={{fontSize: 20, color: "white"}}>{this.getTitle(dataDoor[2])}</Text>
+                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2])}</Text>
               </View>
             </TouchableHighlight>
 
@@ -209,42 +166,6 @@ export default class PorteDetail extends React.Component {
           </View>
         </View>
       );
-
-
-      <Modal
-      animationType="slide"
-      transparent={false}
-      visible={this.state.modalVisible}
-      ariaHideApp={false}
-          >
-          <View style={styles.centeredView,styles.containerO}>
-          <View style={styles.modalView}>
-          <Text style={styles.text}>Nom : </Text>
-      <TextInput placeholder={nickname} style={styles.input}/>
-      <Text style={styles.text}>Tag : </Text>
-      <TextInput placeholder={tagName} style={styles.input}/>
-      <TouchableOpacity
-      style={styles.button}
-      onPress={() => {
-        this.setModalVisible(!this.state.modalVisible);
-      }}
-    >
-    <Text style={styles.textStyleSave}>Sauver </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-      style={styles.button}
-      onPress={() => {
-        this.setModalVisible(!this.state.modalVisible);
-      }}
-    >
-    <Text style={styles.textStyleReturn}>Annuler </Text>
-          </TouchableOpacity>
-          </View>
-
-          </View>
-          </Modal>
-          </View>
-    );
     }
   }
 }
@@ -307,7 +228,6 @@ const styles = StyleSheet.create({
   containerO : {
     flex: 1,
     backgroundColor:"rgba(110,189,254,0.9)",
-    blurRadius :1
   },
   component: {
     justifyContent: 'center',
