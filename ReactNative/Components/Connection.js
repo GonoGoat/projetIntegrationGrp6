@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     borderColor: '#000',
-    borderWidth: 1
+    borderWidth: 1,
   },
   connect: {
     color: 'white',

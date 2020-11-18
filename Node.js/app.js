@@ -216,7 +216,6 @@ app.post('/door/check', async (req, res) => {
 *************************************************/
 
 app.put('/doorStatus', (req, res) => {
-    console.log(req);
     const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
     pool.query(query, (err) => {
         if (err) return res.send(false);
