@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
+import {Alert , Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
@@ -19,15 +19,27 @@ export default class PorteDetail extends React.Component {
   send(doorId, status) {
     this.setState({isLoading: true})
     var newStatus;
+    var textStatus
     if(status == 0) {
       newStatus = 1
+      textStatus = "ouverture";
     } else { 
       newStatus = 0
+      textStatus = "fermeture";
     }
     const door = {
       id : doorId,
       status : newStatus
     };
+
+    axios.get(`http://192.168.1.60/` + textStatus)
+      .then(res => {
+        this.setState({isLoading: false, doors: res.data});
+      })
+      .catch(error => {
+        console.log(error)
+    })
+
     axios.put('http://82.165.248.136:8081/doorStatus',{door})
     .then(res => {
         this.sendHistory(doorId, status)
@@ -65,6 +77,28 @@ export default class PorteDetail extends React.Component {
       });
   }
 
+  confirmDelete(userId, doorId) {
+    Alert.alert(  
+      'Suppression',  
+      'Voulez-vous vraiment supprimer cette porte de votre liste ?',  
+      [  
+          {  
+              text: 'Annuler',  
+                  
+          },  
+          {
+              text: 'OK',
+              onPress: () => (this.deleteAccess(userId, doorId),
+                Alert.alert(  
+                  'Suppression',  
+                  'Porte supprimée'
+                )
+              )
+          }  
+      ]  
+  );
+  }
+
   deleteAccess(userId, doorId) {
     const params = {
       door: doorId,
@@ -72,7 +106,7 @@ export default class PorteDetail extends React.Component {
     }
     axios.post('http://192.168.0.29:8081/access/delete',{params})
       .then(res => {
-        this.props.navigation.navigate("Accueil")
+        this.props.navigation.push("Accueil")
       })
       .catch(err => {
           console.log(err),
@@ -81,7 +115,6 @@ export default class PorteDetail extends React.Component {
   }
 
   componentDidMount() {
-
     axios.get(`http://82.165.248.136:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
@@ -109,10 +142,11 @@ export default class PorteDetail extends React.Component {
         <View style={styles.container}>
           <View style={{flex: 1}}>
             <View style={styles.delete}>
+              
               <Icon.Button  
               name="ios-trash" 
               size={30} 
-              onPress={() => this.deleteAccess(1,doorIdParam)}
+              onPress={() => this.confirmDelete(8,doorIdParam)}
               style={{backgroundColor: "#719ada",}} >
                 Delete door
               </Icon.Button>
