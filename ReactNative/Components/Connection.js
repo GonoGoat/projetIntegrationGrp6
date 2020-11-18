@@ -69,7 +69,7 @@ class Connection extends React.Component {
         </TouchableOpacity>
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -101,10 +101,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#719ada',
     justifyContent: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   textConnection: {
-    color: 'white'
+    color: 'white',
+    textAlign: 'center'
   },
   inscript: {
     textAlign: 'center',

@@ -7,12 +7,8 @@ class Deconnection extends React.Component {
     super(props)
   }
     
-  clearAllData = async () => {
-    try {
-      await AsyncStorage.clear()
-    } catch(error) {
-      throw error;
-    }
+  async clearAllData() {
+    await AsyncStorage.clear()
     this.props.navigation.navigate('Connexion');
   };
 
@@ -23,7 +19,7 @@ class Deconnection extends React.Component {
         <TouchableOpacity style={styles.deconnect} onPress={()=> this.clearAllData()}>
           <Text style={styles.text}>Confirmer</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.cancel} onPress={() => this.props.navigation.navigate('Afficher la liste de vos portes')}>
+        <TouchableOpacity style={styles.cancel} onPress={() => this.props.navigation.goBack()}>
           <Text style={styles.text}>Annuler</Text>
         </TouchableOpacity>
       </View>
