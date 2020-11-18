@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import Inscription from "./Inscription";
+import MotDePasseOublie from "./MotDePasseOublie"
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
 
@@ -69,6 +70,9 @@ class Connection extends React.Component {
         </TouchableOpacity>
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
+          </TouchableOpacity>
+        <TouchableOpacity style={styles.text} onPress={() => nav.navigate("MotDePasseOublie")}>
+          <Text style={styles.text}> mot de passe oublié ?</Text>
         </TouchableOpacity>
       </View>
     )
