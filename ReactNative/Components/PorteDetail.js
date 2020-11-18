@@ -33,6 +33,8 @@ export default class PorteDetail extends React.Component {
     }
   }
 
+
+
   getDoorById(doorId) {
     for(var j=0; j<this.state.doors.length; j++) {
       if(this.state.doors[j].id == doorId) {

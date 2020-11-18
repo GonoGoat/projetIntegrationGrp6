@@ -3,27 +3,34 @@ import {StyleSheet, View, Text, TextInput, TouchableOpacity, TouchableHighlight}
 import Modal from "modal-react-native-web";
 import {Snackbar} from 'react-native-paper';
 import axios from "axios";
+import PorteDetail from "./PorteDetail";
 
 function ModificationInfos(props) {
 
-    const [visible, setVisible] = React.useState(props.visible);
-    const [nickname,setNickname] = React.useState(props.nickname);
-    const [tagName,setTagName] = React.useState(props.tagName);
-    const [door,setdoor] = React.useState(props.doorIdParam);
+    const data = {tagName : props.tagName, nickname : props.nickname, door : props.doorIdParam, visible : props.visible};
+
+    const [visible, setVisible] = React.useState(data.visible);
+    const [nickname,setNickname] = React.useState(data.nickname);
+    const [tagName,setTagName] = React.useState(data.tagName);
+    const [door,setdoor] = React.useState(data.door);
     const [message, setMessage] = React.useState({
         type : "fail"});
 
     const axios = require('axios')
 
     function updateAccess() {
+        console.log(tagName +" "+nickname+" "+door)
 
-        axios.post('http://82.165.248.136:8081/access/update',{tag : tagName, nickname : nickname, door : door})
+        axios.patch('http://localhost:8081/access/update',{tagName : tagName, nickname : nickname, door : door})
             .then(res => {
+                console.log(res);
                 setMessage({
                     message : "Informations sauvegardées !",
                     type : "success"
                 })
-
+                setTimeout(() => {
+                    setVisible(!visible)
+                }, 2000)
                 return true;
             })
             .catch(err => {
@@ -31,10 +38,12 @@ function ModificationInfos(props) {
                 setMessage({
                     message : "Erreur lors de la modification de vos données",
                     type : "fail"
-                })
+                });
+
                 return false;
             });
     }
+
 
     function check() {
         if (nickname.length === 0) {
@@ -54,6 +63,18 @@ function ModificationInfos(props) {
 
         return true;
     }
+
+    function back(){
+        setTagName(data.tagName);
+        setNickname(data.nickname);
+        setVisible(!visible);
+    };
+
+    function save(){
+        check() ? updateAccess() :
+            navigation.push(PorteDetail);
+            setVisible(visible);
+    };
 
     return (
         <View >
@@ -85,9 +106,7 @@ function ModificationInfos(props) {
                         <TouchableOpacity
                         style={styles.saveButton}
                         onPress={() => {
-                            check() ? updateAccess() ? setTimeout(() => {
-                               setVisible(!visible)
-                           }, 2000) : setVisible(visible) : setVisible(visible);
+                            save();
                         }}
                         >
                             <Text style={{fontSize: 20, color: "white"}}>Sauver </Text>
@@ -95,7 +114,7 @@ function ModificationInfos(props) {
                         <TouchableOpacity
                         style={styles.returnButton}
                         onPress={() => {
-                            setVisible(!visible);
+                            back();
                         }}
                         >
                             <Text style={{fontSize: 20}}>Annuler </Text>
@@ -116,11 +135,12 @@ function ModificationInfos(props) {
         </Modal>
     </View>
 
+
 )
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     title: {
         alignSelf: "center",
@@ -137,7 +157,8 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         marginTop: 25,
-        marginBottom: 15
+        marginBottom: 15,
+        padding: 5,
     },
     editButton: {
         flex:1,
@@ -149,15 +170,6 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 15,
         padding: 22,
-    },
-    container : {
-        flex: 1,
-        blurRadius :1
-    },
-    component: {
-        justifyContent: 'center',
-        alignContent: 'center',
-        margin: 75
     },
     input: {
         padding: 5,
@@ -185,7 +197,8 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         marginTop: 15,
-        marginBottom: 15
+        marginBottom: 15,
+        padding: 5,
     },
     centeredView: {
         flex: 1,
@@ -208,22 +221,11 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5
     },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center"
-    },
     success : {
-        color: "black",
-        backgroundColor : "green",
+        backgroundColor : "green"
     },
     fail : {
-        backgroundColor : "red",
-        color: "black",
+        backgroundColor : "red"
     }
 })
 export default ModificationInfos;

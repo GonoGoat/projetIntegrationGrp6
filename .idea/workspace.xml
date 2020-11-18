@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Node.js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/Node.js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/.expo/packager-info.json" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/.expo/packager-info.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/__tests__/ModificationInfos.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/__tests__/ModificationInfos.test.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,11 +40,16 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="jsx.switch.disabled" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/ReactNative/__tests__" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ReactNative/__tests__" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -101,7 +110,7 @@
       <workItem from="1605085216953" duration="8506000" />
       <workItem from="1605124124089" duration="1645000" />
       <workItem from="1605132800187" duration="626000" />
-      <workItem from="1605169005106" duration="34065000" />
+      <workItem from="1605169005106" duration="48994000" />
     </task>
     <servers />
   </component>
