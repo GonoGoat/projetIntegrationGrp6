@@ -7,14 +7,10 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --collect-coverage",
-    "test:utils" : "jest -i __tests__/utils.ajoutPorte.test.js --collect-coverage"
+    "test:utils": "jest -i __tests__/utils.ajoutPorte.test.js --collect-coverage"
   },
   "jest": {
-    "preset": "react-native",
-    "testEnvironment": "jsdom",
-    "setupFiles": [
-      "./jestSetup.js"
-    ]
+    "preset": "react-native"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",
@@ -53,7 +49,8 @@
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.2",
     "react-navigation-stack": "^2.8.4",
-    "react-test-renderer": "^17.0.1"
+    "react-test-renderer": "^17.0.1",
+    "webpack": "^5.5.1"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
@@ -62,10 +59,9 @@
     "enzyme-adapter-react-16": "^1.15.5",
     "enzyme-adapter-react-16.3": "^1.7.3",
     "jest-enzyme": "^7.1.2",
+    "metro-react-native-babel-preset": "^0.64.0",
+    "react-native-dotenv": "^2.4.2",
     "react-navigation-stack": "^2.8.4"
   },
-  "private": true,
-  "jest" : {
-    "preset" : "react-native"
-  }
+  "private": true
 }

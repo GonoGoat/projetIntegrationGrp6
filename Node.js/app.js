@@ -254,7 +254,7 @@ app.post('/door/check', async (req, res) => {
                 }
                 let pswd = response.substring(index[0]+1,index[1]);
                 if (pswd === req.body.password) {
-                    return res.send(isExisting);
+                    return res.send(!isExisting);
                 }
                 else {
                     return res.status(403).send("Bad password !")
