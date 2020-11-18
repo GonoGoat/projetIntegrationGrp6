@@ -3,20 +3,31 @@ import {StyleSheet, Text, TouchableHighlight, View, Dimensions} from 'react-nati
 import axios from 'axios';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function _loadTag () {
-    return axios
 
-      .get('http://82.165.248.136:8081/listTag')
-
+export function _loadTag () {
+  var user = '';
+  AsyncStorage.getItem('user', function(errs, result) {
+    if (!errs) {
+      if (result !== null) {
+        user = result
+      }
+      else {
+        alert('Vous devez vous connecter avant de pouvoir accéder à vos portes')
+      }
+    }
+  })
+     return axios
+      .get('http://82.165.248.136:8081/userTag/' + user)
       .catch(function(error) {
-        // handle error
+        // to do error
         alert(error.message);
       })
-  };
-function _loadDoor (tag) {
-  return axios
+  }
 
+export function _loadDoor (tag) {
+  return axios
     .get("http://82.165.248.136:8081/doorTag/" + tag)
 
     .catch(function(error) {
@@ -32,6 +43,7 @@ class listPortes extends React.Component {
       listeDoor : []
     }
   }
+  
   _getTag() {
     _loadTag().then(data => {
       this.setState({
@@ -50,9 +62,7 @@ class listPortes extends React.Component {
     })
   }
   _goToDetail = item => {
-    console.log(item.door)
-    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})
-    
+    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
     this._getTag()
