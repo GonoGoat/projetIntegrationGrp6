@@ -6,10 +6,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest"
+    "test": "jest --collect-coverage"
   },
   "jest": {
     "preset": "react-native",
+    "testEnvironment": "jsdom",
     "setupFiles": [
       "./jestSetup.js"
     ]

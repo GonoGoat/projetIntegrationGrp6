@@ -15,40 +15,21 @@ class Connection extends React.Component {
     }
   }
 
-  /* Ajouter des données dans la mémoire locale de l'application */ 
-  storeData  = async (name, data) => {
-    try {
-      await AsyncStorage.setItem(name, JSON.stringify(data));
-      
-    } catch (error) {
-      throw error
-    }
-  };
-
-  retrieveData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        return value
-      }
-      return false;
-    } catch (error) {
-      throw error;
-    }
-  };
-
+  /* 
+  Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
+  @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
+  */
   getHistory = (id) => {
     let doors = [];
     axios.get('http://localhost:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i in res.data) {
-          doors.push(parseInt(i));
+          doors.push(parseInt(res.data[i].door));
         }
       })
-      .catch(err => console.log(err));
-      this.storeData('user', id).then();
-      this.storeData('doors', doors).then();
-      this.redirect();
+    AsyncStorage.setItem('user', id);
+    AsyncStorage.setItem('doors', doors);
+    this.redirect();
   };
 
   redirect () {
@@ -79,13 +60,16 @@ class Connection extends React.Component {
         <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
         <Text style={styles.text}>Mot de passe : </Text>
         <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
+        <TouchableOpacity onPress={()=> console.log('TODO')}>
+          <Text style={styles.password}>Mot de passe oublié ?</Text>
+        </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
         <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
           <Text style={styles.textConnection}>Connexion</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -117,10 +101,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#719ada',
     justifyContent: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   textConnection: {
-    color: 'white'
+    color: 'white',
+    textAlign: 'center'
   },
   inscript: {
     textAlign: 'center',
@@ -129,6 +114,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#d8d8d8',
     justifyContent: 'center',
     alignContent: 'center'
+  },
+  password: {
+    textAlign: 'right',
   },
   error: {
     color : 'red',

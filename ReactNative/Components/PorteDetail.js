@@ -302,13 +302,11 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginTop: 15,
     marginBottom: 25
-
-
   },
   containerO : {
     flex: 1,
     backgroundColor:"rgba(110,189,254,0.9)",
-    blurRadius :1
+    borderRadius :1
   },
   component: {
     justifyContent: 'center',

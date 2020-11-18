@@ -165,15 +165,12 @@ const DeconnectionStackScreen = ({navigation}) => (
       fontWeight:'bold'
   }
 }}>
-<DeconnectionScreen.Screen name="Deconnexion" component={Deconnection} options={{
-  headerLeft: () => (
-      <Icon.Button name="ios-menu" size={25}
-  onPress={() => clearAllData}></Icon.Button>
-),
-  drawerLabel: () => null,
-      title: null,
-      drawerIcon: () => null
-}}></DeconnectionScreen.Screen>
+<ConnexionScreen.Screen name="Connexion" component={Connection} options={{
+    headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25}
+    onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></ConnexionScreen.Screen>
 </DeconnectionScreen.Navigator>
 )
 
@@ -187,11 +184,11 @@ export default function App() {
       <Drawer.Navigator initialRouteName="Page1">
         <Drawer.Screen name="Connexion" component={Connection}/>
         <Drawer.Screen name="Inscription" component={Inscription}/>
-        <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
-        <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
-        <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorteStackScreen} />
-        <Drawer.Screen name="PorteParametres" component={PorteParametresStackScreen} />
-        <Drawer.Screen name="Deconnexion" component={DeconnectionStackScreen} />
+        <Drawer.Screen name="Ajouter une porte" component={AjoutPorte} />
+        <Drawer.Screen name="Afficher la liste de vos portes" component={listePortes} />
+        <Drawer.Screen name="Ouvrir/fermer porte" component={OuvrirFermerPorte} />
+        <Drawer.Screen name="PorteParametres" component={PorteParametres} />
+        <Drawer.Screen name="Deconnexion" component={Deconnection} />
       </Drawer.Navigator>
     </NavigationContainer>
   );  
