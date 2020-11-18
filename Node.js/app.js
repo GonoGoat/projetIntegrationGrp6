@@ -165,17 +165,22 @@ app.post('/newUsers', (req, res) =>{
     })
 });
 
-/*************************************************
-		GET ACCESS
-*************************************************/	// TEST OK
 
-app.get('/access/:door', async (req, res) => {
-  let doorId = parseInt(req.url.split('/access/').pop());
-  let sql = 'select * from access where door = ' + doorId;
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
+
+/*************************************************
+ PATCH ACCESS
+ *************************************************/	// TEST OK
+
+app.patch('/access/update', (req, res) => {
+    let door = parseInt(req.body.door);
+    let tag = req.body.tagName;
+    let nickname = req.body.nickname;
+
+    let query = `UPDATE access SET nickname = ${nickname}, tag =${tag} WHERE door = ${door}`;
+    pool.query(query, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    });
 });
 
 
@@ -382,7 +387,7 @@ app.post('/newhistory', (req, res) => {
 
 app.all("/*", function(req, res, next){
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET, PUT,POST,PATCH,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   next();
 });

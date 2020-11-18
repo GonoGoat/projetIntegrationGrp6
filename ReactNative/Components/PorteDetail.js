@@ -3,16 +3,43 @@ import React, { Component } from 'react';
 import {Alert , Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
+import Modal from 'modal-react-native-web';
+import ModificationInfos from "./ModificationInfos";
 export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
-
     this.state={
       doors : [],
       isLoading: true,
-      modalVisible: false
+      modalVisible: false,
+    }
+  }
+
+
+
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+
+  }
+
+
+  getStatus(boolStatus) {
+    if(boolStatus == true) {
+      return "Ouvert";
+    }
+    else {
+      return "Fermé";
+    }
+  }
+
+
+
+  getDoorById(doorId) {
+    for(var j=0; j<this.state.doors.length; j++) {
+      if(this.state.doors[j].id == doorId) {
+        return Object.values(this.state.doors[j]);
+      }
     }
   }
 
@@ -129,15 +156,16 @@ export default class PorteDetail extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
+
       const doorIdParam = this.props.route.params.doorIdParam;
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
-
+      let modalVisible = this.state.modalVisible;
 
       const nav = this.props.navigation.navigate;
       
-      var dataDoor =  getDoorById(doorIdParam, this.state.doors);
-      var statusString = getStatus(dataDoor[2]);
+      var dataDoor =  this.getDoorById(doorIdParam);
+      var statusString = this.getStatus(dataDoor[2]);
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
@@ -184,14 +212,12 @@ export default class PorteDetail extends React.Component {
               </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.editButton}
-              onPress={() => {
-        this.setModalVisible(true);
-      }}>
-              <View>
-                <Text style={{fontSize: 20, color: "white"}}>Édition</Text>
-              </View>
-            </TouchableHighlight>
+            <ModificationInfos
+              nickname={nickname}
+              tagName={tagName}
+              doorIdParam={doorIdParam}
+              visible={modalVisible}
+            />
 
             <TouchableHighlight style={styles.backButton}
               onPress={() => this.props.navigation.goBack()}>
@@ -201,40 +227,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
-      );
-
-
-      <Modal
-      animationType="slide"
-      transparent={false}
-      visible={this.state.modalVisible}
-      ariaHideApp={false}
-      >
-          <View style={styles.centeredView,styles.containerO}>
-            <View style={styles.modalView}>
-              <Text style={styles.text}>Nom : </Text>
-              <TextInput placeholder={nickname} style={styles.input}/>
-              <Text style={styles.text}>Tag : </Text>
-              <TextInput placeholder={tagName} style={styles.input}/>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-                }}
-              >
-                <Text style={styles.textStyleSave}>Sauver </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-                }}
-              >
-                <Text style={styles.textStyleReturn}>Annuler </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-       </Modal>
+      )
     }
   }
 }
@@ -267,16 +260,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: 'center',
     backgroundColor: "#d0d0d0",
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
-    marginBottom: 15
-  },
-  editButton: {
-    flex:1,
-    alignItems: "center",
-    justifyContent: 'center',
-    backgroundColor: "#719ada",
     marginLeft: 20,
     marginRight: 20,
     marginTop: 15,
