@@ -3,35 +3,60 @@ import {StyleSheet, Text, TouchableHighlight, View, Dimensions} from 'react-nati
 import axios from 'axios';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function _loadTag () {
-    return axios
 
-      .get('http://82.165.248.136:8081/listTag')
-
+export function _loadTag () {
+  let user = '';
+  AsyncStorage.getItem('user', function(errs, result) {
+    if (!errs) {
+      if (result !== null) {
+        user = result
+      }
+      else {
+        alert(errs)
+      }
+    }
+  })
+     return axios
+      .get('http://82.165.248.136:8081/userTag/' + user)
       .catch(function(error) {
-        // handle error
+        // to do error
         alert(error.message);
       })
-  };
-function _loadDoor (tag) {
-  return axios
+  }
 
-    .get("http://82.165.248.136:8081/doorTag/" + tag)
+export function _loadDoor (tag) {
+  let user = '';
+  AsyncStorage.getItem('user', function(errs, result) {
+    if (!errs) {
+      if (result !== null) {
+        user = result
+      }
+      else {
+        alert(errs)
+      }
+    }
+  })
+  return axios
+    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
 
     .catch(function(error) {
       alert(error.message);
     })
 };
 const WIDTH = Dimensions.get('window').width
+
 class listPortes extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       listeTag : [],
-      listeDoor : []
+      listeDoor : [],
+      user: ''
     }
   }
+  
   _getTag() {
     _loadTag().then(data => {
       this.setState({
@@ -43,20 +68,21 @@ class listPortes extends React.Component {
     this.setState({
       listeDoor: []
     })
-    _loadDoor(item.tag).then(data => {
+    _loadDoor(item.tag, this.state.user).then(data => {
       this.setState({
         listeDoor : [ ...this.state.listeDoor, ...data.data]
       })
     })
   }
   _goToDetail = item => {
-    console.log(item.door)
-    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})
-    
+    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
-    this._getTag()
+
+  this._getTag()
+
   }
+
   render() {
   return (
     <View style={styles.MainContainer}>
@@ -64,7 +90,7 @@ componentDidMount() {
         <View style={styles.tagContainer}>
             <FlatList        
             data={this.state.listeTag}
-            keyExtractor={(item) => item.tag}
+            keyExtractor={(item) => item}
             numColumns={3}
             renderItem={({item}) =>
             <TouchableHighlight
