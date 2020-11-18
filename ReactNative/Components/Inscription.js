@@ -1,6 +1,7 @@
 import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import axios from 'axios';
+import { _verify, _redirect} from '../Functions/functionsInscription'
 
 class Inscription extends React.Component {
     constructor(props){
@@ -38,42 +39,19 @@ class Inscription extends React.Component {
             });
     }
 
-    _verify(firstname, name, mail, phone, password, confirm ){
-        let error = "";
-        if (password == confirm) {
-            if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(password)) {
-                if (/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(mail)) {
-                    if (/^[A-Za-z]+$/.test(firstname) && /^[A-Za-z]+$/.test(name)) {
-                        if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(phone)) {
-                            return {"state" : true, "msg" : error};
-                        }
-                        else {
-                            error = 'please only use number for phone ';
-                        }
-                    } else {
-                        error = 'please only use letter for firstname and lastname';
-                    }
-                } else {
-                    error = 'email not valid';
-                }
-            } else {
-                error = 'password need at least A / a / 1 / .';
-            }
-        } else {
-            error = "enter twice the same password";
-        }
-        this.setState({error : error});
-        return {"state" : false, "msg" : error};
-    }
+
 
      _submit(){
 
-        if (this._verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm)){
+        if (_verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).state){
             console.log(this.state.mailVerified);
             if (this.state.mailVerified){
                 this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
                 this._redirect();
             }
+        }
+        else {
+            this.setState({error : _verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).msg});
         }
 
     };

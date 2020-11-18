@@ -14,7 +14,7 @@ class MotDePasseOublie extends React.Component {
     }
 
     _verifyMail(mail){
-        axios.get('http://192.168.1.10:8081/userMail/' + mail)
+        axios.get('http://82.165.248.136:8081/userMail/' + mail)
             .then(res => {
                 const verif = res.data;
                 if (verif.length !== 0) {
@@ -31,19 +31,9 @@ class MotDePasseOublie extends React.Component {
     }
 
     _changePassword(mail){
-        axios.put('http://192.168.1.10:8081/resetPassword/' + mail)
+        axios.put('http://82.165.248.136:8081/resetPassword/' + mail)
     }
 
-    Submit = event => {
-
-        event.preventDefault();
-
-        console.log(this.mail);
-        this._verifyMail(this.mail);
-
-
-
-    };
 
 
     render() {
