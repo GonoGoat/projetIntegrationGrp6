@@ -20,6 +20,9 @@ Après on retire GPIO0 et on le branche a GND. On connecte la pin reset de l'ard
 
 Puis on clique sur téléverser et après ça on peut remettre GPIO0 sur la pin 7.
 
+Requêtes: ouverture : GET 192.168.1.60/ouverture
+	  fermeture : GET 192.168.1.60/fermeture
+
 
 
 
