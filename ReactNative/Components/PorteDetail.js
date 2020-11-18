@@ -3,44 +3,23 @@ import React, { Component } from 'react';
 import {Alert , Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import Modal from 'modal-react-native-web';
+import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
 import ModificationInfos from "./ModificationInfos";
+
 export default class PorteDetail extends React.Component {
 
   constructor(props){
     super(props)
+
     this.state={
       doors : [],
       isLoading: true,
-      modalVisible: false,
+      modalVisible: false
     }
   }
-
-
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
-
-  }
-
-
-  getStatus(boolStatus) {
-    if(boolStatus == true) {
-      return "Ouvert";
-    }
-    else {
-      return "Fermé";
-    }
-  }
-
-
-
-  getDoorById(doorId) {
-    for(var j=0; j<this.state.doors.length; j++) {
-      if(this.state.doors[j].id == doorId) {
-        return Object.values(this.state.doors[j]);
-      }
-    }
   }
 
   send(doorId, status) {
@@ -93,7 +72,7 @@ export default class PorteDetail extends React.Component {
       action: newStatus
     }
 
-    axios.post('http://192.168.0.29:8081/newhistory',{history})
+    axios.post('http://localhost:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -131,7 +110,7 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://192.168.0.29:8081/access/delete',{params})
+    axios.post('http://localhost:8081/access/delete',{params})
       .then(res => {
         this.props.navigation.push("Accueil")
       })
@@ -156,7 +135,6 @@ export default class PorteDetail extends React.Component {
       return <Text>Loading...</Text>
     }
     else {
-
       const doorIdParam = this.props.route.params.doorIdParam;
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
@@ -164,8 +142,8 @@ export default class PorteDetail extends React.Component {
 
       const nav = this.props.navigation.navigate;
       
-      var dataDoor =  this.getDoorById(doorIdParam);
-      var statusString = this.getStatus(dataDoor[2]);
+      var dataDoor =  getDoorById(doorIdParam, this.state.doors);
+      var statusString = getStatus(dataDoor[2]);
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
@@ -227,7 +205,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
-      )
+      );
     }
   }
 }
@@ -265,6 +243,16 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15
   },
+  editButton: {
+    flex:1,
+    alignItems: "center",
+    justifyContent: 'center',
+    backgroundColor: "#719ada",
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 15,
+    marginBottom: 15
+  },
   backButton: {
     flex:1,
     alignItems: "center",
@@ -274,6 +262,8 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginTop: 15,
     marginBottom: 25
+
+
   },
   containerO : {
     flex: 1,
@@ -300,24 +290,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Consolas'
   },
   textStyleSave: {
-    flex:1,
-    alignItems: "center",
+    color: '#fff',
+    textAlign: 'center',
+    margin: 50,
+    padding: 10,
+    backgroundColor: '#719ada',
     justifyContent: 'center',
-    backgroundColor: "#719ada",
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
-    marginBottom: 15
+    alignContent: 'center'
   },
   textStyleReturn: {
-    flex:1,
-    alignItems: "center",
+    color: '#000000',
+    textAlign: 'center',
+    margin: 50,
+    padding: 10,
+    backgroundColor: '#979797',
     justifyContent: 'center',
-    backgroundColor: "#d0d0d0",
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
-    marginBottom: 25
+    alignContent: 'center'
   },
   connect: {
     textAlign: 'center',
