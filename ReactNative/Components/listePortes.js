@@ -7,14 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export function _loadTag () {
-  var user = '';
+  let user = '';
   AsyncStorage.getItem('user', function(errs, result) {
     if (!errs) {
       if (result !== null) {
         user = result
       }
       else {
-        alert('Vous devez vous connecter avant de pouvoir accéder à vos portes')
+        alert(errs)
       }
     }
   })
@@ -27,20 +27,33 @@ export function _loadTag () {
   }
 
 export function _loadDoor (tag) {
+  let user = '';
+  AsyncStorage.getItem('user', function(errs, result) {
+    if (!errs) {
+      if (result !== null) {
+        user = result
+      }
+      else {
+        alert(errs)
+      }
+    }
+  })
   return axios
-    .get("http://82.165.248.136:8081/doorTag/" + tag)
+    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
 
     .catch(function(error) {
       alert(error.message);
     })
 };
 const WIDTH = Dimensions.get('window').width
+
 class listPortes extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       listeTag : [],
-      listeDoor : []
+      listeDoor : [],
+      user: ''
     }
   }
   
@@ -55,7 +68,7 @@ class listPortes extends React.Component {
     this.setState({
       listeDoor: []
     })
-    _loadDoor(item.tag).then(data => {
+    _loadDoor(item.tag, this.state.user).then(data => {
       this.setState({
         listeDoor : [ ...this.state.listeDoor, ...data.data]
       })
@@ -65,8 +78,11 @@ class listPortes extends React.Component {
     this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
-    this._getTag()
+
+  this._getTag()
+
   }
+
   render() {
   return (
     <View style={styles.MainContainer}>
@@ -74,7 +90,7 @@ componentDidMount() {
         <View style={styles.tagContainer}>
             <FlatList        
             data={this.state.listeTag}
-            keyExtractor={(item) => item.tag}
+            keyExtractor={(item) => item}
             numColumns={3}
             renderItem={({item}) =>
             <TouchableHighlight
