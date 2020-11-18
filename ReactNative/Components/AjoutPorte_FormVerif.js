@@ -1,117 +1,87 @@
 import React from "react";
 import {StyleSheet, View,Text, TextInput} from 'react-native';
 import { Button } from 'react-native-paper';
+import {checkVerif,checkVerifAPI} from "../utils/ajoutPorte"
 
-function AjoutPorte_FormVerif(props) {
-    const [idPorte,setId] = React.useState("");
-    const [password,setPassword] = React.useState("");
+const axios = require('axios')
 
-    const axios = require('axios')
+async function getCheck(valeurs) {
+    return axios.post("http://localhost:8081/door/check", valeurs);
+}
 
-    function isDoorExisting() {
-        axios.post("http://localhost:8081/door/check", {user : 8, password : password, id : idPorte}).then(res => {
-            if (!res.data) {
-                props.setDoor(parseInt(idPorte));
-            }
-            else {
-                props.setMessage({
-                    message : "Vous avez déjà cette porte. Veuillez entrer les données d'un porte que vous ne posséder pas encore.",
-                    type : "fail"
-                })
-            }
-        }).catch(err => {
-            if (err.reponse) {
-                switch(err.response.status) {
-                    case 403 :
-                        props.setMessage({
-                            message : "Mot de passe incorrect. Veuillez insérer le mot de passe valide.",
-                            type : "fail"
-                        })
-                        break;
-                    case 404 :
-                        props.setMessage({
-                            message : "ID de la porte incorrect. Veuillez rentrer un ID valide.",
-                            type : "fail"
-                        })
-                        break;
-                    default :
-                        console.log(err.response.status);
-                        props.setMessage({
-                            message : "Une erreur s'est produite. Veuillez réessayer.",
-                            type : "fail"
-                        })
-                }
-            }
-            else if (err.request) {
-                props.setMessage({
-                    message : "Une erreur est survenue lors de l'envoi de votre requête. Veuillez réessayer.",
-                    type : "fail"
-                })
-            }
-            else {
-                props.setMessage({
-                    message : "Une erreur s'est produite. Veuillez réessayer.",
-                    type : "fail"
-                })
-            }
-        });
+export default class AjoutPorte_FormVerif extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.idPorte = "";
+        this.password = "";
     }
 
-    function check() {
-        if (!/^[0-9]+$/.test(idPorte)) {
-            if (idPorte.length === 0) {
-                props.setMessage({
-                    message : "Veuillez insérer un ID de porte.",
-                    type : "fail"
-                })
+    async isDoorExisting() {
+        let valeurs = {
+            user : 8,
+            password : this.password,
+            id : this.idPorte
+        }
+        await getCheck(valeurs).then(res => {
+            let rep = checkVerifAPI(res,true);
+            if (rep === true) {
+                this.props.setDoor(parseInt(this.idPorte));
             }
             else {
-                props.setMessage({
-                    message : "Veuillez n'insérer que des chiffres pour l'ID de la porte.",
-                    type : "fail"
-                })
+                this.props.setMessage(rep);
             }
-            return false;
-        }
-        if (!/^[a-zA-Z]{10}$/.test(password)) {
-            if (password.length === 0) {
-                props.setMessage({
-                    message : "Veuillez insérer le mot de passe de la porte.",
-                    type : "fail"
-                })
-            }
-            else {
-                props.setMessage({
-                    message : "Veuillez insérer un mot de passe valide.",
-                    type : "fail"
-                })
-            }
-            return false;
-        }
-        return true;
+        })
+        .catch(err => {this.props.setMessage(checkVerifAPI(err,false))});
     }
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.description}>Pour ajouter un porte, veuillez renseigner l'id et le mot de passe donné.</Text>
-            <View style={styles.form}>
-                <Text style={styles.label}>ID :</Text>
-                <TextInput style={styles.input} placeholder="Insérer un ID valide de porte" value={idPorte} keyboardType={"numeric"} onSubmitEditing={() => check() ? isDoorExisting() : {}} onChangeText={(text) => setId(text)}></TextInput>
-                <Text style={styles.label}>Mot de passe :</Text>
-                <TextInput style={styles.input} placeholder="Insérer le mot de passe de la porte" value={password} secureTextEntry={true} onSubmitEditing={() => check() ? isDoorExisting() : {}} onChangeText={(text) => setPassword(text)}></TextInput>
+    submit() {
+        let valeurs = checkVerif(this.idPorte,this.password);
+        if (valeurs === true) {
+            this.isDoorExisting();
+        }
+        else {
+            this.props.setMessage(valeurs);
+        }
+    }
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.description}>Pour ajouter un porte, veuillez renseigner l'id et le mot de passe donné.</Text>
+                <View style={styles.form}>
+                    <Text style={styles.label}>ID :</Text>
+                    <TextInput style={styles.input}
+                        placeholder="Insérer un ID valide de porte"
+                        testID='id'
+                        keyboardType={"numeric"}
+                        onSubmitEditing={() => this.submit()}
+                        onChangeText={(text) => this.idPorte = text}
+                    />
+                    <Text style={styles.label}>Mot de passe :</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Insérer le mot de passe de la porte"
+                        testID='pswd'
+                        secureTextEntry={true}
+                        onSubmitEditing={() => this.submit()}
+                        onChangeText={(text) => this.password = text}
+                    />
+                </View>
+                <Button
+                    color="#719ADA"
+                    mode="contained"
+                    onPress={() => this.submit()}
+                    contentStyle = {styles.buttonIn}
+                    labelStyle= {styles.buttonText}
+                    style={styles.button}
+                    testID="button-verif"
+                >
+                    Rechercher la porte
+                </Button>
             </View>
-            <Button
-                color="#719ADA"
-                mode="contained"
-                onPress={() => check() ? isDoorExisting() : {}}
-                contentStyle = {styles.buttonIn}
-                labelStyle= {styles.buttonText}
-                style={styles.button}
-            >
-                Rechercher la porte
-            </Button>
-        </View>
-    );   
+        );  
+    }
 }
 const styles = StyleSheet.create({
     container: {
@@ -156,5 +126,4 @@ const styles = StyleSheet.create({
         marginVertical : 50
     }
 })
-export default AjoutPorte_FormVerif;
 

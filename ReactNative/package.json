@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --collect-coverage"
+    "test": "jest --collect-coverage",
+    "test:utils" : "jest -i __tests__/utils.ajoutPorte.test.js --collect-coverage"
   },
   "jest": {
     "preset": "react-native",
@@ -63,5 +64,8 @@
     "jest-enzyme": "^7.1.2",
     "react-navigation-stack": "^2.8.4"
   },
-  "private": true
+  "private": true,
+  "jest" : {
+    "preset" : "react-native"
+  }
 }
