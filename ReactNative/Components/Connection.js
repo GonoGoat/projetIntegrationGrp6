@@ -61,9 +61,6 @@ class Connection extends React.Component {
         <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
         <Text style={styles.text}>Mot de passe : </Text>
         <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
-        <TouchableOpacity onPress={()=> console.log('TODO')}>
-          <Text style={styles.password}>Mot de passe oublié ?</Text>
-        </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
         <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
           <Text style={styles.textConnection}>Connexion</Text>
