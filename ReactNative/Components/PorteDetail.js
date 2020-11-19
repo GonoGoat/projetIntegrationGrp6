@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
-import {Alert , Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
+import {StyleSheet, Text, View,TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Modal} from "react-native-paper";
 import axios from 'axios';
 import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
 import ModificationInfos from "./ModificationInfos";
@@ -83,29 +84,8 @@ export default class PorteDetail extends React.Component {
       });
   }
 
-  confirmDelete(userId, doorId) {
-    Alert.alert(  
-      'Suppression',  
-      'Voulez-vous vraiment supprimer cette porte de votre liste ?',  
-      [  
-          {  
-              text: 'Annuler',  
-                  
-          },  
-          {
-              text: 'OK',
-              onPress: () => (this.deleteAccess(userId, doorId),
-                Alert.alert(  
-                  'Suppression',  
-                  'Porte supprimée'
-                )
-              )
-          }  
-      ]  
-  );
-  }
-
   deleteAccess(userId, doorId) {
+    this.setState({modalVisible: false})
     const params = {
       door: doorId,
       users : userId,
@@ -113,6 +93,7 @@ export default class PorteDetail extends React.Component {
     axios.post('http://localhost:8081/access/delete',{params})
       .then(res => {
         this.props.navigation.push("Accueil")
+        this.setState({isLoading: false})
       })
       .catch(err => {
           console.log(err),
@@ -152,8 +133,8 @@ export default class PorteDetail extends React.Component {
               <Icon.Button  
               name="ios-trash" 
               size={30} 
-              onPress={() => this.confirmDelete(8,doorIdParam)}
-              style={{backgroundColor: "#719ada",}} >
+              onPress={() => this.setState({modalVisible: true})}
+              style={{backgroundColor: "#719ada",}}>
                 Delete door
               </Icon.Button>
             </View>
@@ -204,7 +185,25 @@ export default class PorteDetail extends React.Component {
               </View>
             </TouchableHighlight>
           </View>
+          <Modal visible={this.state.modalVisible} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+            <Text style={{fontSize: 18, textAlign: "center", marginBottom: 5}}>Voulez-vous vraiment supprimer cette porte ?</Text>
+            <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Attention !</Text>
+            <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>Cette action est irréversible. Pour trouver à nouveau cette porte dans vos portes enregistrées, vous aurez à nouveau besoin de l'identifiant et du mot de passe de cette porte.</Text>
+            <TouchableHighlight style={styles.cancelModal}
+              onPress={() => this.setState({modalVisible: false})}>
+              <View>
+                <Text style={{fontSize: 20}}>Non</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight style={styles.okModal}
+              onPress={() => this.deleteAccess(8, doorIdParam)}>
+              <View>
+                <Text style={{fontSize: 20}}>Oui</Text>
+              </View>
+            </TouchableHighlight>
+          </Modal>
         </View>
+        
       );
     }
   }
@@ -345,5 +344,42 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+},
+modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+},
+cancelModal: {
+  position: "absolute",
+  bottom: 10,
+  left: 100,
+  backgroundColor: "#d0d0d0",
+  paddingHorizontal: 25,
+  paddingVertical: 10
+},
+okModal: {
+ position: "absolute",
+ bottom: 10,
+ right: 100,
+ backgroundColor: '#719ada',
+ paddingHorizontal: 25,
+  paddingVertical: 10
+}
 })
