@@ -24,13 +24,13 @@ class Connection extends React.Component {
     let doors = [];
     axios.get('http://localhost:8081/doorHistory/user/'+id)
       .then(res => {
-        for(let i in res.data) {
-          doors.push(parseInt(res.data[i].door));
+        for(let i = 0; i<res.data.length; i ++) {
+          doors[i] = parseInt(res.data[i].door);
         }
+        AsyncStorage.setItem('user', id);
+        AsyncStorage.setItem('doors', doors);
+        this.redirect(); 
       })
-    AsyncStorage.setItem('user', id);
-    AsyncStorage.setItem('doors', doors);
-    this.redirect();
   };
 
   redirect () {
@@ -47,10 +47,13 @@ class Connection extends React.Component {
       .then((response) => {
         if (response.data != false) {
           this.getHistory(response.data);
+        } else {
+          this.setState({errorMessage:'Mail ou mot de passe incorrect'});
         }
       })
-    } 
-    this.setState({errorMessage:'Verify mail or password'});
+    } else {
+      this.setState({errorMessage:'Veuillez renseigner une valeur dans chaque champ'});
+    }
   }
 
   render() {
