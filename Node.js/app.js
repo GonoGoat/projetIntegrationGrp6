@@ -178,7 +178,7 @@ app.patch('/access/update', (req, res) => {
 
     let query = `UPDATE access SET nickname = ${nickname}, tag =${tag} WHERE door = ${door}`;
     pool.query(query, (err) => {
-        if (err) return res.send(false);
+        if (err) return res.send(err);
         return res.send(true);
     });
 });

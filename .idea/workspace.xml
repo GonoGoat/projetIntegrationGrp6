@@ -4,10 +4,9 @@
     <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Node.js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/Node.js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReactNative/.expo/packager-info.json" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/.expo/packager-info.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/Historique.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/Historique.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReactNative/__tests__/ModificationInfos.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/__tests__/ModificationInfos.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/listePortes.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/listePortes.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
