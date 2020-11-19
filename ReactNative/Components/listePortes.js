@@ -1,50 +1,39 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableHighlight, View, Dimensions} from 'react-native';
 import axios from 'axios';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+let user;
 
 export function _loadTag () {
-  let user = 8;
-  AsyncStorage.getItem('user', function(errs, result) {
-    if (!errs) {
-      if (result !== null) {
-        user = result
-      }
-      else {
-        //alert(errs)
-      }
-    }
-  })
      return axios
       .get('http://82.165.248.136:8081/userTag/' + user)
       .catch(function(error) {
-        // to do error
-        //alert(error.message);
+        if (error.response) {
+          alert("404 Not Found page")
+        } else if (error.request) {
+          alert("Network Error")
+        } else {
+          alert('Erreur ' + error.message)
+        }
       })
-  }
+}
 
 export function _loadDoor (tag) {
-  let user = 8;
-  AsyncStorage.getItem('user', function(errs, result) {
-    if (!errs) {
-      if (result !== null) {
-        user = result
-      }
-      else {
-        //alert(errs)
-      }
-    }
-  })
   return axios
     .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
-
     .catch(function(error) {
-      //alert(error.message);
+      if (error.response) {
+        alert("404 Not Found page")
+      } else if (error.request) {
+        alert("Network Error")
+      } else {
+        alert('Erreur ' + error.message)
+      }
     })
 };
+
 const WIDTH = Dimensions.get('window').width
 
 class listPortes extends React.Component {
@@ -53,15 +42,19 @@ class listPortes extends React.Component {
     this.state = {
       listeTag : [],
       listeDoor : [],
-      user: ''
+      erreur : false
     }
   }
   
   _getTag() {
     _loadTag().then(data => {
+      if(data) {
       this.setState({
         listeTag : [ ...this.state.listeTag, ...data.data]
-      })
+      })}
+      else {
+        this.setState({erreur : true})
+      }
     })
   }
   _getDoor = item => {
@@ -78,12 +71,21 @@ class listPortes extends React.Component {
     this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
-
+  AsyncStorage.getItem('user', function(errs, result) {
+    if (!errs) {
+      if (result !== null) {
+        user = result
+      }
+      else {
+        //alert("Connectez-vous avant de pouvoir accéder à vos portes")        
+        //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
+      }
+    }
+  })
   this._getTag()
-
-  }
-
+}
   render() {
+    if ((this.state.erreur === false) && (this.state.listeTag.length !== 0)) {
   return (
     <View style={styles.MainContainer}>
         <Text style={styles.Title}>Mes tags :</Text>
@@ -113,7 +115,32 @@ componentDidMount() {
             />
             </View>      
     </View>
-  )}
+  )} //Si la personne ne possède pas encore de tag 
+  else if ((this.state.erreur === false) && (this.state.listeTag.length == 0)) {
+    return (
+    <View>
+      <View style={styles.MainContainer}>
+        <View style={styles.tagContainer}>
+            <Text style={styles.Title}>Vous ne possédez pas de tag pour l'instant</Text>
+            <TouchableHighlight style={styles.addDoor} onPress={() => this.props.navigation.navigate('Ajouter une porte')}>
+              <Text style={styles.tagText}  >Commencez par ajouter une porte</Text>
+              </TouchableHighlight>
+          </View>          
+            </View>      
+    </View>
+  )
+  } //Si une erreur survient lors de la requête
+  else {
+    return (
+    <View>
+      <Text style={styles.erreur}>Une erreur est survenu</Text>
+      <TouchableHighlight style={styles.addDoor} onPress={() => this.props.navigation.navigate('Connexion')}>
+              <Text style={styles.tagText}  >Rendez-vous à la page de connexion</Text>
+              </TouchableHighlight>
+    </View>
+    )
+  }
+} 
 };
 
 const styles = StyleSheet.create({
@@ -153,6 +180,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     padding : 7
+  },
+  addDoor : {
+    flex : 1,
+    backgroundColor: 'rgb(33, 150, 243)',
+    padding: 10,
+    margin : 4,
+    textAlign: "center"
+  },
+  erreur : {
+    fontSize: 30,
+    padding: 20,
+    textAlign:"center"
   }
 });
 
