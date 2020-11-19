@@ -7,14 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export function _loadTag () {
-  let user = '';
+  let user = 8;
   AsyncStorage.getItem('user', function(errs, result) {
     if (!errs) {
       if (result !== null) {
         user = result
       }
       else {
-        alert(errs)
+        //alert(errs)
       }
     }
   })
@@ -22,19 +22,19 @@ export function _loadTag () {
       .get('http://82.165.248.136:8081/userTag/' + user)
       .catch(function(error) {
         // to do error
-        alert(error.message);
+        //alert(error.message);
       })
   }
 
 export function _loadDoor (tag) {
-  let user = '';
+  let user = 8;
   AsyncStorage.getItem('user', function(errs, result) {
     if (!errs) {
       if (result !== null) {
         user = result
       }
       else {
-        alert(errs)
+        //alert(errs)
       }
     }
   })
@@ -42,7 +42,7 @@ export function _loadDoor (tag) {
     .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
 
     .catch(function(error) {
-      alert(error.message);
+      //alert(error.message);
     })
 };
 const WIDTH = Dimensions.get('window').width

@@ -17,7 +17,7 @@ export default class Historique extends React.Component {
   }
 
   getData(doorId) {
-    axios.get(`http://localhost:8081/doorHistory/`+ doorId)
+    axios.get(`http://82.165.248.136:8081/doorHistory/`+ doorId)
     .then(res => {
       this.setState({histo: res.data})
     })
@@ -27,7 +27,7 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://localhost:8081/user/*`)
+    axios.get(`http://82.165.248.136:8081/user/*`)
     .then(res => {
       this.setState({isLoading:false, users: res.data})
     })
