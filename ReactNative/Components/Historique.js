@@ -27,7 +27,7 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://localhost:8081/user/*`)
+    axios.get(`http://localhost:8081/users/name`)
     .then(res => {
       this.setState({isLoading:false, users: res.data})
     })

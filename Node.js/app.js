@@ -99,6 +99,18 @@ app.get('/user/:id', async (req, res) => {
 });
 
 /*************************************************
+		GET NAME OF ALL USERS
+*************************************************/
+
+app.get('/users/name', async (req, res) => {
+    let sql = 'select id, firstname, lastname from users';
+    pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+  });
+
+/*************************************************
 		GET USER WITH MAIL AND PASSWORD
 *************************************************/	// TEST OK
 
