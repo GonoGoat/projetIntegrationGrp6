@@ -1,11 +1,12 @@
 
 import React, { Component } from 'react';
-import {StyleSheet, Text, View,TouchableHighlight} from 'react-native';
+import {StyleSheet, Text, View,TouchableHighlight, ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Modal} from "react-native-paper";
 import axios from 'axios';
 import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
 import ModificationInfos from "./ModificationInfos";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class PorteDetail extends React.Component {
 
@@ -15,7 +16,8 @@ export default class PorteDetail extends React.Component {
     this.state={
       doors : [],
       isLoading: true,
-      modalVisible: false
+      modalVisible: false,
+      errorVisible: false
     }
   }
 
@@ -39,47 +41,50 @@ export default class PorteDetail extends React.Component {
       status : newStatus
     };
 
-    axios.get(`http://192.168.1.60/` + textStatus)
+    /*axios.get(`http://192.168.1.60/` + textStatus)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
       })
       .catch(error => {
         console.log(error)
-    })
+    })*/
 
-    axios.put('http://82.165.248.136:8081/doorStatus',{door})
+    axios.put('http://192.168.0.29:8081/doorStatus',{door})
     .then(res => {
-        this.sendHistory(doorId, status)
+        this.sendHistory(doorId, newStatus)
     })
     .catch(err => {
-        console.log(err),
         this.setState({isLoading: false})
     });
   }
 
 
-  sendHistory(doorId, status) {
-    var newStatus;
-    if(status == 0) {
-      newStatus = 1
-    } else { 
-      newStatus = 0
-    }
-
+  sendHistory(doorId, newStatus) {
+    let userLogged = ""
+    AsyncStorage.getItem('user', function(errs, result) {
+      if (!errs) {
+        if (result !== null) {
+          userLogged = result;
+        }
+        else {
+          alert(errs)
+        }
+      }
+    })
     const history = {
       door: doorId,
-      users : 1,
+      users: userLogged,
       date: new Date,
       action: newStatus
     }
 
-    axios.post('http://localhost:8081/newhistory',{history})
+    axios.post('http://192.168.0.29:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
       })
       .catch(err => {
-          console.log(err),
+          this.setState({errorVisible: true})
           this.setState({isLoading: false})
       });
   }
@@ -90,7 +95,7 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://localhost:8081/access/delete',{params})
+    axios.post('http://192.168.0.29:8081/access/delete',{params})
       .then(res => {
         this.props.navigation.push("Accueil")
         this.setState({isLoading: false})
@@ -102,18 +107,35 @@ export default class PorteDetail extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://82.165.248.136:8081/doors`)
+    axios.get(`http://192.168.0.29:8081/doors`)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
       })
       .catch(error => {
-        console.log(error)
+        this.setState({errorVisible: true})
     })
   }
 
   render() {
     if(this.state.isLoading) {
-      return <Text>Loading...</Text>
+      return (
+        <View style={styles.container}>
+        <ActivityIndicator style={{alignContent: "center", justifyContent: "space-around", padding: 10}}/>
+          <Modal visible={this.state.errorVisible} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+            <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Erreur !</Text>
+            <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard.</Text>
+            <TouchableHighlight style={styles.okErrorModal}
+              onPress={() => this.props.navigation.goBack()             
+              }>
+              <View>
+                <Text style={{fontSize: 15}}>Ok</Text>
+              </View>
+            </TouchableHighlight>
+          </Modal>
+
+
+        </View>
+      )
     }
     else {
       const doorIdParam = this.props.route.params.doorIdParam;
@@ -315,57 +337,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center'
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center"
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-},
-modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-},
 cancelModal: {
   position: "absolute",
   bottom: 10,
@@ -381,5 +357,13 @@ okModal: {
  backgroundColor: '#719ada',
  paddingHorizontal: 25,
   paddingVertical: 10
-}
+},
+okErrorModal: {
+  position: "absolute",
+  bottom: 20,
+  alignSelf: "center",
+  backgroundColor: '#719ada',
+  paddingHorizontal: 20,
+   paddingVertical: 7
+ }
 })
