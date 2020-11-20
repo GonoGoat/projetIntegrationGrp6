@@ -1,9 +1,10 @@
 
 
-import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, TouchableHighlight, ActivityIndicator } from 'react-native';
 import React from 'react';
 import axios from 'axios';
 import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString} from '../Functions/functionsHistorique'
+import {Modal} from "react-native-paper";
 
 export default class Historique extends React.Component {
   constructor(props){
@@ -11,8 +12,8 @@ export default class Historique extends React.Component {
     this.state={ 
       isLoading: true,
       histo: [],
-      users: []
-
+      users: [],
+      errorVisible: false
     }
   }
 
@@ -22,7 +23,7 @@ export default class Historique extends React.Component {
       this.setState({histo: res.data})
     })
     .catch(error => {
-      console.log(error)
+      this.setState({errorVisible: true})
   })
   }
 
@@ -32,7 +33,7 @@ export default class Historique extends React.Component {
       this.setState({isLoading:false, users: res.data})
     })
     .catch(error => {
-      console.log(error)
+      this.setState({errorVisible: true})
   })
   }
 
@@ -43,7 +44,22 @@ export default class Historique extends React.Component {
     if(this.state.isLoading) {
       this.getData(doorIdParam);
       this.getUsers();
-      return <Text>Loading...</Text>
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator style={{alignContent: "center", justifyContent: "space-around", padding: 10}}/>
+          <Modal visible={this.state.errorVisible} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+            <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Erreur !</Text>
+            <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard.</Text>
+            <TouchableHighlight style={styles.okErrorModal}
+              onPress={() => this.props.navigation.goBack()             
+              }>
+              <View>
+                <Text style={{fontSize: 15}}>Ok</Text>
+              </View>
+            </TouchableHighlight>
+          </Modal>
+        </View>
+      )
     }
     else {
       if(this.state.histo == "") {
@@ -115,5 +131,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#d0d0d0",
     borderTopWidth: 15,
     borderTopColor: "#f2f2f2"
-  }
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+},
+okErrorModal: {
+  position: "absolute",
+  bottom: 20,
+  alignSelf: "center",
+  backgroundColor: '#719ada',
+  paddingHorizontal: 20,
+   paddingVertical: 7
+ }
 })
