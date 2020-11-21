@@ -170,4 +170,3 @@ export function checkAjoutAPI(req,type) {
         }
     }
 }
-    
