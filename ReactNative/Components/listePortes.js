@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableHighlight, View, Dimensions} from 'react-nati
 import axios from 'axios';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export function _loadTag () {

@@ -20,12 +20,14 @@ describe("Connection Class Component", () => {
   const navigation = { navigate: jest.fn() };
 
   it('calls storeData twice on getHistory', async () => {
+    let id = 1;
     axios.get.mockResolvedValue({
-      data : [8, 3]
+      data : [{door:8},{door: 3}]
     })
-    const wrapper = shallow(<Connection navigation={navigation} />);
+
+    const wrapper = shallow(<Connection />);
     const componentInstance = wrapper.instance();
-    componentInstance.getHistory(1);
+    componentInstance.getHistory(id);
     expect(AsyncStorage.setItem).toHaveBeenCalledTimes(2);
   });
 
@@ -36,27 +38,32 @@ describe("Connection Class Component", () => {
     const wrapper = shallow(<Connection />);
     const componentInstance = wrapper.instance();
     componentInstance.checkUser();
-    expect(wrapper.state('errorMessage')).toBe('Verify mail or password');
+    expect(wrapper.state('errorMessage')).toBe('Veuillez renseigner une valeur dans chaque champ');
   });
 
   it('changes state on checkuser with wrong values', async () => {
+    let value = 'TestString';
     axios.post.mockResolvedValue({
       data: false
     });
+
     const wrapper = shallow(<Connection />);
     const componentInstance = wrapper.instance();
+    componentInstance.mail = value;
+    componentInstance.password = value;
     componentInstance.checkUser();
-    expect(wrapper.state('errorMessage')).toBe('Verify mail or password');
+    expect(componentInstance.state.errorMessage).toBe('Mail et/ou mot de passe incorrect');
   });
 
   it('calls getHistory on connection with existing user', async () => {
+    let value = 'TestString';
     axios.post.mockResolvedValue({
-      data: 33
+      data: 62
     });
     const wrapper = shallow(<Connection navigation={navigation} />);
     const componentInstance = wrapper.instance();
-    componentInstance.mail = "value";
-    componentInstance.password = "value";
+    componentInstance.mail = value;
+    componentInstance.password = value;
     componentInstance.checkUser();
     expect(AsyncStorage.setItem).toHaveBeenCalledTimes(2);
   });

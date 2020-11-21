@@ -1,11 +1,11 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import Inscription from "./Inscription";
-import MotDePasseOublie from "./MotDePasseOublie"
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
 
 class Connection extends React.Component {
+
 
   constructor(props) {
     super(props);
@@ -16,39 +16,54 @@ class Connection extends React.Component {
     }
   }
 
+  reset() {
+    this.password = "";
+    this.mail = "";
+    this.setState({errorMessage: ""})
+    this.mailInput.clear();
+    this.passwordInput.clear();
+  }
   /* 
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
-  getHistory = (id) => {
+  getHistory = async (id) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
-      .then(res => {
-        for(let i = 0; i<res.data.length; i ++) {
-          doors[i] = parseInt(res.data[i].door);
-        }
-        AsyncStorage.setItem('user', id);
-        AsyncStorage.setItem('doors', doors);
-        this.redirect(); 
-      })
+    await axios.get('http://localhost:8081/doorHistory/user/'+id)
+    .then(res => {
+      for(let i = 0; i<res.data.length; i ++) {
+        doors[i] = parseInt(res.data[i].door);
+      }
+    })
+    this.setData(id, doors);
   };
+
+  setData = (id, doors) => {
+    AsyncStorage.setItem('user', id);
+    AsyncStorage.setItem('doors', doors);
+  }
 
   redirect () {
     this.props.navigation.navigate('Afficher la liste de vos portes');
-}
+    this.setState({errorMessage: ''});
+    this.passwordInput.value = "";
+    this.mailInput.value = "";
+  }
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : { 
+      axios.post('http://localhost:8081/userConnection/', {user : { 
         mail: this.mail,
         password : this.password
       }
-    })
-      .then((response) => {
-        if (response.data != false) {
-          this.getHistory(response.data);
-        } else {
+      })
+      .then(async (response) => {
+        if (response.data === false) {
           this.setState({errorMessage:'Mail ou mot de passe incorrect'});
+        } else {
+          this.setState({errorMessage:''});
+          this.getHistory(response.data);
+          this.redirect();
         }
       })
     } else {
@@ -61,9 +76,9 @@ class Connection extends React.Component {
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
-        <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
+        <TextInput ref={input => { this.mailInput = input }} placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
         <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
+        <TextInput ref={input => { this.passwordInput = input }} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
         <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
           <Text style={styles.textConnection}>Connexion</Text>
