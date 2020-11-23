@@ -103,14 +103,14 @@ app.get('/user/:id', async (req, res) => {
 *************************************************/	// TEST OK
 
 app.post('/userConnection/', async (req, res) => {
-    let sql = "select * from users WHERE mail = '" + req.body.user.mail + "'";
+    let sql = "select * from users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
-    await pool.query(sql, async (error, rows) => {
-        if (error) throw error;
+    pool.query(sql, async (error, rows) => {
+        if (error) res.send(error);
         if (rows.rowCount != 1) {
             return res.send(false);
         } else {
-        await bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
+        bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
             if (err) return res.send(err);
             if(result) {
                 id = rows.rows[0].id;
@@ -134,7 +134,6 @@ app.post('/newUsers', (req, res) =>{
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
                 let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender,req.body.user.mail, hash, ];
-                console.log(valeur);
                 pool.query(query, valeur, (err) => {
                     if (err) {
                         console.log(err);
@@ -336,10 +335,9 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 
 app.get('/doorHistory/user/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/doorHistory/user/').pop());
-    console.log('door : '+userId)
     let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
     pool.query(sql, (err, rows) => {
-        if (err) throw err;
+        if (err) return res.send(err);
         return res.send(rows.rows);
     })
 });

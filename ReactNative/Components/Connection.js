@@ -1,11 +1,10 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
-import Inscription from "./Inscription";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
+import { verify } from "../Functions/functionsConnection";
 
 class Connection extends React.Component {
-
 
   constructor(props) {
     super(props);
@@ -15,21 +14,13 @@ class Connection extends React.Component {
       errorMessage: ""
     }
   }
-
-  reset() {
-    this.password = "";
-    this.mail = "";
-    this.setState({errorMessage: ""})
-    this.mailInput.clear();
-    this.passwordInput.clear();
-  }
   /* 
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
   getHistory = async (id) => {
     let doors = [];
-    await axios.get('http://localhost:8081/doorHistory/user/'+id)
+    await axios.get('http://82.165.248.136:8081/doorHistory/user/'+id)
     .then(res => {
       for(let i = 0; i<res.data.length; i ++) {
         doors[i] = parseInt(res.data[i].door);
@@ -39,8 +30,8 @@ class Connection extends React.Component {
   };
 
   setData = (id, doors) => {
-    AsyncStorage.setItem('user', id);
-    AsyncStorage.setItem('doors', doors);
+    AsyncStorage.setItem('user', toString(id));
+    AsyncStorage.setItem('doors', toString(doors));
   }
 
   redirect () {
@@ -51,14 +42,14 @@ class Connection extends React.Component {
   }
 
   checkUser(){
-    if(this.password.length > 0 && this.mail.length > 0){
-      axios.post('http://localhost:8081/userConnection/', {user : { 
+    if(verify(this.mail, this.password).state){
+      axios.post('http://82.165.248.136:8081/userConnection/', {user : { 
         mail: this.mail,
         password : this.password
       }
       })
-      .then(async (response) => {
-        if (response.data === false) {
+      .then((response) => {
+        if (!response.data) {
           this.setState({errorMessage:'Mail ou mot de passe incorrect'});
         } else {
           this.setState({errorMessage:''});
@@ -67,7 +58,7 @@ class Connection extends React.Component {
         }
       })
     } else {
-      this.setState({errorMessage:'Veuillez renseigner une valeur dans chaque champ'});
+      this.setState({errorMessage:verify(this.mail, this.password).msg});
     }
   }
 
