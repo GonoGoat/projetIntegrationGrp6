@@ -5,6 +5,7 @@ import React from 'react';
 import axios from 'axios';
 import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString} from '../Functions/functionsHistorique'
 
+
 export default class Historique extends React.Component {
   constructor(props){
     super(props)

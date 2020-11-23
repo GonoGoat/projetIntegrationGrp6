@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableHighlight, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, TouchableHighlight, View, Dimensions, ScrollView} from 'react-native';
 import axios from 'axios';
 import {FlatList} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -104,7 +104,7 @@ componentDidMount() {
             />
           </View>          
           <Text style={styles.Title}>Mes portes :</Text>
-          <View style={styles.contentDoor}>
+          <ScrollView style={styles.contentDoor}>
             <FlatList
             data={this.state.listeDoor}
             keyExtractor={(item) => item.door.toString()}
@@ -113,7 +113,7 @@ componentDidMount() {
             <Text style={styles.doorText}>{item.nickname}</Text>
             </TouchableHighlight>}
             />
-            </View>      
+            </ScrollView>      
     </View>
   )} //Si la personne ne possède pas encore de tag 
   else if ((this.state.erreur === false) && (this.state.listeTag.length == 0)) {
