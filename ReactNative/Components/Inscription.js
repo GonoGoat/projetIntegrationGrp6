@@ -19,14 +19,34 @@ class Inscription extends React.Component {
         error : ""
     };
 
+    _reset() {
+        this.name = "";
+        this.firstname = "" ;
+        this.phone = "";
+        this.gender = "";
+        this.mail = "";
+        this.password = "";
+        this.confirm = "";
+        this.setState({errorMessage: ""});
+        this.mailInput.clear();
+        this.passwordInput.clear();
+        this.nameInput.clear();
+        this.firstnameInput.clear();
+        this.confirmInput.clear();
+        this.phoneInput.clear();
+    }
+
     async _getMail(mail){
-         await axios.get('http://82.165.248.136:8081/userMail/' + mail)
+        let user = {
+            mail : this.mail
+        };
+        await axios.post('http://localhost:8081/userMail/', {user})
              .then(res => {
                 const verif = res.data;
-                console.log(verif.length);
-                if (verif.length === 0) {
+                if (verif) {
                     this.setState({
-                        mailVerified: true
+                        mailVerified: true,
+                        error : ""
                     });
                 }
                 else{
@@ -41,12 +61,14 @@ class Inscription extends React.Component {
 
 
 
+
      _submit(){
 
         if (_verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).state){
             console.log(this.state.mailVerified);
             if (this.state.mailVerified){
                 this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
+                this._reset();
                 this._redirect();
             }
         }
@@ -91,23 +113,23 @@ class Inscription extends React.Component {
             <ScrollView style={styles.scrollView}>
             <View style={styles.component}>
             <Text style={styles.text}>Nom : </Text>
-        <TextInput style={styles.input} onChangeText = {(text) => this.name = text.trim() }  placeholder='Nom de famille' />
+        <TextInput style={styles.input}id ={"nom"} onChangeText = {(text) => this.name = text.trim() }  ref={input => (this.nameInput = input)}ref={input => (this.nameInput = input)} placeholder='Nom de famille' />
             <Text style={styles.text}>Prénom : </Text>
-        <TextInput style={styles.input} onChangeText ={text => this.firstname = text.trim() }  placeholder='Prénom'/>
+        <TextInput style={styles.input} id ={"prenom"} onChangeText ={text => this.firstname = text.trim() } ref={input => (this.firstnameInput = input)}  placeholder='Prénom'/>
             <Text style={styles.text}>Téléphone : </Text>
-        <TextInput style={styles.input}  onChangeText ={text => this.phone = text.trim() } placeholder='Téléphone'/>
+        <TextInput style={styles.input} id ={"phone"} onChangeText ={text => this.phone = text.trim() } ref={input => (this.phoneInput = input)} placeholder='Téléphone'/>
             <Text style={styles.text}>Sexe : </Text>
-        <Picker style={styles.input} onValueChange={value => this.gender = value }>
+        <Picker style={styles.input} onValueChange={value => this.gender = value } ref={input => (this.genderInput = input)}>
     <Picker.Item label='' value=''/>
             <Picker.Item label='F' value='F'/>
             <Picker.Item label='M' value='M'/>
             </Picker>
             <Text style={styles.text}>E-mail : </Text>
-        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' onChangeText ={text => this.mail = text.trim().toLowerCase() }  placeholder='E-mail'/>
+        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' ref={input => (this.mailInput = input)} onChangeText ={text => this.mail = text.trim().toLowerCase() }  placeholder='E-mail'/>
             <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput style={styles.input} secureTextEntry={true}  onChangeText ={text => this.password = text.trim() }  placeholder='Ecrivez votre mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} id ={"password"} ref={input => (this.passwordInput = input)} onChangeText ={text => this.password = text.trim() }  placeholder='Ecrivez votre mot de passe'/>
             <Text style={styles.text}>Confirmation : </Text>
-        <TextInput style={styles.input} secureTextEntry={true}  onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} id ={"confirm"} ref={input => (this.confirmInput = input)} onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
             <Text style={styles.warning}>{this.state.error}</Text>
             <TouchableOpacity style={styles.button}>
             <Text onPress={()=> this._getMail(this.mail)}  style={styles.textButtonBlue}>Inscription</Text>

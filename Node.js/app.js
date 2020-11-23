@@ -70,9 +70,13 @@ function CreateMail(mail, password) {
 /*************************************************
  *     RESET PASSWORD
  *************************************************/
-app.put('/resetPassword/:mail', async (req, res) => {
-    let mail = req.url.split('/resetPassword/').pop();
-    let newPass = password(2);
+app.put('/resetPassword', async (req, res) => {
+    let mail = req.body.user.mail;
+    let newPass = "";
+    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    for (let i =0; i <15; i++){
+        newPass += random[Math.round(Math.random()*62)];
+    }
     let sql = 'update users set password = $1 where mail = $2';
     bcrypt.genSalt(saltRounds, function(err, salt) {
         bcrypt.hash(newPass, salt, async (err, hash) => {
@@ -153,15 +157,16 @@ app.post('/newUsers', (req, res) =>{
  GET USER BY MAIL
  *************************************************/	// TEST OK
 
- app.get('/userMail/:mail', async (req, res) => {
-    let mail = req.url.split('/userMail/').pop();
-    let sql = 'select mail from users where mail =  \'' + mail + '\'' ;
-    pool.query(sql, (err, rows) => {
+ app.post('/userMail/', async (req, res) => {
+    let mail = [req.body.user.mail];
+    let sql = 'select mail from users where mail = $1' ;
+    pool.query(sql, mail,(err, rows) => {
         if (err) throw err;
-        if (res.send(rows.rows).length == 0) {
-            return true;
+        if (rows.rows.length === 0 ){
+            res.send(true)
+        }else {
+            res.send(false)
         }
-        return false;
     })
 });
 
@@ -270,7 +275,7 @@ app.post('/door/check', async (req, res) => {
 *************************************************/
 
 app.put('/doorStatus', (req, res) => {
-    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id;
     pool.query(query, (err) => {
         if (err) return res.send(false);
         return res.send(true);

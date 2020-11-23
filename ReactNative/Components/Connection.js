@@ -16,7 +16,7 @@ class Connection extends React.Component {
     }
   }
 
-  /* 
+  /*
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
@@ -29,7 +29,7 @@ class Connection extends React.Component {
         }
         AsyncStorage.setItem('user', id);
         AsyncStorage.setItem('doors', doors);
-        this.redirect(); 
+        this.redirect();
       })
   };
 
@@ -39,7 +39,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : { 
+    axios.post('http://localhost:8081/userConnection/', {user : {
         mail: this.mail,
         password : this.password
       }
@@ -71,8 +71,8 @@ class Connection extends React.Component {
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
           </TouchableOpacity>
-        <TouchableOpacity style={styles.text} onPress={() => nav.navigate("MotDePasseOublie")}>
-          <Text style={styles.text}> mot de passe oublié ?</Text>
+        <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+          <Text style={styles.password}><u>mot de passe oublié ?</u></Text>
         </TouchableOpacity>
       </View>
     )
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   connect: {
     color: 'white',
     textAlign: 'center',
-    margin: 50,
+    margin: 25,
     padding: 10,
     backgroundColor: '#719ada',
     justifyContent: 'center',
@@ -113,14 +113,14 @@ const styles = StyleSheet.create({
   },
   inscript: {
     textAlign: 'center',
-    margin: 50,
+    margin: 25,
     padding: 10,
     backgroundColor: '#d8d8d8',
     justifyContent: 'center',
     alignContent: 'center'
   },
   password: {
-    textAlign: 'right',
+    marginTop : 140
   },
   error: {
     color : 'red',
