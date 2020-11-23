@@ -1,6 +1,7 @@
 import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import axios from 'axios';
+import { _verify, _redirect} from '../Functions/functionsInscription'
 
 class Inscription extends React.Component {
     constructor(props){
@@ -14,74 +15,52 @@ class Inscription extends React.Component {
         this.confirm = "";
     }
     state = {
-        mailVerified : true,
+        mailVerified : false,
         error : ""
     };
 
-
-
-    getEmail(firstname, name, phone, gender, mail, password, mailVerified, confirm) {
-        axios.get('http://82.165.248.136:8081/userMail/' + mail)
-
-            .then(res => {
+    async _getMail(mail){
+         await axios.get('http://82.165.248.136:8081/userMail/' + mail)
+             .then(res => {
                 const verif = res.data;
-                if (verif.length != 0) {
+                console.log(verif.length);
+                if (verif.length === 0) {
+                    this.setState({
+                        mailVerified: true
+                    });
+                }
+                else{
+                    this.setState({error : "vous possédez déjà un compte avec cette adresse mail"});
                     this.setState({
                         mailVerified: false
                     });
                 }
-                let error = "";
-                if (mailVerified) {
-                    if (password == confirm) {
-                        if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(password)) {
-                            if (/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(mail)) {
-                                if (/^[A-Za-z]+$/.test(firstname) && /^[A-Za-z]+$/.test(name)) {
-                                    if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(phone)) {
-                                        this.setState({error :''});
-                                        this.send(firstname, name, phone, gender, mail, password);
-                                        this.redirect();
-                                    }
-                                    else {
-                                        error = 'please only use number for phone ';
-                                    }
-                                } else {
-                                    error = 'please only use letter for firstname and lastname';
-                                }
-                            } else {
-                                error = 'email not valid';
-                            }
-                        } else {
-                            error = 'password need at least A / a / 1 / .';
-                        }
-                    } else {
-                        error = "enter twice the same password";
-                    }
-                }
-                else {
-                    error =  "vous possédez déjà un compte avec cette adresse mail";
-                    this.setState( {mailVerified : true })
-                }
-                this.setState( {error : error});
-                return error;
-            })
+                this._submit();
+            });
     }
 
 
-    verify = event => {
 
-        event.preventDefault();
+     _submit(){
 
-        this.getEmail(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.state.mailVerified, this.confirm);
-
-
+        if (_verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).state){
+            console.log(this.state.mailVerified);
+            if (this.state.mailVerified){
+                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
+                this._redirect();
+            }
+        }
+        else {
+            this.setState({error : _verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).msg});
+        }
 
     };
 
-    redirect (test) {
+    _redirect (test) {
         this.props.navigation.navigate('Connexion');
     }
 
-    send(firstname, name, phone, gender, mail, password) {
+    _send(firstname, name, phone, gender, mail, password) {
 
         const config = {
             'Content-Type': 'application/json'
@@ -101,7 +80,6 @@ class Inscription extends React.Component {
 
             .then(res => {
                 console.log(res.data);
-                console.log('test');
             })
             .catch(err => console.log(err));
 
@@ -132,7 +110,7 @@ class Inscription extends React.Component {
         <TextInput style={styles.input} secureTextEntry={true}  onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
             <Text style={styles.warning}>{this.state.error}</Text>
             <TouchableOpacity style={styles.button}>
-            <Text onPress={this.verify}  style={styles.textButtonBlue}>Inscription</Text>
+            <Text onPress={()=> this._getMail(this.mail)}  style={styles.textButtonBlue}>Inscription</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => nav("Connexion")} style={styles.connect}>
             <Text style={styles.textButton}>Déjà un compte ? </Text>
@@ -184,7 +162,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginHorizontal: 50,
         padding: 10,
-        backgroundColor: '#efefef',
+        backgroundColor: '#d0d0d0',
         justifyContent: 'center',
         alignContent: 'center'
     },

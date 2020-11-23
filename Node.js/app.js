@@ -7,6 +7,8 @@ const cors = require('cors');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
+const nodemailer = require("nodemailer");
+var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
 
 const bcrypt = require('bcrypt');
@@ -36,6 +38,53 @@ pool.connect(function (err) {
   }
 });
 
+var transporter = nodemailer.createTransport({              //Compte gmail envoyant les mails
+    host: 'smtp.gmail.com',
+    auth: {
+        user: 'doorzapp@gmail.com',
+        pass: 'Passw0rd!123'
+    },
+});
+
+var mailOptions = {                         //Création du mail
+    from: 'doorzapp@gmail.com',
+    to: "",
+    subject: 'DoorzApp : Réinitialisation de mot de passe',
+    text: 'That was easy!'
+};
+
+
+function CreateMail(mail, password) {
+    mailOptions.to = mail;
+    mailOptions.text = "Votre mot de passe temporaire est : '" + password + "'. Veuillez le changer le plus rapidement possible dans l'onglet prévu à cet effet de la section 'profil'";
+
+    transporter.sendMail(mailOptions, function(error, info){  // Envoie le mail
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
+/*************************************************
+ *     RESET PASSWORD
+ *************************************************/
+app.put('/resetPassword/:mail', async (req, res) => {
+    let mail = req.url.split('/resetPassword/').pop();
+    let newPass = password(2);
+    let sql = 'update users set password = $1 where mail = $2';
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(newPass, salt, async (err, hash) => {
+            let values = [hash, mail];
+            pool.query(sql, values, (err, rows) => {
+                if (err) throw err;
+                CreateMail(mail, newPass);
+                return res.send(rows.rows);
+            })
+        })
+    })
+});
 /*************************************************
 		GET USER
 *************************************************/	// TEST OK
@@ -68,7 +117,7 @@ app.post('/userConnection/', async (req, res) => {
             }
             return res.json(id);
         });
-    }    
+    }
     })
   });
 
@@ -129,7 +178,7 @@ app.patch('/access/update', (req, res) => {
 
     let query = `UPDATE access SET nickname = ${nickname}, tag =${tag} WHERE door = ${door}`;
     pool.query(query, (err) => {
-        if (err) return res.send(false);
+        if (err) return res.send(err);
         return res.send(true);
     });
 });
@@ -205,7 +254,7 @@ app.post('/door/check', async (req, res) => {
                 }
                 let pswd = response.substring(index[0]+1,index[1]);
                 if (pswd === req.body.password) {
-                    return res.send(isExisting);
+                    return res.send(!isExisting);
                 }
                 else {
                     return res.status(403).send("Bad password !")
@@ -221,7 +270,6 @@ app.post('/door/check', async (req, res) => {
 *************************************************/
 
 app.put('/doorStatus', (req, res) => {
-    console.log(req);
     const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
     pool.query(query, (err) => {
         if (err) return res.send(false);
