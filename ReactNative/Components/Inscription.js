@@ -1,7 +1,8 @@
 import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import axios from 'axios';
-import { _verify, _redirect} from '../Functions/functionsInscription'
+import { _verifyMail, _redirect, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone} from '../Functions/functionsInscription'
+import {Snackbar} from "react-native-paper";
 
 class Inscription extends React.Component {
     constructor(props){
@@ -16,7 +17,7 @@ class Inscription extends React.Component {
     }
     state = {
         mailVerified : false,
-        error : ""
+        error : "",
     };
 
     _reset() {
@@ -64,16 +65,35 @@ class Inscription extends React.Component {
 
      _submit(){
 
-        if (_verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).state){
-            console.log(this.state.mailVerified);
-            if (this.state.mailVerified){
-                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                this._reset();
-                this._redirect();
-            }
+        if (_verifyname(this.firstname, this.name).state){
+           if (_verifyPhone(this.phone).state){
+               if (_verifyMail(this.mail).state){
+                   if (_verifyPassword(this.password).state){
+                       if (_verifyconfirm(this.confirm, this.password).state){
+                           if (this.state.mailVerified){
+                               this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
+                               this._reset();
+                               this._redirect();
+                           }
+                       }
+                       else {
+                           this.setState({error : _verifyconfirm(this.confirm, this.password).msg});
+                       }
+                   }
+                   else {
+                       this.setState({error : _verifyPassword(this.password).msg});
+                   }
+               }
+               else {
+                   this.setState({error : _verifyMail(this.mail).msg});
+               }
+           }
+           else {
+               this.setState({error : _verifyPhone(this.phone).msg});
+           }
         }
         else {
-            this.setState({error : _verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).msg});
+            this.setState({error : _verifyname(this.firstname, this.name).msg});
         }
 
     };

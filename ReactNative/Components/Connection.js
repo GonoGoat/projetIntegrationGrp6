@@ -4,6 +4,7 @@ import Inscription from "./Inscription";
 import MotDePasseOublie from "./MotDePasseOublie"
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
+import {Snackbar} from "react-native-paper";
 
 class Connection extends React.Component {
 
@@ -12,9 +13,10 @@ class Connection extends React.Component {
     this.mail = "";
     this.password = "";
     this.state={
-      errorMessage: ""
+      errorMessage: "",
     }
   }
+
 
   /*
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
@@ -71,6 +73,9 @@ class Connection extends React.Component {
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
           </TouchableOpacity>
+        <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
+        "Votre compte a bien été validé"
+        </Snackbar>
         <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
           <Text style={styles.password}><u>mot de passe oublié ?</u></Text>
         </TouchableOpacity>
@@ -126,6 +131,9 @@ const styles = StyleSheet.create({
     color : 'red',
     textAlign: 'center',
     paddingTop: 5
+  },
+  success : {
+    backgroundColor : "green",
   }
 });
 

@@ -20,9 +20,9 @@ class MotDePasseOublie extends React.Component {
         let user = { mail : this.mail };
         this.setState({type : checkmail(mail).type});
         this.setState({error : checkmail(mail).message});
-        axios.get('http://localhost:8081/userMail/')
+        axios.post('http://localhost:8081/userMail/', {user})
             .then(res => {
-                const verif = res.data;
+                const verif = !res.data;
                 if (verif) {
                     this.setState({mailVerif: true});
                 }
@@ -41,7 +41,7 @@ class MotDePasseOublie extends React.Component {
         let user = {
             mail : mail
         };
-        axios.put('http://82.165.248.136:8081/resetPassword/' + {user})
+        axios.put('http://localhost:8081/resetPassword/', {user})
     }
 
 
@@ -57,7 +57,7 @@ class MotDePasseOublie extends React.Component {
                 <Text style={styles.textConnection}>Envoyer</Text>
             </TouchableOpacity>
             <Snackbar visible={this.state.error != ""} onDismiss={() => this.setState({type : this.state.type})} style = {this.state.type === "success" ? styles.success : styles.fail}duration={2000} >
-            this.state.error.value
+            {this.state.error}
             </Snackbar>
             <TouchableOpacity style={styles.text} onPress={() => nav.goBack()}>
                 <Text style={styles.test}><u>Retour</u></Text>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         paddingTop: 5
     },
     test:{
-        marginTop: 200
+        marginTop: 160
     },
     success : {
         backgroundColor : "green",
