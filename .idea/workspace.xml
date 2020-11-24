@@ -3,6 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos-.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Functions/functionsModificationInfos.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Functions/functionsModificationInfos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/__tests__/ModificationInfos.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/__tests__/ModificationInfos.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/package-lock.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -106,6 +111,7 @@
       <workItem from="1605124124089" duration="1645000" />
       <workItem from="1605132800187" duration="626000" />
       <workItem from="1605169005106" duration="48994000" />
+      <workItem from="1606251795810" duration="6457000" />
     </task>
     <servers />
   </component>
