@@ -21,7 +21,7 @@ export default class AjoutPorte_FormAjout extends React.Component {
   async addNewAccess() {
     let valeurs = {
         door : this.props.doorId,
-        user : AsyncStorage.getItem('user'),
+        user : 8,//AsyncStorage.getItem('user')
         tag : this.tag,
         nickname : this.nickname,
     }

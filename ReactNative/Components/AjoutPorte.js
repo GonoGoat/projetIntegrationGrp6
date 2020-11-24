@@ -46,7 +46,7 @@ export default class AjoutPorte extends React.Component {
             visible={this.state.message.message != undefined}
             onDismiss={() => this.setState({type : this.state.message.type})}
             style = {this.state.message.type === "success" ? styles.success : styles.fail}
-            duration={2000}
+            duration={2000}            
           >
             {this.state.message.message != undefined ? this.state.message.message : ""}
           </Snackbar>
