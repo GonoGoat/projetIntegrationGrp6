@@ -3,7 +3,6 @@ import {StyleSheet, View,Text, TextInput} from 'react-native';
 import { Button } from 'react-native-paper';
 import {checkVerif,checkVerifAPI} from "../Functions/functionsAjoutPorte"
 import AsyncStorage from "@react-native-community/async-storage"
-import { ModuleFilenameHelpers } from "webpack";
 
 const axios = require('axios')
 
