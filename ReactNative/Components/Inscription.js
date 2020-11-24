@@ -1,7 +1,7 @@
 import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import axios from 'axios';
-import { _verifyMail, _redirect, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone} from '../Functions/functionsInscription'
+import { _verifyMail, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone, _reset} from '../Functions/functionsInscription'
 import {Snackbar} from "react-native-paper";
 
 class Inscription extends React.Component {
@@ -19,23 +19,6 @@ class Inscription extends React.Component {
         mailVerified : false,
         error : "",
     };
-
-    _reset() {
-        this.name = "";
-        this.firstname = "" ;
-        this.phone = "";
-        this.gender = "";
-        this.mail = "";
-        this.password = "";
-        this.confirm = "";
-        this.setState({errorMessage: ""});
-        this.mailInput.clear();
-        this.passwordInput.clear();
-        this.nameInput.clear();
-        this.firstnameInput.clear();
-        this.confirmInput.clear();
-        this.phoneInput.clear();
-    }
 
     async _getMail(mail){
         let user = {
@@ -72,8 +55,14 @@ class Inscription extends React.Component {
                        if (_verifyconfirm(this.confirm, this.password).state){
                            if (this.state.mailVerified){
                                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                               this._reset();
-                               this._redirect();
+                               _reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
+                               this.mailInput.clear();
+                               this.passwordInput.clear();
+                               this.nameInput.clear();
+                               this.firstnameInput.clear();
+                               this.confirmInput.clear();
+                               this.phoneInput.clear();
+                               this.props.navigation.navigate('Connexion');
                            }
                        }
                        else {
@@ -97,10 +86,6 @@ class Inscription extends React.Component {
         }
 
     };
-
-    _redirect (test) {
-        this.props.navigation.navigate('Connexion');
-    }
 
     _send(firstname, name, phone, gender, mail, password) {
 
@@ -128,7 +113,6 @@ class Inscription extends React.Component {
     }
 
     render() {
-        const nav = this.props.navigation.navigate;
         return (
             <ScrollView style={styles.scrollView}>
             <View style={styles.component}>
@@ -154,7 +138,7 @@ class Inscription extends React.Component {
             <TouchableOpacity style={styles.button}>
             <Text onPress={()=> this._getMail(this.mail)}  style={styles.textButtonBlue}>Inscription</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => nav("Connexion")} style={styles.connect}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Connexion")} style={styles.connect}>
             <Text style={styles.textButton}>Déjà un compte ? </Text>
         </TouchableOpacity>
         </View>

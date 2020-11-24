@@ -1,5 +1,3 @@
-
-
 export function _verifyname(firstname, name){
     let error = "";
     if (/^[A-Za-z]+$/.test(firstname) && /^[A-Za-z]+$/.test(name)) {
@@ -20,6 +18,7 @@ export function _verifyMail(mail){
     }
     return {"state" : false, "msg" : error};
 }
+
 export function _verifyPhone(phone){
     let error = "";
     if (/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(phone)){
@@ -30,6 +29,7 @@ export function _verifyPhone(phone){
     }
     return {"state" : false, "msg" : error};
 }
+
 export function _verifyPassword(password){
     let error = "";
     if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(password)){
@@ -40,6 +40,7 @@ export function _verifyPassword(password){
     }
     return {"state" : false, "msg" : error};
 }
+
 export function _verifyconfirm(confirm, password){
     let error = "";
     if (password === confirm){
@@ -51,7 +52,13 @@ export function _verifyconfirm(confirm, password){
     return {"state" : false, "msg" : error};
 }
 
-
-export function _redirect (test) {
-    this.props.navigation.navigate('Connexion');
+export function _reset(prenom, name, phone, gender, mail, password, confirm) {
+    prenom = "";
+    name = "" ;
+    phone = "";
+    gender = "";
+    mail = "";
+    password = "";
+    confirm = "";
 }
+
