@@ -22,7 +22,7 @@ class Connection extends React.Component {
   */
   getHistory = (id) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
+    axios.get('http://192.168.0.29:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i in res.data) {
           doors.push(parseInt(res.data[i].door));
@@ -39,7 +39,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : { 
+    axios.post('http://192.168.0.29:8081/userConnection/', {user : { 
         mail: this.mail,
         password : this.password
       }
@@ -51,6 +51,16 @@ class Connection extends React.Component {
       })
     } 
     this.setState({errorMessage:'Verify mail or password'});
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem('user').then((result) => {
+      let user = result;
+      console.log(user)
+      if(user != null) {
+        this.props.navigation.navigate('Afficher la liste de vos portes')
+      }
+    })
   }
 
   render() {
