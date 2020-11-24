@@ -196,6 +196,22 @@ app.patch('/access/update', (req, res) => {
 });
 
 
+/*************************************************
+ DELETE ACCESS
+ *************************************************/	// TEST OK
+
+ app.post('/access/delete', async (req, res) => {
+    let door = req.body.params.door;
+    let user = req.body.params.users;
+
+    let query = 'DELETE FROM access where door=' + door + ' AND users=' + user;
+    await pool.query(query, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    });
+});
+
+
 
 /*************************************************
  GET ALL TAG

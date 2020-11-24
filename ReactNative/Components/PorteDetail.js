@@ -17,7 +17,9 @@ export default class PorteDetail extends React.Component {
       doors : [],
       isLoading: true,
       modalVisible: false,
-      errorVisible: false
+      errorVisible: false,
+      errorMessage: "",
+      userLogged: 0
     }
   }
 
@@ -60,20 +62,9 @@ export default class PorteDetail extends React.Component {
 
 
   sendHistory(doorId, newStatus) {
-    let userLogged = ""
-    AsyncStorage.getItem('user', function(errs, result) {
-      if (!errs) {
-        if (result !== null) {
-          userLogged = result;
-        }
-        else {
-          alert(errs)
-        }
-      }
-    })
     const history = {
       door: doorId,
-      users: userLogged,
+      users: this.state.userLogged,
       date: new Date,
       action: newStatus
     }
@@ -91,7 +82,7 @@ export default class PorteDetail extends React.Component {
 
   deleteAccess(userId, doorId) {
     this.setState({modalVisible: false})
-    const params = {
+    var params = {
       door: doorId,
       users : userId,
     }
@@ -101,8 +92,9 @@ export default class PorteDetail extends React.Component {
         this.setState({isLoading: false})
       })
       .catch(err => {
-          console.log(err),
-          this.setState({isLoading: false})
+        this.setState({isLoading: false})
+        this.setState({errorMessage: "Une erreur du système s'est produite. La suppression n'a pas été prise en compte. Veuillez réessayer. Si l'erreur persiste, revenez plus tard."});
+        this.setState({errorVisible: true})
       });
   }
 
@@ -112,18 +104,33 @@ export default class PorteDetail extends React.Component {
         this.setState({isLoading: false, doors: res.data});
       })
       .catch(error => {
-        this.setState({errorVisible: true})
+        this.setState({errorMessage: "Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard."});
+        this.setState({errorVisible: true});
+        this.setState({isLoading: false})
     })
+    let user;
+    AsyncStorage.getItem('user', function(errs, result) {
+      if (!errs) {
+        if (result !== null) {
+          user = result
+        }
+        else {
+          alert(errs)
+        }
+      }
+    })
+    this.setState({userLogged: user});
   }
 
   render() {
     if(this.state.isLoading) {
       return (
+
         <View style={styles.container}>
         <ActivityIndicator style={{alignContent: "center", justifyContent: "space-around", padding: 10}}/>
           <Modal visible={this.state.errorVisible} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
             <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Erreur !</Text>
-            <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard.</Text>
+            <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>{this.state.errorMessage}</Text>
             <TouchableHighlight style={styles.okErrorModal}
               onPress={() => this.props.navigation.goBack()             
               }>
@@ -142,7 +149,6 @@ export default class PorteDetail extends React.Component {
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
       let modalVisible = this.state.modalVisible;
-
       const nav = this.props.navigation.navigate;
       
       var dataDoor =  getDoorById(doorIdParam, this.state.doors);
@@ -218,7 +224,7 @@ export default class PorteDetail extends React.Component {
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={styles.okModal}
-              onPress={() => this.deleteAccess(8, doorIdParam)}>
+              onPress={() => this.deleteAccess(this.state.userLogged, doorIdParam)}>
               <View>
                 <Text style={{fontSize: 20}}>Oui</Text>
               </View>

@@ -1,8 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, AppState} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useEffect } from 'react';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -140,11 +140,9 @@ const DeconnectionStackScreen = ({navigation}) => (
 const Stack = createStackNavigator();
 
 export default function App() {
-  let user = null;
-  AsyncStorage.getItem('user').then((result) => {user = result})
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Connexion">
+      <Drawer.Navigator initialRouteName={Connection}>
         <Drawer.Screen name="Connexion" component={Connection}/>
         <Drawer.Screen name="Inscription" component={Inscription}/>
         <Drawer.Screen name="Portes favorites" component={FavoriteStackScreen} />
