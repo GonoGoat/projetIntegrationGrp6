@@ -5,6 +5,7 @@ import {Snackbar} from 'react-native-paper';
 import axios from "axios";
 import PorteDetail from "./PorteDetail";
 
+
 function ModificationInfos(props) {
 
     const data = {tagName : props.tagName, nickname : props.nickname, door : props.doorIdParam, visible : props.visible};
