@@ -45,8 +45,8 @@ void setup() {
   Serial.print("IP address:\t");
   Serial.println(WiFi.localIP());         // Send the IP address of the ESP8266 to the computer
 
-  server.on("/ouverture", HTTP_GET, ouvre);
-  server.on("/fermeture", HTTP_GET, ferme);
+  server.on("/ouverture/123Porte!", HTTP_GET, ouvre);
+  server.on("/fermeture/123Porte!", HTTP_GET, ferme);
   server.begin();
 }
 
