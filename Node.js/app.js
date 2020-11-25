@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
 var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
 
-const bcrypt = require('bcrypt');
+const argon2 = require('bcrypt');
 const saltRounds = 5;
 
 const app = express();
@@ -103,20 +103,20 @@ app.get('/user/:id', async (req, res) => {
 *************************************************/	// TEST OK
 
 app.post('/userConnection/', async (req, res) => {
-    let sql = "select * from users WHERE mail = '"+req.body.user.mail+"'";
+    let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
     pool.query(sql, async (error, rows) => {
         if (error) res.send(error);
         if (rows.rowCount != 1) {
-            return res.send(false);
+            return res.status(403).send("L'utilisateur n'existe pas")
         } else {
-        bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
-            if (err) return res.send(err);
-            if(result) {
-                id = rows.rows[0].id;
-            }
+        if (await argon2.compare(req.body.user.password, rows.rows[0].password)) {
+            id = rows.rows[0].id;
+            console.log(id);
             return res.json(id);
-        });
+        } else {
+            return res.status(403).send("Bad password !")
+        }
     }
     })
   });

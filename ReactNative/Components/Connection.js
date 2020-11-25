@@ -30,8 +30,9 @@ class Connection extends React.Component {
   };
 
   setData = (id, doors) => {
-    AsyncStorage.setItem('user', toString(id));
-    AsyncStorage.setItem('doors', toString(doors));
+    console.log(id, doors)
+    AsyncStorage.setItem('user', id.toString());
+    AsyncStorage.setItem('doors', doors.toString());
   }
 
   redirect () {
