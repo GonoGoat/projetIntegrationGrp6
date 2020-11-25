@@ -1,4 +1,4 @@
-
+import {getTitle, getStatus, getDoorById} from "../Functions/functionsPorteDetail";
 import React, { Component } from 'react';
 import {Alert , Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
