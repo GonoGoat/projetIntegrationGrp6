@@ -47,7 +47,7 @@ export default class PorteDetail extends React.Component {
 
     axios.get(`http://192.168.1.60/` + textStatus)
       .then(res => {
-        this.setState({isLoading: false, doors: res.data});
+        this.setState({isLoading: false});
       })
       .catch(error => {
         console.log(error)
