@@ -52,7 +52,7 @@ class Inscription extends React.Component {
                        if (_verifyconfirm(this.confirm, this.password).state){
                            if (this.state.mailVerified){
                                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                               _reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
+                               //_reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
                                this.mailInput.clear();
                                this.passwordInput.clear();
                                this.nameInput.clear();

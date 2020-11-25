@@ -109,21 +109,3 @@ it('Returns -false- and an error when the phone is not valid', () => {
     expect(answer.msg).toBe('le téléphone ne peut contenir que des chiffres');
 });
 
-///////////////////////////////// RESET ////////////////////////////////////////////////////////////////////////////////
-
-
-it('clear the parameters', () => {
-    let champs1 = 'Lucas';
-    let champs2 = 'Pastori';
-    let champs3 = '0476090014';
-    let champs4 = 'arle060620@gmail.com';
-    let champs5 = 'test';
-    let champs6 = 'test';
-    _reset(champs1,champs2,champs3,champs4,champs5,champs6);
-    expect(champs1).toBe("");
-    expect(champs2).toBe("");
-    expect(champs3).toBe("");
-    expect(champs4).toBe("");
-    expect(champs5).toBe("");
-    expect(champs6).toBe("");
-});
