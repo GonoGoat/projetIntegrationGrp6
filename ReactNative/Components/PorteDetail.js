@@ -19,7 +19,8 @@ export default class PorteDetail extends React.Component {
       modalVisible: false,
       errorVisible: false,
       errorMessage: "",
-      userLogged: 0
+      userLogged: 0,
+      isChangingStatus: false
     }
   }
 
@@ -29,6 +30,7 @@ export default class PorteDetail extends React.Component {
 
   send(doorId, status) {
     this.setState({isLoading: true})
+    this.setState({isChangingStatus: true})
     var newStatus;
     var textStatus
     if(status == 0) {
@@ -43,13 +45,13 @@ export default class PorteDetail extends React.Component {
       status : newStatus
     };
 
-    /*axios.get(`http://192.168.1.60/` + textStatus)
+    axios.get(`http://192.168.1.60/` + textStatus)
       .then(res => {
         this.setState({isLoading: false, doors: res.data});
       })
       .catch(error => {
         console.log(error)
-    })*/
+    })
 
     axios.put('http://192.168.0.29:8081/doorStatus',{door})
     .then(res => {
@@ -58,6 +60,9 @@ export default class PorteDetail extends React.Component {
     .catch(err => {
         this.setState({isLoading: false})
     });
+    this.timeoutHandle = setTimeout(()=>{
+      this.setState({isChangingStatus: false})
+ }, 5000);
   }
 
 
@@ -185,10 +190,12 @@ export default class PorteDetail extends React.Component {
           </View>
 
           <View style={{flex: 6}}>
-            <TouchableHighlight style={styles.openButton}
-              onPress={() => this.send(doorIdParam, dataDoor[2])}>
+            <TouchableHighlight disabled={this.state.isChangingStatus}
+            style={styles.openButton}
+              onPress={() => this.send(doorIdParam, dataDoor[2])}
+              >
               <View>
-                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2])}</Text>
+                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2], this.state.isChangingStatus)}</Text>
               </View>
             </TouchableHighlight>
 

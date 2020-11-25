@@ -15,10 +15,17 @@ export function getDoorById(doorId, table) {
     }
 }
 
-export function getTitle(status) {
-    if(status == 0) {
-      return("Ouvrir");
-    } else {
-      return("Fermer");
+export function getTitle(status, bool) {
+    if(status == 0 && !bool) {
+        return("Ouvrir");
+    } 
+    else if(status == 1 && !bool) {
+        return("Fermer");
+    }
+    else if(status == 0 && bool) {
+        return("Fermeture...");
+      } 
+    else if(status == 1 && bool) {
+        return("Ouverture...");
     }
 }
