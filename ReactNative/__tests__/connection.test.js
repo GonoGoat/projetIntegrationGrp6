@@ -21,14 +21,13 @@ describe("Connection Class Component", () => {
 
   it('calls storeData twice on getHistory', async () => {
     let id = 1;
-    axios.get.mockResolvedValue({
-      data : [{door:8},{door: 3}]
-    })
+    doors = [8,3]
 
     const wrapper = shallow(<Connection />);
     const componentInstance = wrapper.instance();
-    componentInstance.getHistory(id);
+    componentInstance.setData(id, doors);
     expect(AsyncStorage.setItem).toHaveBeenCalledTimes(2);
+    jest.clearAllMocks();
   });
 
   it('changes state on checkuser without values', async () => {
@@ -38,7 +37,8 @@ describe("Connection Class Component", () => {
     const wrapper = shallow(<Connection />);
     const componentInstance = wrapper.instance();
     componentInstance.checkUser();
-    expect(wrapper.state('errorMessage')).toBe('Veuillez renseigner une valeur dans chaque champ');
+    expect(wrapper.state('errorMessage')).toBe('Le mot de passe ne répond pas aux contraintes de l\'inscription');
+    jest.clearAllMocks();
   });
 
   it('changes state on checkuser with wrong values', async () => {
@@ -52,7 +52,8 @@ describe("Connection Class Component", () => {
     componentInstance.mail = value;
     componentInstance.password = value;
     componentInstance.checkUser();
-    expect(componentInstance.state.errorMessage).toBe('Mail et/ou mot de passe incorrect');
+    expect(componentInstance.state.errorMessage).toBe('Le mot de passe ne répond pas aux contraintes de l\'inscription');
+    jest.clearAllMocks();
   });
 
   it('calls getHistory on connection with existing user', async () => {
@@ -66,6 +67,7 @@ describe("Connection Class Component", () => {
     componentInstance.password = value;
     componentInstance.checkUser();
     expect(AsyncStorage.setItem).toHaveBeenCalledTimes(2);
+    jest.clearAllMocks();
   });
 });
 
@@ -73,5 +75,10 @@ describe("Connection Class render", () => {
   it('Should have 6 texts', async ()=> {
     const wrapper = shallow(<Connection />)
     expect(wrapper.find('Text')).toHaveLength(6);
+  })
+  it('Should have default empty password and mail', async ()=> {
+    const wrapper = shallow(<Connection />)
+    expect(wrapper.instance().mail).toBe("");
+    expect(wrapper.instance().mail).toBe("");
   })
 });

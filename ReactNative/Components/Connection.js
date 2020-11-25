@@ -31,7 +31,6 @@ class Connection extends React.Component {
   };
 
   setData = (id, doors) => {
-    console.log(id, doors)
     AsyncStorage.setItem('user', id.toString());
     AsyncStorage.setItem('doors', doors.toString());
   }
@@ -53,7 +52,10 @@ class Connection extends React.Component {
       .then((response) => {
         if (!response.data) {
           this.setState({errorMessage:'Mail ou mot de passe incorrect'});
-        } else {
+        } else if (response.status === 403) {
+          this.setState({errorMessage:response.data})
+        }
+        else {
           this.setState({errorMessage:''});
           this.getHistory(response.data);
           this.redirect();
@@ -69,20 +71,20 @@ class Connection extends React.Component {
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
-        <TextInput ref={input => { this.mailInput = input }} placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
+        <TextInput testID='mail' ref={input => { this.mailInput = input }} placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
         <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput ref={input => { this.passwordInput = input }} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
+        <TextInput testID='password' ref={input => { this.passwordInput = input }} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
-        <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
+        <TouchableOpacity testID='connexion' style={styles.connect} onPress={()=> this.checkUser()}>
           <Text style={styles.textConnection}>Connexion</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
+        <TouchableOpacity testID='inscription' style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
           </TouchableOpacity>
         <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
         "Votre compte a bien été validé"
         </Snackbar>
-        <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+        <TouchableOpacity testID='forgot' style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
           <Text style={styles.password}><u>mot de passe oublié ?</u></Text>
         </TouchableOpacity>
       </View>
