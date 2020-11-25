@@ -12,7 +12,6 @@ var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
 
 const argon2 = require("argon2");
-const bcrypt = require('bcrypt');
 const saltRounds = 5;
 
 const app = express();
@@ -114,9 +113,8 @@ app.post('/userConnection/', async (req, res) => {
         if (rows.rowCount != 1) {
             return res.status(403).send("L'utilisateur n'existe pas")
         } else {
-        if (await argon2.compare(req.body.user.password, rows.rows[0].password)) {
+        if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
             id = rows.rows[0].id;
-            console.log(id);
             return res.json(id);
         } else {
             return res.status(403).send("Bad password !")
@@ -234,7 +232,7 @@ app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
     let user = parseInt(req.body.user)
     let isExisting = false;
-    let sql = `select * from access where door = ${id} and users = ${user}`
+    let sql = `select * from access where door = ${id} AND users = ${user}`
     pool.query(sql, (err,rows) => {
         if (err) throw err;
         if (rows.rows.length > 0) {

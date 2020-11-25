@@ -79,7 +79,6 @@ class listPortes extends React.Component {
   }
 componentDidMount() {
 
-  this.setState('user', JSON.parse(await AsyncStorage.getItem('user')))
   this._getTag()
 
   }

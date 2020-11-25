@@ -3,6 +3,7 @@ import React from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
 import { verify } from "../Functions/functionsConnection";
+import {Snackbar} from "react-native-paper";
 
 class Connection extends React.Component {
 
