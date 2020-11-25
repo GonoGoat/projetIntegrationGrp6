@@ -43,9 +43,6 @@ class Inscription extends React.Component {
             });
     }
 
-
-
-
      _submit(){
 
         if (_verifyname(this.firstname, this.name).state){
@@ -103,11 +100,8 @@ class Inscription extends React.Component {
         };
 
 
-        axios.post('http://82.165.248.136:8081/newUsers',{user})
+        axios.post('http://localhost:8081/newUsers',{user})
 
-            .then(res => {
-                console.log(res.data);
-            })
             .catch(err => console.log(err));
 
     }

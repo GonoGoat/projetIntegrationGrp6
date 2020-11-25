@@ -11,6 +11,7 @@ const nodemailer = require("nodemailer");
 var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
 
+const argon2 = require("argon2");
 const bcrypt = require('bcrypt');
 const saltRounds = 5;
 
@@ -71,23 +72,22 @@ function CreateMail(mail, password) {
  *     RESET PASSWORD
  *************************************************/
 app.put('/resetPassword/', async (req, res) => {
+    let hash;
     let mail = req.body.user.mail;
     let newPass = "";
     let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
     for (let i =0; i <15; i++){
         newPass += random[Math.round(Math.random()*62)];
     }
+    hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
-    bcrypt.genSalt(saltRounds, function(err, salt) {
-        bcrypt.hash(newPass, salt, async (err, hash) => {
-            let values = [hash, mail];
-            pool.query(sql, values, (err, rows) => {
-                if (err) throw err;
-                CreateMail(mail, newPass);
-                return res.send(rows.rows);
-            })
-        })
+    let values = [hash, mail];
+    pool.query(sql, values, (err, rows) => {
+        if (err) throw err;
+        CreateMail(mail, newPass);
+        return res.send(rows.rows);
     })
+
 });
 /*************************************************
 		GET USER
@@ -129,29 +129,27 @@ app.post('/userConnection/', async (req, res) => {
 		POST USER
 *************************************************/	// TEST OK
 
-app.post('/newUsers', (req, res) =>{
+app.post('/newUsers', async (req, res) => {  //argon2 test
+    let hash;
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
+    if (!errors.isEmpty()) {
         return res.send(errors);
     } else {
         const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password) VALUES ($1,$2,$3,$4,$5,$6)";
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(req.body.user.password, salt, async (err, hash) => {
-                let valeur = [  req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender,req.body.user.mail, hash, ];
-                console.log(valeur);
-                pool.query(query, valeur, (err) => {
-                    if (err) {
-                        console.log(err);
-                        return res.send(false);
-                    }
-                    else {
-                        return res.send(true);
-                    }
-                });
-            });
-        })
+        hash = await argon2.hash(req.body.user.password, {type: argon2.argon2id});
+        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash,];
+        pool.query(query, valeur, (err) => {
+            if (err) {
+                console.log(err);
+                return res.send(false);
+            } else {
+                return res.send(true);
+            }
+        });
     }
+    ;
 });
+
 
 /*************************************************
  GET USER BY MAIL
