@@ -14,16 +14,18 @@ export default class AjoutPorte_FormAjout extends React.Component {
 
   constructor(props) {
     super(props);
-    this.tag = "";
-    this.nickname = "";
+    this.state = {
+      tag : "",
+      nickname : ""
+    }
   }
 
   async addNewAccess() {
     let valeurs = {
         door : this.props.doorId,
         user : 8,//AsyncStorage.getItem('user')
-        tag : this.tag,
-        nickname : this.nickname,
+        tag : this.state.tag,
+        nickname : this.state.nickname,
     }
     await checkAccess(valeurs).then(res => {
       let rep = checkAjoutAPI(res,true);
@@ -36,7 +38,7 @@ export default class AjoutPorte_FormAjout extends React.Component {
   }
 
   submit() {
-    let valeurs = checkAjout(this.tag,this.nickname);
+    let valeurs = checkAjout(this.state.tag,this.state.nickname);
     if (valeurs === true) {
       this.addNewAccess();
     }
@@ -55,13 +57,19 @@ export default class AjoutPorte_FormAjout extends React.Component {
             style={styles.input}
             placeholder="Nommez la nouvelle porte"
             onSubmitEditing={() => this.submit()}
-            onChangeText={(text) => this.nickname = text}></TextInput>
+            onChangeText={(text) => this.setState({nickname : text})}
+            testID='name'
+            value={this.state.nickname}
+          />
           <Text style={styles.label}>Tag</Text>
           <TextInput 
             style={styles.input}
             placeholder="Créez un tag"
             onSubmitEditing={() => this.submit()}
-            onChangeText={(text) =>this.tag = text}></TextInput>
+            onChangeText={(text) =>this.setState({tag : text})}
+            testID='tag'
+            value={this.state.tag}
+          />
         </View>
         <Button
           color="#719ADA"
@@ -70,10 +78,11 @@ export default class AjoutPorte_FormAjout extends React.Component {
           contentStyle = {styles.buttonIn}
           labelStyle= {styles.buttonText}
           style={styles.button}
+          testID='button-ajout'
         >
           Rechercher la porte
         </Button>
-        <Text onPress = {() => this.props.setDoor(undefined)} style={styles.retour}>Retour</Text>
+        <Text testID='back' onPress = {() => this.props.setDoor(undefined)} style={styles.retour}>Retour</Text>
       </View>
     )
   }

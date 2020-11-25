@@ -61,6 +61,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
                         keyboardType={"numeric"}
                         onSubmitEditing={() => this.submit()}
                         onChangeText={(text) => this.setState({idPorte : text})}
+                        value={this.state.idPorte}
                     />
                     <Text style={styles.label}>Mot de passe :</Text>
                     <TextInput
@@ -70,6 +71,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
                         secureTextEntry={true}
                         onSubmitEditing={() => this.submit()}
                         onChangeText={(text) => this.setState({password : text})}
+                        value={this.state.password}
                     />
                 </View>
                 <Button
@@ -79,7 +81,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
                     contentStyle = {styles.buttonIn}
                     labelStyle= {styles.buttonText}
                     style={styles.button}
-                    testID="button-verif"
+                    testID='button-verif'
                 >
                     Rechercher la porte
                 </Button>
