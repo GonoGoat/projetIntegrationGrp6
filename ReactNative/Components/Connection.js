@@ -70,6 +70,7 @@ class Connection extends React.Component {
 
   render() {
     const nav = this.props.navigation;
+    var isSubmitted = this.props.route.params.inscriptionSubmitted
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
@@ -83,7 +84,7 @@ class Connection extends React.Component {
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
           </TouchableOpacity>
-        <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
+        <Snackbar visible={isSubmitted} style = {this.state.type = styles.success } duration={2000} >
         "Votre compte a bien été validé"
         </Snackbar>
         <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>

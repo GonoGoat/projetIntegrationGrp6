@@ -58,22 +58,10 @@ const ConnexionStackScreen = ({navigation}) => (
   },
   headerShown : false
 }}>
-<ConnexionScreen.Screen name="Connexion" component={Connection} options={{
-  headerLeft: () => (
-      <Icon.Button name="ios-menu" size={25}
-  onPress={() => navigation.openDrawer()}></Icon.Button>
-)
-}}></ConnexionScreen.Screen>
-<MotDePasseOublieScreen.Screen name="MotDePasseOublie" component={MotDePasseOublie} options={{
-  headerLeft: () => (
-      <Icon.Button name="md-menu" size={25}
-  onPress={ () => { navigation.openDrawer() }}></Icon.Button>
-),
-}}></MotDePasseOublieScreen.Screen>
 </ConnexionScreen.Navigator>
 )
 
-/*const InscriptionStackScreen = ({navigation}) => (
+const InscriptionStackScreen = ({navigation}) => (
   <InscriptionScreen.Navigator screenOptions={{
     headerStyle: {
       //backgroundcolor: "blue",
@@ -89,8 +77,24 @@ const ConnexionStackScreen = ({navigation}) => (
         onPress={() => navigation.openDrawer()}></Icon.Button>
       )
     }}></InscriptionScreen.Screen>
+    <ConnexionScreen.Screen name="Connexion" component={Connection} initialParams={{ inscriptionSubmitted: false }} options={{
+      inscriptionSubmitted: false,
+      headerLeft: () => (
+          <Icon.Button name="ios-menu" size={25}
+      onPress={() => navigation.openDrawer()}></Icon.Button>
+      )
+    }}>
+    </ConnexionScreen.Screen>
+    <MotDePasseOublieScreen.Screen name="MotDePasseOublie" component={MotDePasseOublie} options={{
+      headerLeft: () => (
+          <Icon.Button name="md-menu" size={25}
+      onPress={ () => { navigation.openDrawer() }}></Icon.Button>
+      ),
+    }}>
+    </MotDePasseOublieScreen.Screen>
     </InscriptionScreen.Navigator>
-)*/
+)
+
 const AjoutPorteStackScreen = ({navigation}) => (
   <AjoutPorteScreen.Navigator screenOptions={{
     headerStyle: {
@@ -172,8 +176,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName={Connection}>
-        <Drawer.Screen name="Connexion" component={Connection}/>
-        <Drawer.Screen name="Inscription" component={Inscription}/>
+        <Drawer.Screen name="Connexion" component={Connection} initialParams={{ inscriptionSubmitted: false }}/>
+        <Drawer.Screen name="Inscription" component={InscriptionStackScreen}/>
         <Drawer.Screen name="Portes favorites" component={FavoriteStackScreen} />
         <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
