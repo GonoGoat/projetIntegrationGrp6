@@ -24,7 +24,7 @@ class Connection extends React.Component {
   */
   getHistory = (id) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
+    axios.get('http://192.168.0.29:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
@@ -41,7 +41,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : {
+    axios.post('http://192.168.0.29:8081/userConnection/', {user : { 
         mail: this.mail,
         password : this.password
       }
@@ -58,8 +58,19 @@ class Connection extends React.Component {
     }
   }
 
+  componentDidMount() {
+    AsyncStorage.getItem('user').then((result) => {
+      let user = result;
+      console.log(user)
+      if(user != null) {
+        this.props.navigation.navigate('Afficher la liste de vos portes')
+      }
+    })
+  }
+
   render() {
     const nav = this.props.navigation;
+    var isSubmitted = this.props.route.params.inscriptionSubmitted
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
@@ -73,7 +84,7 @@ class Connection extends React.Component {
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
           </TouchableOpacity>
-        <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
+        <Snackbar visible={isSubmitted} style = {this.state.type = styles.success } duration={2000} >
         "Votre compte a bien été validé"
         </Snackbar>
         <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>

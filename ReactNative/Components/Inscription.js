@@ -59,7 +59,7 @@ class Inscription extends React.Component {
                                this.firstnameInput.clear();
                                this.confirmInput.clear();
                                this.phoneInput.clear();
-                               this.props.navigation.navigate('Connexion');
+                               this.props.navigation.navigate('Connexion', {inscriptionSubmitted: true});
                            }
                        }
                        else {

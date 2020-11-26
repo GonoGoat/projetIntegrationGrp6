@@ -1,8 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, AppState} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useEffect } from 'react';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -58,22 +58,10 @@ const ConnexionStackScreen = ({navigation}) => (
   },
   headerShown : false
 }}>
-<ConnexionScreen.Screen name="Connexion" component={Connection} options={{
-  headerLeft: () => (
-      <Icon.Button name="ios-menu" size={25}
-  onPress={() => navigation.openDrawer()}></Icon.Button>
-)
-}}></ConnexionScreen.Screen>
-<MotDePasseOublieScreen.Screen name="MotDePasseOublie" component={MotDePasseOublie} options={{
-  headerLeft: () => (
-      <Icon.Button name="md-menu" size={25}
-  onPress={ () => { navigation.openDrawer() }}></Icon.Button>
-),
-}}></MotDePasseOublieScreen.Screen>
 </ConnexionScreen.Navigator>
 )
 
-/*const InscriptionStackScreen = ({navigation}) => (
+const InscriptionStackScreen = ({navigation}) => (
   <InscriptionScreen.Navigator screenOptions={{
     headerStyle: {
       //backgroundcolor: "blue",
@@ -89,8 +77,24 @@ const ConnexionStackScreen = ({navigation}) => (
         onPress={() => navigation.openDrawer()}></Icon.Button>
       )
     }}></InscriptionScreen.Screen>
+    <ConnexionScreen.Screen name="Connexion" component={Connection} initialParams={{ inscriptionSubmitted: false }} options={{
+      inscriptionSubmitted: false,
+      headerLeft: () => (
+          <Icon.Button name="ios-menu" size={25}
+      onPress={() => navigation.openDrawer()}></Icon.Button>
+      )
+    }}>
+    </ConnexionScreen.Screen>
+    <MotDePasseOublieScreen.Screen name="MotDePasseOublie" component={MotDePasseOublie} options={{
+      headerLeft: () => (
+          <Icon.Button name="md-menu" size={25}
+      onPress={ () => { navigation.openDrawer() }}></Icon.Button>
+      ),
+    }}>
+    </MotDePasseOublieScreen.Screen>
     </InscriptionScreen.Navigator>
-)*/
+)
+
 const AjoutPorteStackScreen = ({navigation}) => (
   <AjoutPorteScreen.Navigator screenOptions={{
     headerStyle: {
@@ -169,16 +173,11 @@ const DeconnectionStackScreen = ({navigation}) => (
 )
 
 export default function App() {
-  let user = null;
-  AsyncStorage.getItem('user').then((result) => {user = result})
-  if (user != null) {
-    
-  }
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Connexion">
-        <Drawer.Screen name="Connexion" component={ConnexionStackScreen}/>
-        <Drawer.Screen name="Inscription" component={Inscription}/>
+      <Drawer.Navigator initialRouteName={Connection}>
+        <Drawer.Screen name="Connexion" component={Connection} initialParams={{ inscriptionSubmitted: false }}/>
+        <Drawer.Screen name="Inscription" component={InscriptionStackScreen}/>
         <Drawer.Screen name="Portes favorites" component={FavoriteStackScreen} />
         <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />

@@ -103,6 +103,18 @@ app.get('/user/:id', async (req, res) => {
 });
 
 /*************************************************
+		GET NAME OF ALL USERS
+*************************************************/
+
+app.get('/users/name', async (req, res) => {
+    let sql = 'select id, firstname, lastname from users';
+    pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+  });
+
+/*************************************************
 		GET USER WITH MAIL AND PASSWORD
 *************************************************/	// TEST OK
 
@@ -182,6 +194,22 @@ app.patch('/access/update', (req, res) => {
     let query = `UPDATE access SET nickname = ${nickname}, tag =${tag} WHERE door = ${door}`;
     pool.query(query, (err) => {
         if (err) return res.send(err);
+        return res.send(true);
+    });
+});
+
+
+/*************************************************
+ DELETE ACCESS
+ *************************************************/	// TEST OK
+
+ app.post('/access/delete', async (req, res) => {
+    let door = req.body.params.door;
+    let user = req.body.params.users;
+
+    let query = 'DELETE FROM access where door=' + door + ' AND users=' + user;
+    await pool.query(query, (err) => {
+        if (err) return res.send(false);
         return res.send(true);
     });
 });
