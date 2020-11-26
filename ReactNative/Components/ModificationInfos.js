@@ -21,7 +21,7 @@ function ModificationInfos(props) {
     function updateAccess() {
         console.log(tagName +" "+nickname+" "+door)
 
-        axios.patch('http://localhost:8081/access/update',{tagName : tagName, nickname : nickname, door : door})
+        axios.patch('http://82.165.248.136:8081/access/update',{tagName : tagName, nickname : nickname, door : door})
             .then(res => {
                 console.log(res);
                 setMessage({
@@ -72,7 +72,7 @@ function ModificationInfos(props) {
 
     function save(){
         check() ? updateAccess() :
-            navigation.push(PorteDetail);
+            //navigation.push(PorteDetail);
             setVisible(visible);
     };
 

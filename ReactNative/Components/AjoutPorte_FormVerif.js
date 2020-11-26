@@ -2,6 +2,7 @@ import React from "react";
 import {StyleSheet, View,Text, TextInput} from 'react-native';
 import { Button } from 'react-native-paper';
 import {checkVerif,checkVerifAPI} from "../Functions/functionsAjoutPorte"
+import AsyncStorage from "@react-native-community/async-storage"
 
 const axios = require('axios')
 
@@ -19,7 +20,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
 
     async isDoorExisting() {
         let valeurs = {
-            user : 59,
+            user : AsyncStorage.getItem('user'),
             password : this.password,
             id : this.idPorte
         }

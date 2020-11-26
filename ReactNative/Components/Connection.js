@@ -4,6 +4,7 @@ import Inscription from "./Inscription";
 import MotDePasseOublie from "./MotDePasseOublie"
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
+import {Snackbar} from "react-native-paper";
 
 class Connection extends React.Component {
 
@@ -12,11 +13,12 @@ class Connection extends React.Component {
     this.mail = "";
     this.password = "";
     this.state={
-      errorMessage: ""
+      errorMessage: "",
     }
   }
 
-  /* 
+
+  /*
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
@@ -24,13 +26,13 @@ class Connection extends React.Component {
     let doors = [];
     axios.get('http://192.168.0.29:8081/doorHistory/user/'+id)
       .then(res => {
-        for(let i in res.data) {
-          doors.push(parseInt(res.data[i].door));
+        for(let i = 0; i<res.data.length; i ++) {
+          doors[i] = parseInt(res.data[i].door);
         }
+        AsyncStorage.setItem('user', id);
+        AsyncStorage.setItem('doors', doors);
+        this.redirect();
       })
-    AsyncStorage.setItem('user', id);
-    AsyncStorage.setItem('doors', doors);
-    this.redirect();
   };
 
   redirect () {
@@ -47,10 +49,13 @@ class Connection extends React.Component {
       .then((response) => {
         if (response.data != false) {
           this.getHistory(response.data);
+        } else {
+          this.setState({errorMessage:'Mail ou mot de passe incorrect'});
         }
       })
-    } 
-    this.setState({errorMessage:'Verify mail or password'});
+    } else {
+      this.setState({errorMessage:'Veuillez renseigner une valeur dans chaque champ'});
+    }
   }
 
   componentDidMount() {
@@ -71,9 +76,6 @@ class Connection extends React.Component {
         <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
         <Text style={styles.text}>Mot de passe : </Text>
         <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
-        <TouchableOpacity onPress={()=> console.log('TODO')}>
-          <Text style={styles.password}>Mot de passe oublié ?</Text>
-        </TouchableOpacity>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
         <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
           <Text style={styles.textConnection}>Connexion</Text>
@@ -81,8 +83,11 @@ class Connection extends React.Component {
         <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
           </TouchableOpacity>
-        <TouchableOpacity style={styles.text} onPress={() => nav.navigate("MotDePasseOublie")}>
-          <Text style={styles.text}> mot de passe oublié ?</Text>
+        <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
+        "Votre compte a bien été validé"
+        </Snackbar>
+        <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+          <Text style={styles.password}><u>mot de passe oublié ?</u></Text>
         </TouchableOpacity>
       </View>
     )
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
   connect: {
     color: 'white',
     textAlign: 'center',
-    margin: 50,
+    margin: 25,
     padding: 10,
     backgroundColor: '#719ada',
     justifyContent: 'center',
@@ -123,19 +128,22 @@ const styles = StyleSheet.create({
   },
   inscript: {
     textAlign: 'center',
-    margin: 50,
+    margin: 25,
     padding: 10,
     backgroundColor: '#d8d8d8',
     justifyContent: 'center',
     alignContent: 'center'
   },
   password: {
-    textAlign: 'right',
+    marginTop : 140
   },
   error: {
     color : 'red',
     textAlign: 'center',
     paddingTop: 5
+  },
+  success : {
+    backgroundColor : "green",
   }
 });
 

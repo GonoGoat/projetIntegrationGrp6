@@ -14,6 +14,8 @@ import listePortes from './Components/listePortes'
 import Historique from './Components/Historique'
 import PorteDetail from './Components/PorteDetail';
 import Deconnection from './Components/Deconnection';
+import MotDePasseOublie from './Components/MotDePasseOublie';
+
 import AsyncStorage from '@react-native-community/async-storage'
 
 const Drawer = createDrawerNavigator();
@@ -23,6 +25,7 @@ const InscriptionScreen = createStackNavigator();
 const AjoutPorteScreen = createStackNavigator();
 const listePortesScreen = createStackNavigator();
 const DeconnectionScreen = createStackNavigator();
+const MotDePasseOublieScreen = createStackNavigator();
 
 const FavoriteStackScreen = ({navigation}) => (
   <FavoriteScreen.Navigator screenOptions={{
@@ -44,7 +47,33 @@ const FavoriteStackScreen = ({navigation}) => (
     </FavoriteScreen.Navigator>
 )
 
-const InscriptionStackScreen = ({navigation}) => (
+const ConnexionStackScreen = ({navigation}) => (
+  <ConnexionScreen.Navigator screenOptions={{
+  headerStyle: {
+      //backgroundcolor: "blue",
+  },
+  headerTintColor: '#fff',
+      headerTitleStyle: {
+      fontWeight:'bold'
+  },
+  headerShown : false
+}}>
+<ConnexionScreen.Screen name="Connexion" component={Connection} options={{
+  headerLeft: () => (
+      <Icon.Button name="ios-menu" size={25}
+  onPress={() => navigation.openDrawer()}></Icon.Button>
+)
+}}></ConnexionScreen.Screen>
+<MotDePasseOublieScreen.Screen name="MotDePasseOublie" component={MotDePasseOublie} options={{
+  headerLeft: () => (
+      <Icon.Button name="md-menu" size={25}
+  onPress={ () => { navigation.openDrawer() }}></Icon.Button>
+),
+}}></MotDePasseOublieScreen.Screen>
+</ConnexionScreen.Navigator>
+)
+
+/*const InscriptionStackScreen = ({navigation}) => (
   <InscriptionScreen.Navigator screenOptions={{
     headerStyle: {
       //backgroundcolor: "blue",
@@ -61,7 +90,7 @@ const InscriptionStackScreen = ({navigation}) => (
       )
     }}></InscriptionScreen.Screen>
     </InscriptionScreen.Navigator>
-)
+)*/
 const AjoutPorteStackScreen = ({navigation}) => (
   <AjoutPorteScreen.Navigator screenOptions={{
     headerStyle: {
@@ -86,7 +115,8 @@ const listePortesStackScreen = ({navigation}) => (
     headerTintColor: '#fff',
     headerTitleStyle: {
       fontWeight:'bold'
-    }
+    },
+    headerShown : false
     }}>
     <listePortesScreen.Screen name="Accueil" component={listePortes} options={{
       headerLeft: () => (
@@ -123,7 +153,8 @@ const DeconnectionStackScreen = ({navigation}) => (
   headerTintColor: '#fff',
       headerTitleStyle: {
       fontWeight:'bold'
-  }
+  },
+  headerShown : false,
 }}>
 <DeconnectionScreen.Screen name="Deconnexion" component={Deconnection} options={{
   headerLeft: () => (
@@ -137,8 +168,6 @@ const DeconnectionStackScreen = ({navigation}) => (
 </DeconnectionScreen.Navigator>
 )
 
-const Stack = createStackNavigator();
-
 export default function App() {
   return (
     <NavigationContainer>
@@ -151,5 +180,7 @@ export default function App() {
         <Drawer.Screen name="Deconnexion" component={DeconnectionStackScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
-  );  
+  );
 }
+
+
