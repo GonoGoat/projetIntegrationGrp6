@@ -176,8 +176,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName={Connection}>
-        <Drawer.Screen name="Connexion" component={Connection} initialParams={{ inscriptionSubmitted: false }}/>
-        <Drawer.Screen name="Inscription" component={InscriptionStackScreen}/>
+        <Drawer.Screen name="Mon compte" component={InscriptionStackScreen}/>
         <Drawer.Screen name="Portes favorites" component={FavoriteStackScreen} />
         <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />

@@ -3,6 +3,7 @@ import React from "react";
 import axios from 'axios';
 import { _verifyMail, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone, _reset} from '../Functions/functionsInscription'
 import {Snackbar} from "react-native-paper";
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Inscription extends React.Component {
     constructor(props){
@@ -105,6 +106,19 @@ class Inscription extends React.Component {
             .catch(err => console.log(err));
 
     }
+
+    componentDidMount() {
+        AsyncStorage.getItem('user').then((result) => {
+          let user = result;
+          console.log(user)
+          if(user != null) {
+            this.props.navigation.navigate('Afficher la liste de vos portes')
+          }
+          else {
+            this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
+          }
+        })
+      }
 
     render() {
         return (
