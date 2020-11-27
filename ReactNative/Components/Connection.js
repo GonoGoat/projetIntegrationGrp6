@@ -58,44 +58,39 @@ class Connection extends React.Component {
     }
   }
 
-  componentDidMount() {
-    AsyncStorage.getItem('user').then((result) => {
-      let user = result;
-      console.log(user)
-      if(user != null) {
-        this.props.navigation.navigate('Afficher la liste de vos portes')
-      }
-    })
-  }
-
   render() {
     const nav = this.props.navigation;
     var isSubmitted = this.props.route.params.inscriptionSubmitted
     return (
-      <View style={styles.component}>
-        <Text style={styles.text}>E-mail : </Text>
-        <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
-        <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
-        <Text style={styles.error}>{this.state.errorMessage}</Text>
-        <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
-          <Text style={styles.textConnection}>Connexion</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
-          <Text style={styles.text}>Pas encore de compte ? </Text>
+      <View style={styles.container}>
+        <View style={styles.component}>
+          <Text style={styles.text}>E-mail : </Text>
+          <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
+          <Text style={styles.text}>Mot de passe : </Text>
+          <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+          <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
+            <Text style={styles.textConnection}>Connexion</Text>
           </TouchableOpacity>
-        <Snackbar visible={isSubmitted} style = {this.state.type = styles.success } duration={2000} >
-        "Votre compte a bien été validé"
-        </Snackbar>
+          <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
+            <Text style={styles.text}>Pas encore de compte ? </Text>
+            </TouchableOpacity>
+          <Snackbar visible={isSubmitted} style = {this.state.type = styles.success } duration={2000} >
+          "Votre compte a bien été validé"
+          </Snackbar>
+        </View>
         <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
-          <Text style={styles.password}><u>mot de passe oublié ?</u></Text>
+          <Text style={styles.password}>mot de passe oublié ?</Text>
         </TouchableOpacity>
-      </View>
+     </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   component: {
     justifyContent: 'center',
     alignContent: 'center',
@@ -136,7 +131,8 @@ const styles = StyleSheet.create({
     alignContent: 'center'
   },
   password: {
-    marginTop : 140
+    marginBottom : 10,
+    marginLeft: 10
   },
   error: {
     color : 'red',
