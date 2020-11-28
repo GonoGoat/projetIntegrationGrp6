@@ -109,15 +109,15 @@ app.post('/userConnection/', async (req, res) => {
     let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
     pool.query(sql, async (error, rows) => {
-        if (error) res.send(error);
+        if (error) res.send({status : false, msg : error});
         if (rows.rowCount != 1) {
-            return res.status(403).send("L'utilisateur n'existe pas")
+            return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
         } else {
         if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
             id = rows.rows[0].id;
-            return res.json(id);
+            return res.send({status : true, msg : id});
         } else {
-            return res.status(403).send("Bad password !")
+            return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
         }
     }
     })

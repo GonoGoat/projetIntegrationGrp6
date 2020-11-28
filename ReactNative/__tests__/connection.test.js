@@ -1,12 +1,7 @@
 import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { shallow, mount } from 'enzyme';
+import Enzyme, { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import React from 'react';
-import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
 import Connection from '../Components/Connection';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
@@ -46,7 +41,6 @@ describe("Connection Class Component", () => {
     axios.post.mockResolvedValue({
       data: false
     });
-
     const wrapper = shallow(<Connection />);
     const componentInstance = wrapper.instance();
     componentInstance.mail = value;
@@ -56,29 +50,90 @@ describe("Connection Class Component", () => {
     jest.clearAllMocks();
   });
 
-  it('calls getHistory on connection with existing user', async () => {
-    let value = 'TestString';
-    axios.post.mockResolvedValue({
-      data: 62
+  it('calls setData on getHistory', () => {
+    axios.get.mockResolvedValue({
+      data: [{door : 1}, {door : 3}]
     });
-    const wrapper = shallow(<Connection navigation={navigation} />);
-    const componentInstance = wrapper.instance();
-    componentInstance.mail = value;
-    componentInstance.password = value;
-    componentInstance.checkUser();
-    expect(AsyncStorage.setItem).toHaveBeenCalledTimes(2);
+    const wrapper = shallow(<Connection />);
+    const instance  = wrapper.instance();
+    instance.getHistory(1);
+    expect(axios.get).toHaveBeenCalledTimes(1);
     jest.clearAllMocks();
   });
+
+  it('Redirect should clear state and input values', () => {
+    const wrap = shallow(<Connection  navigation={navigation} />);
+    const instance = wrap.instance();
+    instance.redirect();
+    expect(instance.state.mail).toBe('')
+    expect(instance.state.password).toBe('')
+    expect(instance.state.errorMessage).toBe('')
+  })
 });
 
-describe("Connection Class render", () => {
-  it('Should have 6 texts', async ()=> {
+describe("Connection Functions", () => {
+  it ("should create component", () => {
     const wrapper = shallow(<Connection />)
-    expect(wrapper.find('Text')).toHaveLength(6);
+    expect(wrapper.exists()).toBe(true);
+  });
+
+  it ("should be empty by default ", () => {
+    const wrap = shallow(<Connection />)
+    expect(wrap.find("[testID='mail']").at(0).prop('value')).toEqual("");
+    expect(wrap.find("[testID='password']").at(0).prop('value')).toEqual("");
   })
-  it('Should have default empty password and mail', async ()=> {
-    const wrapper = shallow(<Connection />)
-    expect(wrapper.instance().mail).toBe("");
-    expect(wrapper.instance().mail).toBe("");
+
+  it ("should change values on user input value", () => {
+    let mail = "this@is.mail"
+    let pwd = "Passw0rd!"
+    const wrap = shallow(<Connection/>)
+    wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
+    wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+    expect(wrap.find("[testID='mail']").at(0).prop('value')).toEqual(mail);
+    expect(wrap.find("[testID='password']").at(0).prop('value')).toEqual(pwd);
+  });
+
+  it("should not call API and display password error message", () => {
+    let mail = "test";
+    let password = "testeteste"
+    axios.post.mockResolvedValue({
+      data : true
+    })
+    const wrap = shallow(<Connection />);
+    wrap.setState({mail : mail,password : password});
+    wrap.find("[testID='connexion']").simulate('press');
+    expect(axios.post).toHaveBeenCalledTimes(0);
+    expect(wrap.instance().state.errorMessage).toEqual("Le mot de passe ne répond pas aux contraintes de l'inscription")
+    jest.clearAllMocks();
   })
-});
+
+  it("should not call API and display mail error message", async () => {
+    let mail = "1";
+    let password = "Passw0rd!"
+    axios.post.mockResolvedValue({
+      status : false,
+      msg : ""
+    })
+    const wrap = shallow(<Connection />);
+    wrap.setState({mail : mail,password : password});
+    wrap.find("[testID='connexion']").simulate('press');
+    expect(axios.post).toHaveBeenCalledTimes(0);
+    expect(await wrap.instance().state.errorMessage).toEqual("L'email n'est pas valide")
+    jest.clearAllMocks();
+  })
+
+  it("should call API and display mail error message", async () => {
+    let mail = "existe@pas.mail";
+    let password = "Passw0rd!"
+    let data = "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."
+    axios.post.mockResolvedValue({
+      status : false,
+      msg : data
+    })
+    const wrap = shallow(<Connection />);
+    wrap.setState({mail : mail, password : password});
+    wrap.find("[testID='connexion']").simulate('press');
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    jest.clearAllMocks();
+  })
+})

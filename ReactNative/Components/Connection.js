@@ -9,12 +9,13 @@ class Connection extends React.Component {
 
   constructor(props) {
     super(props);
-    this.mail = "";
-    this.password = "";
     this.state={
       errorMessage: "",
+      mail: "",
+      password: ""
     }
   }
+
   /* 
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
@@ -38,31 +39,32 @@ class Connection extends React.Component {
   redirect () {
     this.props.navigation.navigate('Afficher la liste de vos portes');
     this.setState({errorMessage: ''});
-    this.passwordInput.value = "";
-    this.mailInput.value = "";
+    this.setState({mail : ''});
+    this.setState({password: ''});
   }
 
-  checkUser(){
-    if(verify(this.mail, this.password).state){
-      axios.post('http://82.165.248.136:8081/userConnection/', {user : { 
-        mail: this.mail,
-        password : this.password
-      }
-      })
-      .then((response) => {
-        if (!response.data) {
-          this.setState({errorMessage:'Mail ou mot de passe incorrect'});
-        } else if (response.status === 403) {
-          this.setState({errorMessage:response.data})
+  async userConnection() {
+    return await axios.post('http://localhost:8081/userConnection/', {user : { 
+      mail: this.state.mail,
+      password : this.state.password
+    }
+    })
+  }
+
+  async checkUser(){
+    if(verify(this.state.mail, this.state.password).state){
+      await this.userConnection()
+        .then(response => {
+        if (!response.data.status) {
+          this.setState({errorMessage:response.data.msg})
         }
         else {
           this.setState({errorMessage:''});
-          this.getHistory(response.data);
+          this.getHistory(response.data.msg);
           this.redirect();
-        }
-      })
+        }});
     } else {
-      this.setState({errorMessage:verify(this.mail, this.password).msg});
+      this.setState({errorMessage:verify(this.state.mail, this.state.password).msg});
     }
   }
 
@@ -71,16 +73,21 @@ class Connection extends React.Component {
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
-        <TextInput testID='mail' ref={input => { this.mailInput = input }} placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
+        <TextInput 
+          placeholder='E-mail' style={styles.input} 
+          onChangeText={(text)=> this.setState({mail: text})}
+          testID='mail' 
+          value={this.state.mail}
+          />
         <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput testID='password' ref={input => { this.passwordInput = input }} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
+        <TextInput testID='password' value={this.state.password} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.setState({password: text}) }/>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
         <TouchableOpacity testID='connexion' style={styles.connect} onPress={()=> this.checkUser()}>
           <Text style={styles.textConnection}>Connexion</Text>
         </TouchableOpacity>
         <TouchableOpacity testID='inscription' style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
           <Text style={styles.text}>Pas encore de compte ? </Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
         <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
         "Votre compte a bien été validé"
         </Snackbar>
