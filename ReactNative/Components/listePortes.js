@@ -6,12 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let user;
 
-export function _loadTag () {
+export function _loadTag (utili) {
      return axios
-      .get('http://82.165.248.136:8081/userTag/' + user)
+      .get('http://localhost:8081/userTag/' + utili)
       .catch(function(error) {
         if (error.response) {
-          alert("404 Not Found page")
+          alert("40X Not Found page")
         } else if (error.request) {
           alert("Network Error")
         } else {
@@ -20,12 +20,12 @@ export function _loadTag () {
       })
 }
 
-export function _loadDoor (tag) {
+export function _loadDoor (tag, utili) {
   return axios
-    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
+    .get("http://localhost:8081/doorTagUser/" + tag + "/" + utili)
     .catch(function(error) {
       if (error.response) {
-        alert("404 Not Found page")
+        alert("40X Not Found page")
       } else if (error.request) {
         alert("Network Error")
       } else {
@@ -33,8 +33,6 @@ export function _loadDoor (tag) {
       }
     })
 };
-
-const WIDTH = Dimensions.get('window').width
 
 class listPortes extends React.Component {
   constructor(props) {
@@ -46,8 +44,8 @@ class listPortes extends React.Component {
     }
   }
   
-  _getTag() {
-    _loadTag().then(data => {
+  _getTag(utili) {
+    _loadTag(utili).then(data => {
       if(data) {
       this.setState({
         listeTag : [ ...this.state.listeTag, ...data.data]
@@ -57,11 +55,11 @@ class listPortes extends React.Component {
       }
     })
   }
-  _getDoor = item => {
+  _getDoor(item, utili) {
     this.setState({
       listeDoor: []
     })
-    _loadDoor(item.tag, this.state.user).then(data => {
+    _loadDoor(item.tag, utili).then(data => {
       this.setState({
         listeDoor : [ ...this.state.listeDoor, ...data.data]
       })
@@ -82,7 +80,7 @@ componentDidMount() {
       }
     }
   })
-  this._getTag()
+  this._getTag(user)
 }
   render() {
     if ((this.state.erreur === false) && (this.state.listeTag.length !== 0)) {
@@ -97,7 +95,7 @@ componentDidMount() {
             renderItem={({item}) =>
             <TouchableHighlight
             style={styles.tagList}  
-            onPress={() => this._getDoor(item)}
+            onPress={() => this._getDoor(item, user)}
             >
               <Text style={styles.tagText}>{item.tag}</Text>  
             </TouchableHighlight>}
