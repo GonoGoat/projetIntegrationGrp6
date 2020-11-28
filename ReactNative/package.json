@@ -10,7 +10,9 @@
     "test:utils": "jest -i __tests__/utils.ajoutPorte.test.js --collect-coverage"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "testEnvironment": "jsdom",
+    "setupFiles": ["./jestSetup.js"]
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",

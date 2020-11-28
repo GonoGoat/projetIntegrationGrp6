@@ -41,7 +41,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://192.168.0.29:8081/userConnection/', {user : { 
+    axios.post('http://192.168.0.29:8081/userConnection/', {user : {
         mail: this.mail,
         password : this.password
       }
@@ -75,7 +75,7 @@ class Connection extends React.Component {
           <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
             <Text style={styles.text}>Pas encore de compte ? </Text>
             </TouchableOpacity>
-          <Snackbar visible={isSubmitted} style = {this.state.type = styles.success } duration={2000} >
+          <Snackbar visible={isSubmitted} onDismiss={true} style={this.state.type = styles.success } duration={2000} >
           "Votre compte a bien été validé"
           </Snackbar>
         </View>
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   password: {
     marginBottom : 10,
-    marginLeft: 10
+    marginLeft: 25
   },
   error: {
     color : 'red',

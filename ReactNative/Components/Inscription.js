@@ -1,8 +1,7 @@
 import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import axios from 'axios';
-import { _verifyMail, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone, _reset} from '../Functions/functionsInscription'
-import {Snackbar} from "react-native-paper";
+import { _verifyMail, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone, _reset} from '../Functions/functionsInscription';
 import AsyncStorage from '@react-native-community/async-storage';
 
 class Inscription extends React.Component {
@@ -21,7 +20,7 @@ class Inscription extends React.Component {
         error : "",
     };
 
-    async _getMail(mail){
+    async _getMail(){
         let user = {
             mail : this.mail
         };
@@ -33,6 +32,7 @@ class Inscription extends React.Component {
                         mailVerified: true,
                         error : ""
                     });
+                    this._submit();
                 }
                 else{
                     this.setState({error : "vous possédez déjà un compte avec cette adresse mail"});
@@ -40,7 +40,7 @@ class Inscription extends React.Component {
                         mailVerified: false
                     });
                 }
-                this._submit();
+
             });
     }
 
@@ -53,7 +53,6 @@ class Inscription extends React.Component {
                        if (_verifyconfirm(this.confirm, this.password).state){
                            if (this.state.mailVerified){
                                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                               //_reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
                                this.mailInput.clear();
                                this.passwordInput.clear();
                                this.nameInput.clear();
@@ -110,7 +109,7 @@ class Inscription extends React.Component {
     componentDidMount() {
         AsyncStorage.getItem('user').then((result) => {
           let user = result;
-          console.log(user)
+          console.log(user);
           if(user != null) {
             this.props.navigation.navigate('Afficher la liste de vos portes')
           }
@@ -125,26 +124,26 @@ class Inscription extends React.Component {
             <ScrollView style={styles.scrollView}>
             <View style={styles.component}>
             <Text style={styles.text}>Nom : </Text>
-        <TextInput style={styles.input}id ={"nom"} onChangeText = {(text) => this.name = text.trim() }  ref={input => (this.nameInput = input)}ref={input => (this.nameInput = input)} placeholder='Nom de famille' />
+        <TextInput style={styles.input} testID="name" id ={"nom"} onChangeText = {(text) => this.name = text.trim() }  ref={input => (this.nameInput = input)} placeholder='Nom de famille' />
             <Text style={styles.text}>Prénom : </Text>
-        <TextInput style={styles.input} id ={"prenom"} onChangeText ={text => this.firstname = text.trim() } ref={input => (this.firstnameInput = input)}  placeholder='Prénom'/>
+        <TextInput style={styles.input} testID="firstname" id ={"prenom"} onChangeText ={text => this.firstname = text.trim() } ref={input => (this.firstnameInput = input)}  placeholder='Prénom'/>
             <Text style={styles.text}>Téléphone : </Text>
-        <TextInput style={styles.input} id ={"phone"} onChangeText ={text => this.phone = text.trim() } ref={input => (this.phoneInput = input)} placeholder='Téléphone'/>
+        <TextInput style={styles.input} testID="phone" id ={"phone"} onChangeText ={text => this.phone = text.trim() } ref={input => (this.phoneInput = input)} placeholder='Téléphone'/>
             <Text style={styles.text}>Sexe : </Text>
-        <Picker style={styles.input} onValueChange={value => this.gender = value } ref={input => (this.genderInput = input)}>
+        <Picker style={styles.input} testID="gender" onValueChange={value => this.gender = value } ref={input => (this.genderInput = input)}>
     <Picker.Item label='' value=''/>
             <Picker.Item label='F' value='F'/>
             <Picker.Item label='M' value='M'/>
             </Picker>
             <Text style={styles.text}>E-mail : </Text>
-        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' ref={input => (this.mailInput = input)} onChangeText ={text => this.mail = text.trim().toLowerCase() }  placeholder='E-mail'/>
+        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} testID="mail" autoCompleteType='email' ref={input => (this.mailInput = input)} onChangeText ={text => this.mail = text.trim().toLowerCase() }  placeholder='E-mail'/>
             <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput style={styles.input} secureTextEntry={true} id ={"password"} ref={input => (this.passwordInput = input)} onChangeText ={text => this.password = text.trim() }  placeholder='Ecrivez votre mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} id ={"password"} testID="password" ref={input => (this.passwordInput = input)} onChangeText ={text => this.password = text.trim() }  placeholder='Ecrivez votre mot de passe'/>
             <Text style={styles.text}>Confirmation : </Text>
-        <TextInput style={styles.input} secureTextEntry={true} id ={"confirm"} ref={input => (this.confirmInput = input)} onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} id ={"confirm"} testID="confirm" ref={input => (this.confirmInput = input)} onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
             <Text style={styles.warning}>{this.state.error}</Text>
             <TouchableOpacity style={styles.button}>
-            <Text onPress={()=> this._getMail(this.mail)}  style={styles.textButtonBlue}>Inscription</Text>
+            <Text onPress={()=> this._getMail()} testID="submit"  style={styles.textButtonBlue}>Inscription</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Connexion")} style={styles.connect}>
             <Text style={styles.textButton}>Déjà un compte ? </Text>
