@@ -1,7 +1,9 @@
 import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import axios from 'axios';
-import { _verify, _redirect} from '../Functions/functionsInscription'
+import { _verifyMail, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone, _reset} from '../Functions/functionsInscription'
+import {Snackbar} from "react-native-paper";
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Inscription extends React.Component {
     constructor(props){
@@ -16,17 +18,20 @@ class Inscription extends React.Component {
     }
     state = {
         mailVerified : false,
-        error : ""
+        error : "",
     };
 
     async _getMail(mail){
-         await axios.get('http://82.165.248.136:8081/userMail/' + mail)
+        let user = {
+            mail : this.mail
+        };
+        await axios.post('http://localhost:8081/userMail/', {user})
              .then(res => {
                 const verif = res.data;
-                console.log(verif.length);
-                if (verif.length === 0) {
+                if (verif) {
                     this.setState({
-                        mailVerified: true
+                        mailVerified: true,
+                        error : ""
                     });
                 }
                 else{
@@ -39,26 +44,46 @@ class Inscription extends React.Component {
             });
     }
 
-
-
      _submit(){
 
-        if (_verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).state){
-            console.log(this.state.mailVerified);
-            if (this.state.mailVerified){
-                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                this._redirect();
-            }
+        if (_verifyname(this.firstname, this.name).state){
+           if (_verifyPhone(this.phone).state){
+               if (_verifyMail(this.mail).state){
+                   if (_verifyPassword(this.password).state){
+                       if (_verifyconfirm(this.confirm, this.password).state){
+                           if (this.state.mailVerified){
+                               this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
+                               _reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
+                               this.mailInput.clear();
+                               this.passwordInput.clear();
+                               this.nameInput.clear();
+                               this.firstnameInput.clear();
+                               this.confirmInput.clear();
+                               this.phoneInput.clear();
+                               this.props.navigation.navigate('Connexion', {inscriptionSubmitted: true});
+                           }
+                       }
+                       else {
+                           this.setState({error : _verifyconfirm(this.confirm, this.password).msg});
+                       }
+                   }
+                   else {
+                       this.setState({error : _verifyPassword(this.password).msg});
+                   }
+               }
+               else {
+                   this.setState({error : _verifyMail(this.mail).msg});
+               }
+           }
+           else {
+               this.setState({error : _verifyPhone(this.phone).msg});
+           }
         }
         else {
-            this.setState({error : _verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).msg});
+            this.setState({error : _verifyname(this.firstname, this.name).msg});
         }
 
     };
-
-    _redirect (test) {
-        this.props.navigation.navigate('Connexion');
-    }
 
     _send(firstname, name, phone, gender, mail, password) {
 
@@ -76,43 +101,52 @@ class Inscription extends React.Component {
         };
 
 
-        axios.post('http://82.165.248.136:8081/newUsers',{user})
+        axios.post('http://localhost:8081/newUsers',{user})
 
-            .then(res => {
-                console.log(res.data);
-            })
             .catch(err => console.log(err));
 
     }
 
+    componentDidMount() {
+        AsyncStorage.getItem('user').then((result) => {
+          let user = result;
+          console.log(user)
+          if(user != null) {
+            this.props.navigation.navigate('Afficher la liste de vos portes')
+          }
+          else {
+            this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
+          }
+        })
+      }
+
     render() {
-        const nav = this.props.navigation.navigate;
         return (
             <ScrollView style={styles.scrollView}>
             <View style={styles.component}>
             <Text style={styles.text}>Nom : </Text>
-        <TextInput style={styles.input} onChangeText = {(text) => this.name = text.trim() }  placeholder='Nom de famille' />
+        <TextInput style={styles.input}id ={"nom"} onChangeText = {(text) => this.name = text.trim() }  ref={input => (this.nameInput = input)}ref={input => (this.nameInput = input)} placeholder='Nom de famille' />
             <Text style={styles.text}>Prénom : </Text>
-        <TextInput style={styles.input} onChangeText ={text => this.firstname = text.trim() }  placeholder='Prénom'/>
+        <TextInput style={styles.input} id ={"prenom"} onChangeText ={text => this.firstname = text.trim() } ref={input => (this.firstnameInput = input)}  placeholder='Prénom'/>
             <Text style={styles.text}>Téléphone : </Text>
-        <TextInput style={styles.input}  onChangeText ={text => this.phone = text.trim() } placeholder='Téléphone'/>
+        <TextInput style={styles.input} id ={"phone"} onChangeText ={text => this.phone = text.trim() } ref={input => (this.phoneInput = input)} placeholder='Téléphone'/>
             <Text style={styles.text}>Sexe : </Text>
-        <Picker style={styles.input} onValueChange={value => this.gender = value }>
+        <Picker style={styles.input} onValueChange={value => this.gender = value } ref={input => (this.genderInput = input)}>
     <Picker.Item label='' value=''/>
             <Picker.Item label='F' value='F'/>
             <Picker.Item label='M' value='M'/>
             </Picker>
             <Text style={styles.text}>E-mail : </Text>
-        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' onChangeText ={text => this.mail = text.trim().toLowerCase() }  placeholder='E-mail'/>
+        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' ref={input => (this.mailInput = input)} onChangeText ={text => this.mail = text.trim().toLowerCase() }  placeholder='E-mail'/>
             <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput style={styles.input} secureTextEntry={true}  onChangeText ={text => this.password = text.trim() }  placeholder='Ecrivez votre mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} id ={"password"} ref={input => (this.passwordInput = input)} onChangeText ={text => this.password = text.trim() }  placeholder='Ecrivez votre mot de passe'/>
             <Text style={styles.text}>Confirmation : </Text>
-        <TextInput style={styles.input} secureTextEntry={true}  onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
+        <TextInput style={styles.input} secureTextEntry={true} id ={"confirm"} ref={input => (this.confirmInput = input)} onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
             <Text style={styles.warning}>{this.state.error}</Text>
             <TouchableOpacity style={styles.button}>
             <Text onPress={()=> this._getMail(this.mail)}  style={styles.textButtonBlue}>Inscription</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => nav("Connexion")} style={styles.connect}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Connexion")} style={styles.connect}>
             <Text style={styles.textButton}>Déjà un compte ? </Text>
         </TouchableOpacity>
         </View>

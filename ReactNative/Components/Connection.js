@@ -4,6 +4,7 @@ import Inscription from "./Inscription";
 import MotDePasseOublie from "./MotDePasseOublie"
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
+import {Snackbar} from "react-native-paper";
 
 class Connection extends React.Component {
 
@@ -12,24 +13,25 @@ class Connection extends React.Component {
     this.mail = "";
     this.password = "";
     this.state={
-      errorMessage: ""
+      errorMessage: "",
     }
   }
 
-  /* 
+
+  /*
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
   getHistory = (id) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
+    axios.get('http://192.168.0.29:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
         }
         AsyncStorage.setItem('user', id);
         AsyncStorage.setItem('doors', doors);
-        this.redirect(); 
+        this.redirect();
       })
   };
 
@@ -39,7 +41,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : { 
+    axios.post('http://192.168.0.29:8081/userConnection/', {user : { 
         mail: this.mail,
         password : this.password
       }
@@ -58,28 +60,37 @@ class Connection extends React.Component {
 
   render() {
     const nav = this.props.navigation;
+    var isSubmitted = this.props.route.params.inscriptionSubmitted
     return (
-      <View style={styles.component}>
-        <Text style={styles.text}>E-mail : </Text>
-        <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
-        <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
-        <Text style={styles.error}>{this.state.errorMessage}</Text>
-        <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
-          <Text style={styles.textConnection}>Connexion</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
-          <Text style={styles.text}>Pas encore de compte ? </Text>
+      <View style={styles.container}>
+        <View style={styles.component}>
+          <Text style={styles.text}>E-mail : </Text>
+          <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
+          <Text style={styles.text}>Mot de passe : </Text>
+          <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
+          <Text style={styles.error}>{this.state.errorMessage}</Text>
+          <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
+            <Text style={styles.textConnection}>Connexion</Text>
           </TouchableOpacity>
-        <TouchableOpacity style={styles.text} onPress={() => nav.navigate("MotDePasseOublie")}>
-          <Text style={styles.text}> mot de passe oublié ?</Text>
+          <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
+            <Text style={styles.text}>Pas encore de compte ? </Text>
+            </TouchableOpacity>
+          <Snackbar visible={isSubmitted} style = {this.state.type = styles.success } duration={2000} >
+          "Votre compte a bien été validé"
+          </Snackbar>
+        </View>
+        <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+          <Text style={styles.password}>mot de passe oublié ?</Text>
         </TouchableOpacity>
-      </View>
+     </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   component: {
     justifyContent: 'center',
     alignContent: 'center',
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
   connect: {
     color: 'white',
     textAlign: 'center',
-    margin: 50,
+    margin: 25,
     padding: 10,
     backgroundColor: '#719ada',
     justifyContent: 'center',
@@ -113,19 +124,23 @@ const styles = StyleSheet.create({
   },
   inscript: {
     textAlign: 'center',
-    margin: 50,
+    margin: 25,
     padding: 10,
     backgroundColor: '#d8d8d8',
     justifyContent: 'center',
     alignContent: 'center'
   },
   password: {
-    textAlign: 'right',
+    marginBottom : 10,
+    marginLeft: 10
   },
   error: {
     color : 'red',
     textAlign: 'center',
     paddingTop: 5
+  },
+  success : {
+    backgroundColor : "green",
   }
 });
 
