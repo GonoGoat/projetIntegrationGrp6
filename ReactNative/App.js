@@ -15,6 +15,7 @@ import Historique from './Components/Historique'
 import PorteDetail from './Components/PorteDetail';
 import Deconnection from './Components/Deconnection';
 import MotDePasseOublie from './Components/MotDePasseOublie';
+import MonCompte from './Components/MonCompte';
 
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -26,6 +27,7 @@ const AjoutPorteScreen = createStackNavigator();
 const listePortesScreen = createStackNavigator();
 const DeconnectionScreen = createStackNavigator();
 const MotDePasseOublieScreen = createStackNavigator();
+const MonCompteScreen = createStackNavigator();
 
 const FavoriteStackScreen = ({navigation}) => (
   <FavoriteScreen.Navigator screenOptions={{
@@ -167,7 +169,25 @@ const DeconnectionStackScreen = ({navigation}) => (
 }}></DeconnectionScreen.Screen>
 </DeconnectionScreen.Navigator>
 )
-
+const monCompteStackScreen = ({navigation}) => (
+    <MonCompteScreen.Navigator screenOptions={{
+        headerStyle: {
+            // backgroundcolor: "blue",
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight:'bold'
+        },
+        headerShown : false,
+    }}>
+        <MonCompteScreen.Screen name="MonCompte" component={MonCompte} options={{
+    headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25}
+                     onPress={() => navigation.openDrawer()}></Icon.Button>
+    )
+}}/>
+    </MonCompteScreen.Navigator>
+)
 export default function App() {
   let user = null;
   AsyncStorage.getItem('user').then((result) => {user = result})
@@ -182,6 +202,7 @@ export default function App() {
         <Drawer.Screen name="Portes favorites" component={FavoriteStackScreen} />
         <Drawer.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
         <Drawer.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
+        <Drawer.Screen name="Mon compte" component={monCompteStackScreen} />
         <Drawer.Screen name="Deconnexion" component={DeconnectionStackScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
