@@ -120,7 +120,7 @@ export default class PorteDetail extends React.Component {
           user = result
         }
         else {
-          alert(errs)
+          //alert(errs)
         }
       }
     })
