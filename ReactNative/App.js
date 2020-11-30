@@ -15,6 +15,7 @@ import PorteDetail from './Components/PorteDetail';
 import Deconnection from './Components/Deconnection';
 import MotDePasseOublie from './Components/MotDePasseOublie';
 import MonCompte from './Components/MonCompte';
+import Admin from "./Components/Admin"
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -119,6 +120,19 @@ const monCompteStackScreen = ({navigation}) => (
 }}/>
     </MonCompteScreen.Navigator>
 )
+const AdminStackScreen = ({navigation}) => (
+  <Drawer.Navigator screenOptions={{headerShown: true}}>
+    <Drawer.Screen name="Deconnexion" component={Admin}
+      options={{
+      headerLeft: () => (
+        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+      )}}>
+    </Drawer.Screen>
+  </Drawer.Navigator>
+)
+
+const isAdmin = true;
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -128,6 +142,7 @@ export default function App() {
         <Stack.Screen name="Ajouter une porte" component={AjoutPorteStackScreen}/>
         <Stack.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
         <Stack.Screen name="Deconnexion" component={DeconnectionStackScreen}/>
+        {isAdmin === true ? <Stack.Screen name="Admin" component={AdminStackScreen}/> : <React.Fragment></React.Fragment>}
       </Drawer.Navigator>
     </NavigationContainer>
   );
