@@ -20,7 +20,7 @@ class MotDePasseOublie extends React.Component {
         let user = { mail : this.mail };
         this.setState({type : checkmail(mail).type});
         this.setState({error : checkmail(mail).message});
-        axios.post('http://localhost:8081/userMail/', {user})
+        axios.post('http://192.168.1.10:8081/userMail/', {user})
             .then(res => {
                 const verif = !res.data;
                 if (verif) {

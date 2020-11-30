@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import Inscription from "./Inscription";
 import MotDePasseOublie from "./MotDePasseOublie"
@@ -24,7 +24,7 @@ class Connection extends React.Component {
   */
   getHistory = (id) => {
     let doors = [];
-    axios.get('http://192.168.0.29:8081/doorHistory/user/'+id)
+    axios.get('http://192.168.1.10:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
@@ -41,7 +41,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://192.168.0.29:8081/userConnection/', {user : {
+    axios.post('http://192.168.1.10:8081/userConnection/', {user : {
         mail: this.mail,
         password : this.password
       }
@@ -62,86 +62,88 @@ class Connection extends React.Component {
     const nav = this.props.navigation;
     var isSubmitted = this.props.route.params.inscriptionSubmitted
     return (
-      <View style={styles.container}>
-        <View style={styles.component}>
-          <Text style={styles.text}>E-mail : </Text>
-          <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail = text}/>
-          <Text style={styles.text}>Mot de passe : </Text>
-          <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
-          <Text style={styles.error}>{this.state.errorMessage}</Text>
-          <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
-            <Text style={styles.textConnection}>Connexion</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
-            <Text style={styles.text}>Pas encore de compte ? </Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.component}>
+            <Text style={styles.text}>E-mail : </Text>
+            <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail =  text.trim().toLowerCase()}/>
+            <Text style={styles.text}>Mot de passe : </Text>
+            <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
+            <Text style={styles.error}>{this.state.errorMessage}</Text>
+            <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
+              <Text style={styles.textConnection}>Connexion</Text>
             </TouchableOpacity>
-          <Snackbar visible={isSubmitted} onDismiss={true} style={this.state.type = styles.success } duration={2000} >
-          "Votre compte a bien été validé"
-          </Snackbar>
+            <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
+              <Text style={styles.text}>Pas encore de compte ? </Text>
+            </TouchableOpacity>
+            <Snackbar visible={isSubmitted} onDismiss={true} style={this.state.type = styles.success } duration={2000} >
+              "Votre compte a bien été validé"
+            </Snackbar>
+          </View>
+          <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+            <Text style={styles.password}>Mot de passe oublié ? </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
-          <Text style={styles.password}>mot de passe oublié ?</Text>
-        </TouchableOpacity>
-     </View>
+      </ScrollView>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1
-  },
-  component: {
+    },
+    component: {
     justifyContent: 'center',
     alignContent: 'center',
     margin: 75,
-    marginTop: 100
-  },
-  text: {
+    marginTop: 75
+    },
+    text: {
     padding: 5,
     justifyContent: 'center',
     alignContent: 'center'
-  },
-  input: {
-    padding: 5,
-    justifyContent: 'center',
-    alignContent: 'center',
-    borderColor: '#000',
-    borderWidth: 1,
-  },
-  connect: {
-    color: 'white',
-    textAlign: 'center',
-    margin: 25,
-    padding: 10,
-    backgroundColor: '#719ada',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  textConnection: {
-    color: 'white',
-    textAlign: 'center'
-  },
-  inscript: {
-    textAlign: 'center',
-    margin: 25,
-    padding: 10,
-    backgroundColor: '#d8d8d8',
-    justifyContent: 'center',
-    alignContent: 'center'
-  },
-  password: {
-    marginBottom : 10,
-    marginLeft: 25
-  },
-  error: {
-    color : 'red',
-    textAlign: 'center',
-    paddingTop: 5
-  },
-  success : {
-    backgroundColor : "green",
-  }
+    },
+    input: {
+      padding: 5,
+      justifyContent: 'center',
+      alignContent: 'center',
+      borderColor: '#000',
+      borderWidth: 1,
+    },
+    connect: {
+      color: 'white',
+      textAlign: 'center',
+      margin: 25,
+      padding: 10,
+      backgroundColor: '#719ada',
+      justifyContent: 'center',
+      alignContent: 'center',
+    },
+    textConnection: {
+      color: 'white',
+      textAlign: 'center'
+    },
+    inscript: {
+      textAlign: 'center',
+      margin: 25,
+      padding: 10,
+      backgroundColor: '#d8d8d8',
+      justifyContent: 'center',
+      alignContent: 'center'
+    },
+    password: {
+      marginBottom : 25,
+      marginLeft: 25
+    },
+    error: {
+      color : 'red',
+      textAlign: 'center',
+      paddingTop: 5
+    },
+    success : {
+      backgroundColor : "green",
+    }
 });
 
 export default Connection;
