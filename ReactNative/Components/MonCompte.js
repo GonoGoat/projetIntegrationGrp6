@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import {StyleSheet, Text,  View} from "react-native";
+import {StyleSheet, Text,  View, TouchableHighlight} from "react-native";
 import axios from "axios";
 
 
@@ -28,8 +28,7 @@ class MonCompte extends React.Component {
                 }
             }
         })
-        axios
-            .get('http://82.165.248.136:8081/user/' + user)
+        axios.get('http://192.168.0.29:8081/user/' + user)
             .then(res => {
                 this.setState({isLoading:false, user: res.data})
             })
@@ -37,6 +36,16 @@ class MonCompte extends React.Component {
                 console.log(error)
             })
     }
+
+    componentDidMount() {
+        AsyncStorage.getItem('user').then((result) => {
+          let user = result;
+          console.log(user)
+          if(user == null) {
+            this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
+          }
+        })
+      }
 
     render(){
         if(this.state.isLoading) {
@@ -54,6 +63,14 @@ class MonCompte extends React.Component {
                     <Text style={styles.textUt}>{this.state.user[0].sexe}</Text>
                     <Text style={styles.text}>Mail :</Text>
                     <Text style={styles.textUt}>{this.state.user[0].mail}</Text>
+                    <View style={{flex: 6}}>
+                        <TouchableHighlight style={styles.editButton}
+                            onPress={() => alert('toDo')}>
+                            <View>
+                                <Text style={{fontSize: 20}}>Modifier</Text>
+                            </View>
+                        </TouchableHighlight>
+                    </View>
                 </View>
             )
         }
@@ -85,6 +102,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         fontSize: 15,
     },
-
+    editButton: {
+        flex:1,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#d0d0d0",
+        paddingVertical: 10,
+        marginTop: 40,
+        marginBottom: 15
+      },
 });
 export default MonCompte;

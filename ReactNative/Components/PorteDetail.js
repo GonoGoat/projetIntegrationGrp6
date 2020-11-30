@@ -29,40 +29,61 @@ export default class PorteDetail extends React.Component {
   }
 
   send(doorId, status) {
-    this.setState({isLoading: true})
-    this.setState({isChangingStatus: true})
-    var newStatus;
-    var textStatus
-    if(status == 0) {
-      newStatus = 1
-      textStatus = "ouverture";
-    } else { 
-      newStatus = 0
-      textStatus = "fermeture";
+    if(status == 2 || status== 3) {
+      alert('Erreur')
     }
-    const door = {
-      id : doorId,
-      status : newStatus
-    };
+    else {
+      this.setState({isLoading: true})
+      var statusChanging = 2;
+      var newStatus;
+      var textStatus
+      if(status == 0) {
+        newStatus = 2
+        textStatus = "ouverture";
+      } else { 
+        newStatus = 3
+        textStatus = "fermeture";
+      }
+      var door = {
+        id : doorId,
+        status : newStatus
+      };
 
-    axios.get(`http://192.168.1.60/` + textStatus)
+      /*axios.get(`http://192.168.1.60/` + textStatus)
+        .then(res => {
+          this.setState({isLoading: false});
+        })
+        .catch(error => {
+          console.log(error)
+      })*/
+
+      axios.put('http://192.168.0.29:8081/doorStatus',{door})
       .then(res => {
-        this.setState({isLoading: false});
+          
       })
-      .catch(error => {
-        console.log(error)
-    })
-
-    axios.put('http://192.168.0.29:8081/doorStatus',{door})
-    .then(res => {
-        this.sendHistory(doorId, newStatus)
-    })
-    .catch(err => {
-        this.setState({isLoading: false})
-    });
-    this.timeoutHandle = setTimeout(()=>{
-      this.setState({isChangingStatus: false})
- }, 5000);
+      .catch(err => {
+          this.setState({isLoading: false})
+      });
+      this.timeoutHandle = setTimeout(()=>{
+        this.setState({isChangingStatus: false})
+        if(status == 0) {
+          newStatus = 1
+        } else { 
+          newStatus = 0
+        }
+        door = {
+          id : doorId,
+          status : newStatus
+        };
+        axios.put('http://192.168.0.29:8081/doorStatus',{door})
+        .then(res => {
+          this.sendHistory(doorId, newStatus)
+        })
+        .catch(err => {
+          this.setState({isLoading: false})
+        });
+      }, 5000);
+    }
   }
 
 
@@ -73,7 +94,6 @@ export default class PorteDetail extends React.Component {
       date: new Date,
       action: newStatus
     }
-
     axios.post('http://192.168.0.29:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
@@ -103,16 +123,19 @@ export default class PorteDetail extends React.Component {
       });
   }
 
-  componentDidMount() {
+  getDoors() {
     axios.get(`http://192.168.0.29:8081/doors`)
-      .then(res => {
-        this.setState({isLoading: false, doors: res.data});
-      })
-      .catch(error => {
-        this.setState({errorMessage: "Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard."});
-        this.setState({errorVisible: true});
-        this.setState({isLoading: false})
+    .then(res => {
+      this.setState({isLoading: false, doors: res.data});
     })
+    .catch(error => {
+      this.setState({errorMessage: "Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard."});
+      this.setState({errorVisible: true});
+      this.setState({isLoading: false})
+  })
+  }
+
+  componentDidMount() {
     let user;
     AsyncStorage.getItem('user', function(errs, result) {
       if (!errs) {
@@ -124,7 +147,12 @@ export default class PorteDetail extends React.Component {
         }
       }
     })
+    this.interval = setInterval(() => (this.getDoors()), 1000);
     this.setState({userLogged: user});
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
@@ -154,10 +182,15 @@ export default class PorteDetail extends React.Component {
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
       let modalVisible = this.state.modalVisible;
-      const nav = this.props.navigation.navigate;
       
       var dataDoor =  getDoorById(doorIdParam, this.state.doors);
       var statusString = getStatus(dataDoor[2]);
+      if(dataDoor[2] == 2 || dataDoor[2] == 3) {
+        this.state.isChangingStatus = true
+      }
+      else {
+        this.state.isChangingStatus = false
+      }
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
@@ -195,7 +228,7 @@ export default class PorteDetail extends React.Component {
               onPress={() => this.send(doorIdParam, dataDoor[2])}
               >
               <View>
-                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2], this.state.isChangingStatus)}</Text>
+                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2])}</Text>
               </View>
             </TouchableHighlight>
 

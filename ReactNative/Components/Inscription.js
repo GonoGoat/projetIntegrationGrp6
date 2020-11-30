@@ -53,7 +53,7 @@ class Inscription extends React.Component {
                        if (_verifyconfirm(this.confirm, this.password).state){
                            if (this.state.mailVerified){
                                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                               _reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
+                               //_reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
                                this.mailInput.clear();
                                this.passwordInput.clear();
                                this.nameInput.clear();
@@ -146,7 +146,7 @@ class Inscription extends React.Component {
             <TouchableOpacity style={styles.button}>
             <Text onPress={()=> this._getMail(this.mail)}  style={styles.textButtonBlue}>Inscription</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("Connexion")} style={styles.connect}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Connexion", {inscriptionSubmitted: false})} style={styles.connect}>
             <Text style={styles.textButton}>Déjà un compte ? </Text>
         </TouchableOpacity>
         </View>
