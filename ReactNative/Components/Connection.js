@@ -24,7 +24,7 @@ class Connection extends React.Component {
   */
   getHistory = (id) => {
     let doors = [];
-    axios.get('http://192.168.1.10:8081/doorHistory/user/'+id)
+    axios.get('http://localhost:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
@@ -41,7 +41,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://192.168.1.10:8081/userConnection/', {user : {
+    axios.post('http://localhost:8081/userConnection/', {user : {
         mail: this.mail,
         password : this.password
       }
@@ -76,13 +76,13 @@ class Connection extends React.Component {
             <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
               <Text style={styles.text}>Pas encore de compte ? </Text>
             </TouchableOpacity>
+              <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+                <Text style={styles.password}>Mot de passe oublié ? </Text>
+              </TouchableOpacity>
             <Snackbar visible={isSubmitted} onDismiss={true} style={this.state.type = styles.success } duration={2000} >
               "Votre compte a bien été validé"
             </Snackbar>
           </View>
-          <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
-            <Text style={styles.password}>Mot de passe oublié ? </Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     )
@@ -91,58 +91,61 @@ class Connection extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-    flex: 1
+        flex: 1
     },
     component: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    margin: 75,
-    marginTop: 75
+        justifyContent: 'center',
+        alignContent: 'center',
+        margin: '12%',
+        marginTop: '10%'
     },
     text: {
-    padding: 5,
-    justifyContent: 'center',
-    alignContent: 'center'
+        padding: 5,
+        justifyContent: 'center',
+        alignContent: 'center'
     },
     input: {
-      padding: 5,
-      justifyContent: 'center',
-      alignContent: 'center',
-      borderColor: '#000',
-      borderWidth: 1,
+        padding: 5,
+        justifyContent: 'center',
+        alignContent: 'center',
+        borderColor: '#000',
+        borderWidth: 1,
     },
     connect: {
-      color: 'white',
-      textAlign: 'center',
-      margin: 25,
-      padding: 10,
-      backgroundColor: '#719ada',
-      justifyContent: 'center',
-      alignContent: 'center',
+        color: 'white',
+        textAlign: 'center',
+        margin: '6%',
+        padding: 10,
+        backgroundColor: '#719ada',
+        justifyContent: 'center',
+        alignContent: 'center',
     },
     textConnection: {
-      color: 'white',
-      textAlign: 'center'
+        color: 'white',
+        textAlign: 'center'
     },
     inscript: {
-      textAlign: 'center',
-      margin: 25,
-      padding: 10,
-      backgroundColor: '#d8d8d8',
-      justifyContent: 'center',
-      alignContent: 'center'
+        textAlign: 'center',
+        margin: '6%',
+        padding: 10,
+        backgroundColor: '#d8d8d8',
+        justifyContent: 'center',
+        alignContent: 'center'
     },
     password: {
-      marginBottom : 25,
-      marginLeft: 25
+        textDecorationLine: 'underline',
+        marginTop : '12%',
+        marginLeft: '8%',
+        justifyContent: 'flex-start',
+        alignContent: 'flex-start',
     },
     error: {
-      color : 'red',
-      textAlign: 'center',
-      paddingTop: 5
+        color : 'red',
+        textAlign: 'center',
+        paddingTop: 5
     },
     success : {
-      backgroundColor : "green",
+        backgroundColor : "green",
     }
 });
 

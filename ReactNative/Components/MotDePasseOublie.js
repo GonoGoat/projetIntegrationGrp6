@@ -20,7 +20,7 @@ class MotDePasseOublie extends React.Component {
         let user = { mail : this.mail };
         this.setState({type : checkmail(mail).type});
         this.setState({error : checkmail(mail).message});
-        axios.post('http://192.168.1.10:8081/userMail/', {user})
+        axios.post('http://localhost:8081/userMail/', {user})
             .then(res => {
                 const verif = !res.data;
                 if (verif) {
@@ -50,18 +50,18 @@ class MotDePasseOublie extends React.Component {
          const nav = this.props.navigation;
         return (
             <View style={styles.component}>
-            <Text style={styles.text}>Veuillez rentrer votre addresse mail, nous allons vous envoyer un mail contenant un mot de passe a utiliser temporairement, nous vous conseillons de directement modifer votre nouveau mot de passe une fois connecter dans la section prévue a cet effet dans 'profil'.</Text>
-            <Text style={styles.text}>E-mail : </Text>
-            <TextInput placeholder='E-mail' style={styles.input} ref={input => (this.mailInput = input)} onChangeText={(text)=> this.mail = text.trim().toLowerCase()}/>
-            <TouchableOpacity style={styles.reset} onPress={()=> this._verifyMail(this.mail)}>
-                <Text style={styles.textConnection}>Envoyer</Text>
-            </TouchableOpacity>
-            <Snackbar visible={this.state.error != ""} onDismiss={() => this.setState({type : this.state.type})} style = {this.state.type === "success" ? styles.success : styles.fail}duration={2000} >
-            {this.state.error}
-            </Snackbar>
-            <TouchableOpacity style={styles.text} onPress={() => nav.goBack()}>
-                <Text style={styles.test}><u>Retour</u></Text>
-            </TouchableOpacity>
+                <Text style={styles.text}>Veuillez rentrer votre addresse mail, nous allons vous envoyer un mail contenant un mot de passe a utiliser temporairement, nous vous conseillons de directement modifer votre nouveau mot de passe une fois connecter dans la section prévue a cet effet dans 'profil'.</Text>
+                <Text style={styles.mail}>E-mail : </Text>
+                <TextInput placeholder='E-mail' style={styles.input} ref={input => (this.mailInput = input)} onChangeText={(text)=> this.mail = text.trim().toLowerCase()}/>
+                <TouchableOpacity style={styles.envoi} onPress={()=> this._verifyMail(this.mail)}>
+                    <Text style={styles.textEnvoi}>Envoyer</Text>
+                </TouchableOpacity>
+                <Snackbar visible={this.state.error != ""} onDismiss={() => this.setState({type : this.state.type})} style = {this.state.type === "success" ? styles.success : styles.fail}duration={2000} >
+                    {this.state.error}
+                </Snackbar>
+                <TouchableOpacity style={styles.text} onPress={() => nav.goBack()}>
+                    <Text style={styles.retour}>Retour</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -69,34 +69,39 @@ class MotDePasseOublie extends React.Component {
 
 const styles = StyleSheet.create({
     component: {
+        flex : 1,
         justifyContent: 'center',
         alignContent: 'center',
-        margin: 75,
-        marginTop: 100
+        marginHorizontal : '15%',
+        marginVertical : '8%'
     },
     pave: {
-        paddingVertical : 10,
+        paddingVertical : '4%',
         alignContent : "center",
         textAlign : 'center'
     },
     text: {
-        marginTop: 10,
-        padding: 5,
+        marginTop: '8%',
+        marginBottom : '2%',
         justifyContent: 'center',
         alignContent: 'center'
     },
     input: {
-        padding: 5,
+        padding: '4%',
         justifyContent: 'center',
         alignContent: 'center',
         borderColor: '#000',
         borderWidth: 1
     },
-    reset: {
+    textEnvoi: {
+        color : '#ffffff',
+        textAlign : "center"
+    },
+    envoi: {
         color: 'white',
         textAlign: 'center',
-        marginTop: 80,
-        padding: 10,
+        marginTop: '12%',
+        padding: '6%',
         backgroundColor: '#719ada',
         justifyContent: 'center',
         alignContent: 'center'
@@ -106,8 +111,7 @@ const styles = StyleSheet.create({
     },
     inscript: {
         textAlign: 'center',
-        margin: 50,
-        padding: 10,
+        padding: '3%',
         backgroundColor: '#d8d8d8',
         justifyContent: 'center',
         alignContent: 'center'
@@ -117,8 +121,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingTop: 5
     },
-    test:{
-        marginTop: 160
+    retour:{
+        textDecorationLine: 'underline',
+        marginTop : '25%',
+        marginLeft: -5,
+    },
+    mail : {
+        marginBottom: '8%',
+        marginTop : '12%',
+        justifyContent: 'center',
+        alignContent: 'center'
     },
     success : {
         backgroundColor : "green",
