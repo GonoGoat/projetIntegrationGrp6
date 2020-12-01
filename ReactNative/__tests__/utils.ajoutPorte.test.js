@@ -133,6 +133,27 @@ describe ("checkAjoutAPI function" , () => {
         expect(test2.type).toEqual(test.type);
         expect(test2.message).toEqual(test.message);
     })
+    it('fails with a specific message if the error status is 403', () => {
+        let alreadyExists = {
+            response : {
+                status : 403
+            }
+        };
+        let alsoExists = {
+            response : {
+                status : 403
+            },
+            data : true
+        };
+        let test = fcts.checkAjoutAPI(alreadyExists,false);
+        let test2 = fcts.checkAjoutAPI(alsoExists,false);
+
+        expect(test.hasOwnProperty("type")).toBeTruthy();
+        expect(test2.hasOwnProperty("type")).toBeTruthy();
+        expect(test.type === "fail").toBeTruthy();
+        expect(test2.type).toEqual(test.type);
+        expect(test2.message).toEqual(test.message);
+    });
     it('works if the type is set at "true" and the data is correct', () => {
         let good ={
             data : true,

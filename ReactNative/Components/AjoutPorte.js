@@ -2,7 +2,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import AjoutPorte_FormVerif from "./AjoutPorte_FormVerif"
 import AjoutPorte_FormAjout from "./AjoutPorte_FormAjout"
-import {Snackbar} from 'react-native-paper';
+import {Snackbar,Modal,Button,Text} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class AjoutPorte extends React.Component {
 
@@ -10,11 +11,25 @@ export default class AjoutPorte extends React.Component {
     super(props);
     this.state = {
       door : undefined,
-      message : {type: "fail"}
-    }
+      message : {type: "fail"},
+      user : false
+    };
+  }
+
+  componentDidMount() {console.log("oui")};
+
+  setUser() {
+    AsyncStorage.setItem("user", "106");
+    this.setState({user : 104})
   }
 
   displayComponent() {
+    let user;
+    AsyncStorage.getAllKeys().then(res => {
+      if (res.indexOf(user) != -1) {
+        AsyncStorage.getItem('user').then(res => this.setState({user : parseInt(res)}));
+      }
+    });
     if (this.state.door === undefined) {
       return (
         <View style={styles.container}>
@@ -24,6 +39,24 @@ export default class AjoutPorte extends React.Component {
           />
         </View>
       );
+    }
+    else if (this.state.user === false) {
+      return (<View style={styles.container}>
+        <Text>Vous devez être connecté pour accéder à cette fonctionnalité.</Text>
+          <Button
+            mode="contained"
+            onPress={() => this.props.navigation.navigate('Connexion')}
+
+          >
+            Se connecter
+          </Button>
+          <Button
+            mode="contained"
+            onPress={() => this.setUser()}
+            >
+              Add
+          </Button>
+      </View>)
     }
     else {
       return (
@@ -56,14 +89,18 @@ export default class AjoutPorte extends React.Component {
 };
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
+      flex : 1,
+      alignItems : "center",
+      justifyContent : "center"
+    },
+    modal : {
+      textAlign : "center",
     },
     success : {
       backgroundColor : "green",
     },
     fail : {
       backgroundColor : "red",
-    }
+    },
+    
 })

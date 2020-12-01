@@ -1,8 +1,8 @@
 import React from "react"
-import {StyleSheet, View, TextInput} from 'react-native';
-import { Button,Text } from 'react-native-paper';
+import {StyleSheet, View,TextInput} from 'react-native';
+import { Button,Text,Modal} from 'react-native-paper';
 import {checkAjout,checkAjoutAPI} from "../Functions/functionsAjoutPorte"
-import AsyncStorage from "@react-native-community/async-storage"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const axios = require('axios')
 
@@ -23,10 +23,11 @@ export default class AjoutPorte_FormAjout extends React.Component {
   async addNewAccess() {
     let valeurs = {
         door : this.props.doorId,
-        user : 8,//AsyncStorage.getItem('user')
+        user : "",
         tag : this.state.tag,
         nickname : this.state.nickname,
-    }
+    };
+    await AsyncStorage.getItem('user').then(res => valeurs.user = res);
     await checkAccess(valeurs).then(res => {
       let rep = checkAjoutAPI(res,true);
       this.props.setMessage(rep);
@@ -89,8 +90,8 @@ export default class AjoutPorte_FormAjout extends React.Component {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
+    flex : 1
   },
   description : {
       height : 100,
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
       height : 40,
       fontSize : 18,
       padding : 7,
-      marginBottom : 50
+      marginBottom : 50,
   },
   buttonIn : {
       height : 50,
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
       marginBottom : 50
   },
   form : {
-      marginVertical : 50
+      marginVertical : 50,
   },
   retour : {
     color : "#719ADA",

@@ -1,8 +1,9 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import {StyleSheet, View, TextInput} from 'react-native';
+import {StyleSheet, View,TextInput} from 'react-native';
 import { Button,Text } from 'react-native-paper';
 import {checkVerif,checkVerifAPI} from "../Functions/functionsAjoutPorte"
-import AsyncStorage from "@react-native-community/async-storage"
+//import AsyncStorage from "@react-native-community/async-storage"
 
 const axios = require('axios')
 
@@ -17,16 +18,16 @@ export default class AjoutPorte_FormVerif extends React.Component {
         this.state = {
             idPorte : "",
             password : "",
-            user : (this.props.hasOwnProperty("user") ? this.props.user : 1)
         }
     }
 
     async isDoorExisting() {
         let valeurs = {
-            user : this.state.user,//AsyncStorage.getItem('user')
+            user : "",
             password : this.state.password,
             id : this.state.idPorte
         }
+        await AsyncStorage.getItem('user').then(res => valeurs.user = res);
         await getCheck(valeurs).then(res => {
             let rep = checkVerifAPI(res,true);
             if (rep === true) {
@@ -62,6 +63,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
                         onSubmitEditing={() => this.submit()}
                         onChangeText={(text) => this.setState({idPorte : text})}
                         value={this.state.idPorte}
+                        multiline={false}
                     />
                     <Text style={styles.label}>Mot de passe :</Text>
                     <TextInput
@@ -72,6 +74,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
                         onSubmitEditing={() => this.submit()}
                         onChangeText={(text) => this.setState({password : text})}
                         value={this.state.password}
+                        multiline={false}
                     />
                 </View>
                 <Button
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
         height : 40,
         fontSize : 18,
         padding : 7,
-        marginBottom : 50
+        marginBottom : 50,
     },
     buttonIn : {
         height : 50,
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
         marginTop : 50
     },
     form : {
-        marginVertical : 50
+        marginVertical : 50,
     }
 })
 

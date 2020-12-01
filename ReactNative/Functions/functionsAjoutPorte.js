@@ -121,6 +121,14 @@ export function checkAjoutAPI(req,type) {
         }
     }
     else {
+        if (req.response) {
+            if (req.response.status === 403) {
+                return ({
+                    message : "Ce nom existe déjà sous ce tag. Veuillez utiliser un nom ou un tag différent.",
+                    type : "fail"
+                })
+            }
+        }
         return error(req);
     }
 };

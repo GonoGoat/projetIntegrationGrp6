@@ -122,7 +122,7 @@ const monCompteStackScreen = ({navigation}) => (
 )
 const AdminStackScreen = ({navigation}) => (
   <Drawer.Navigator screenOptions={{headerShown: true}}>
-    <Drawer.Screen name="Deconnexion" component={Admin}
+    <Drawer.Screen name="Administration" component={Admin}
       options={{
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
