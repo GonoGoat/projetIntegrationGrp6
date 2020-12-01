@@ -22,7 +22,7 @@ class Connection extends React.Component {
   */
   getHistory = async (id) => {
     let doors = [];
-    await axios.get('http://82.165.248.136:8081/doorHistory/user/'+id)
+    await axios.get('http://192.168.1.61:8081/doorHistory/user/'+id)
     .then(res => {
       for(let i = 0; i<res.data.length; i ++) {
         doors[i] = parseInt(res.data[i].door);
@@ -44,15 +44,15 @@ class Connection extends React.Component {
   }
 
   async userConnection() {
-    return await axios.post('http://localhost:8081/userConnection/', {user : { 
-      mail: this.state.mail,
+    return await axios.post('http://192.168.1.61:8081/userConnection/', {user : { 
+      mail: this.state.mail.toLowerCase(),
       password : this.state.password
     }
     })
   }
 
   async checkUser(){
-    if(verify(this.state.mail, this.state.password).state){
+    if(verify(this.state.mail.toLowerCase(), this.state.password).state){
       await this.userConnection()
         .then(response => {
         if (!response.data.status) {
@@ -64,7 +64,7 @@ class Connection extends React.Component {
           this.redirect();
         }});
     } else {
-      this.setState({errorMessage:verify(this.state.mail, this.state.password).msg});
+      this.setState({errorMessage:verify(this.state.mail.toLowerCase(), this.state.password).msg});
     }
   }
 
@@ -75,9 +75,10 @@ class Connection extends React.Component {
         <Text style={styles.text}>E-mail : </Text>
         <TextInput 
           placeholder='E-mail' style={styles.input} 
-          onChangeText={(text)=> this.setState({mail: text})}
+          onChangeText={(text)=> this.setState({mail: text.trim()})}
           testID='mail' 
           value={this.state.mail}
+          autoCapitalize = 'none'
           />
         <Text style={styles.text}>Mot de passe : </Text>
         <TextInput testID='password' value={this.state.password} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.setState({password: text}) }/>
@@ -92,7 +93,7 @@ class Connection extends React.Component {
         "Votre compte a bien été validé"
         </Snackbar>
         <TouchableOpacity testID='forgot' style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
-          <Text style={styles.password}><u>mot de passe oublié ?</u></Text>
+          <Text style={styles.password}>mot de passe oublié ?</Text>
         </TouchableOpacity>
       </View>
     )
