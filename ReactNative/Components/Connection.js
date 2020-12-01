@@ -83,6 +83,9 @@ class Connection extends React.Component {
         <Text style={styles.text}>Mot de passe : </Text>
         <TextInput testID='password' value={this.state.password} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.setState({password: text}) }/>
         <Text style={styles.error}>{this.state.errorMessage}</Text>
+        <TouchableOpacity testID='forgot' style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+          <Text style={styles.password}>Mot de passe oublié ?</Text>
+        </TouchableOpacity>
         <TouchableOpacity testID='connexion' style={styles.connect} onPress={()=> this.checkUser()}>
           <Text style={styles.textConnection}>Connexion</Text>
         </TouchableOpacity>
@@ -92,9 +95,7 @@ class Connection extends React.Component {
         <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
         "Votre compte a bien été validé"
         </Snackbar>
-        <TouchableOpacity testID='forgot' style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
-          <Text style={styles.password}>mot de passe oublié ?</Text>
-        </TouchableOpacity>
+
       </View>
     )
   }
@@ -102,18 +103,20 @@ class Connection extends React.Component {
 
 const styles = StyleSheet.create({
   component: {
+    minWidth: '40%',
+    flex : 1,
     justifyContent: 'center',
     alignContent: 'center',
-    margin: 75,
-    marginTop: 100
+    marginHorizontal : '12%',
+    marginVertical : '5%'
   },
   text: {
-    padding: 5,
-    justifyContent: 'center',
+    paddingVertical: '3%',
     alignContent: 'center'
   },
   input: {
-    padding: 5,
+    paddingVertical: '2%',
+    paddingHorizontal: '2%',
     justifyContent: 'center',
     alignContent: 'center',
     borderColor: '#000',
@@ -122,11 +125,13 @@ const styles = StyleSheet.create({
   connect: {
     color: 'white',
     textAlign: 'center',
-    margin: 25,
-    padding: 10,
     backgroundColor: '#719ada',
     justifyContent: 'center',
     alignContent: 'center',
+    marginHorizontal: '10%',
+    marginVertical: '5%',
+    marginTop: '20%',
+    paddingVertical: '5%'
   },
   textConnection: {
     color: 'white',
@@ -134,19 +139,21 @@ const styles = StyleSheet.create({
   },
   inscript: {
     textAlign: 'center',
-    margin: 25,
-    padding: 10,
+    marginHorizontal: '10%',
+    marginVertical: '5%',
+    paddingVertical: '5%',
     backgroundColor: '#d8d8d8',
     justifyContent: 'center',
     alignContent: 'center'
   },
   password: {
-    marginTop : 140
+    textDecorationLine: 'underline',
+    textAlign: 'right'
   },
   error: {
     color : 'red',
     textAlign: 'center',
-    paddingTop: 5
+    paddingTop: '5%'
   },
   success : {
     backgroundColor : "green",
