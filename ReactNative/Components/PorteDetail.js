@@ -87,14 +87,14 @@ export default class PorteDetail extends React.Component {
   }
 
 
-  sendHistory(doorId, newStatus) {
+  async sendHistory(doorId, newStatus) {
     const history = {
       door: doorId,
       users: this.state.userLogged,
       date: new Date,
       action: newStatus
     }
-    axios.post('http://192.168.0.27:8081/newhistory',{history})
+    await axios.post('http://192.168.0.27:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -124,6 +124,7 @@ export default class PorteDetail extends React.Component {
   }
 
   getDoors() {
+    
     axios.get(`http://192.168.0.27:8081/doors`)
     .then(res => {
       this.setState({isLoading: false, doors: res.data});
@@ -147,7 +148,7 @@ export default class PorteDetail extends React.Component {
         }
       }
     })
-    this.interval = setInterval(() => (this.getDoors()), 1000);
+    this.interval = setInterval(() => (this.getDoors()), 2000);
     this.setState({userLogged: user});
   }
 

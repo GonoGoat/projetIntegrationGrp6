@@ -12,7 +12,6 @@ var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
 
 const argon2 = require("argon2");
-const bcrypt = require('bcrypt');
 const saltRounds = 5;
 
 const app = express();
@@ -62,8 +61,6 @@ function CreateMail(mail, password) {
     transporter.sendMail(mailOptions, function(error, info){  // Envoie le mail
         if (error) {
             console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
         }
     });
 }
@@ -75,9 +72,9 @@ app.put('/resetPassword/', async (req, res) => {
     let hash;
     let mail = req.body.user.mail;
     let newPass = "";
-    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#","?","!","@","$","%","^","&","*","-"]                                   
     for (let i =0; i <15; i++){
-        newPass += random[Math.round(Math.random()*62)];
+        newPass += random[Math.round(Math.random()*72)];
     }
     hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
@@ -119,20 +116,22 @@ app.get('/users/name', async (req, res) => {
 *************************************************/	// TEST OK
 
 app.post('/userConnection/', async (req, res) => {
-    let sql = "select * from users WHERE mail = '" + req.body.user.mail + "'";
+    let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
-    await pool.query(sql, async (error, rows) => {
-        if (error) throw error;
+    pool.query(sql, async (error, rows) => {
+        if (error) console.log('ok'), res.send({status : false, msg : error});
         if (rows.rowCount != 1) {
-            return res.send(false);
+            console.log('ici')
+            return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
         } else {
-        await bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
-            if (err) return res.send(err);
-            if(result) {
-                id = rows.rows[0].id;
-            }
-            return res.json(id);
-        });
+        if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
+            id = rows.rows[0].id;
+            console.log('la')
+            return res.send({status : true, msg : id});
+        } else {
+            console.log('ou la')
+            return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
+        }
     }
     })
   });
@@ -262,7 +261,7 @@ app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
     let user = parseInt(req.body.user);
     let isExisting = false;
-    let sql = `select * from access where door = ${id} and users = ${user}`
+    let sql = `select * from access where door = ${id} AND users = ${user}`
     pool.query(sql, (err,rows) => {
         if (err) throw err;
         if (rows.rows.length > 0) {
@@ -370,7 +369,7 @@ app.get('/doorHistory/user/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/doorHistory/user/').pop());
     let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
     pool.query(sql, (err, rows) => {
-        if (err) throw err;
+        if (err) return res.send(err);
         return res.send(rows.rows);
     })
 });

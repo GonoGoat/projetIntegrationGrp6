@@ -19,8 +19,9 @@ export default class AjoutPorte_FormVerif extends React.Component {
     }
 
     async isDoorExisting() {
+        let storedUser = await AsyncStorage.getItem('user');
         let valeurs = {
-            user : AsyncStorage.getItem('user'),
+            user : storedUser,
             password : this.password,
             id : this.idPorte
         }

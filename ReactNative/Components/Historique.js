@@ -37,20 +37,11 @@ export default class Historique extends React.Component {
   })
   }
 
-  componentDidMount() {
-    //this.interval = setInterval(() => (console.log('ok')), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
   render() {
     const doorIdParam = this.props.route.params.doorIdParam;
     const nickname = this.props.route.params.nickname;
     this.getData(doorIdParam);
     if(this.state.isLoading) {
-      this.getData(doorIdParam);
       this.getUsers();
       return (
         <View style={styles.container}>
