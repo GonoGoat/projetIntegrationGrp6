@@ -57,7 +57,7 @@ export default class PorteDetail extends React.Component {
           console.log(error)
       })*/
 
-      axios.put('http://192.168.0.29:8081/doorStatus',{door})
+      axios.put('http://192.168.0.27:8081/doorStatus',{door})
       .then(res => {
           
       })
@@ -75,7 +75,7 @@ export default class PorteDetail extends React.Component {
           id : doorId,
           status : newStatus
         };
-        axios.put('http://192.168.0.29:8081/doorStatus',{door})
+        axios.put('http://192.168.0.27:8081/doorStatus',{door})
         .then(res => {
           this.sendHistory(doorId, newStatus)
         })
@@ -94,7 +94,7 @@ export default class PorteDetail extends React.Component {
       date: new Date,
       action: newStatus
     }
-    axios.post('http://192.168.0.29:8081/newhistory',{history})
+    axios.post('http://192.168.0.27:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -111,9 +111,9 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://192.168.0.29:8081/access/delete',{params})
+    axios.post('http://192.168.0.27:8081/access/delete',{params})
       .then(res => {
-        this.props.navigation.push("Accueil")
+        this.props.navigation.navigate("ListePortes")
         this.setState({isLoading: false})
       })
       .catch(err => {
@@ -124,7 +124,7 @@ export default class PorteDetail extends React.Component {
   }
 
   getDoors() {
-    axios.get(`http://192.168.0.29:8081/doors`)
+    axios.get(`http://192.168.0.27:8081/doors`)
     .then(res => {
       this.setState({isLoading: false, doors: res.data});
     })
@@ -184,8 +184,8 @@ export default class PorteDetail extends React.Component {
       let modalVisible = this.state.modalVisible;
       
       var dataDoor =  getDoorById(doorIdParam, this.state.doors);
-      var statusString = getStatus(dataDoor[2]);
-      if(dataDoor[2] == 2 || dataDoor[2] == 3) {
+      var statusString = getStatus(dataDoor[1]);
+      if(dataDoor[1] == 2 || dataDoor[1] == 3) {
         this.state.isChangingStatus = true
       }
       else {
@@ -225,15 +225,16 @@ export default class PorteDetail extends React.Component {
           <View style={{flex: 6}}>
             <TouchableHighlight disabled={this.state.isChangingStatus}
             style={styles.openButton}
-              onPress={() => this.send(doorIdParam, dataDoor[2])}
+              onPress={() => this.send(doorIdParam, dataDoor[1])}
               >
               <View>
-                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2])}</Text>
+                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[1])}</Text>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.histoButton}
-              onPress={() => this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
+              onPress={() => 
+              this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
               <View>
                 <Text style={{fontSize: 20}}>Historique</Text>
               </View>

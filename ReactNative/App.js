@@ -29,23 +29,14 @@ const MonCompteStackScreen = ({navigation}) => (
     </Drawer.Screen>
     
     <Drawer.Screen name="Inscription" component={Inscription}
-      options={{
-      headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-      )}}>
+      options={{headerShown: false}}>
     </Drawer.Screen>
 
-    <Drawer.Screen name="Connexion" component={Connection} options={{inscriptionSubmitted: false,
-      headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-      )}}>
+    <Drawer.Screen name="Connexion" component={Connection} options={{inscriptionSubmitted: false, headerShown: false}}>
     </Drawer.Screen>
 
     <Drawer.Screen name="MotDePasseOublie" component={MotDePasseOublie}
-      options={{
-      headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-      )}}>
+      options={{headerShown: false}}>
     </Drawer.Screen>
   </Drawer.Navigator>
 )
@@ -115,7 +106,7 @@ export default function App() {
         <Stack.Screen name="Mon compte" component={MonCompteStackScreen}/>
         <Stack.Screen name="Portes favorites" component={FavoriteStackScreen}/>
         <Stack.Screen name="Ajouter une porte" component={AjoutPorteStackScreen}/>
-        <Stack.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
+        <Stack.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen}/>
         <Stack.Screen name="Deconnexion" component={DeconnectionStackScreen}/>
       </Drawer.Navigator>
     </NavigationContainer>

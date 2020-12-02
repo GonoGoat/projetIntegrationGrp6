@@ -19,7 +19,7 @@ export function _loadTag () {
     }
   })
      return axios
-      .get('http://82.165.248.136:8081/userTag/' + user)
+      .get('http://localhost:8081/userTag/' + user)
       .catch(function(error) {
         // to do error
         //alert(error.message);
@@ -39,7 +39,7 @@ export function _loadDoor (tag) {
     }
   })
   return axios
-    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
+    .get("http://localhost:8081/doorTagUser/" + tag + "/" + user)
 
     .catch(function(error) {
       //alert(error.message);

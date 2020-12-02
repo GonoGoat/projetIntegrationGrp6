@@ -24,7 +24,7 @@ class Connection extends React.Component {
   */
   getHistory = (id) => {
     let doors = [];
-    axios.get('http://192.168.0.29:8081/doorHistory/user/'+id)
+    axios.get('http://192.168.0.27:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
@@ -41,7 +41,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://192.168.0.29:8081/userConnection/', {user : { 
+    axios.post('http://192.168.0.27:8081/userConnection/', {user : { 
         mail: this.mail,
         password : this.password
       }
@@ -50,6 +50,7 @@ class Connection extends React.Component {
         if (response.data != false) {
           this.getHistory(response.data);
         } else {
+
           this.setState({errorMessage:'Mail ou mot de passe incorrect'});
         }
       })

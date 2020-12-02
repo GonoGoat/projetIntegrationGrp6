@@ -9,7 +9,7 @@ class Deconnection extends React.Component {
     
   async clearAllData() {
     await AsyncStorage.clear()
-    this.props.navigation.navigate('Connexion');
+    this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false});
   };
 
   render() {

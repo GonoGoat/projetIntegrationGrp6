@@ -33,7 +33,7 @@ class MonCompte extends React.Component {
                 }
             }
         })
-        axios.get('http://192.168.0.29:8081/user/' + user)
+        axios.get('http://192.168.0.27:8081/user/' + user)
             .then(res => {
                 this.setState({
                     isLoading:false,
@@ -191,11 +191,11 @@ class MonCompte extends React.Component {
                                     <TouchableOpacity
                                     style={styles.returnButton}
                                     onPress={() => {
-                                        this.textInput0.clear()
-                                        this.textInput1.clear()
-                                        this.textInput2.clear()
-                                        this.textInput3.clear()
-                                        this.textInput4.clear()
+                                        this.textInput0.value = this.state.user[0].lastname
+                                        this.textInput1.value = this.state.user[0].firstname
+                                        this.textInput2.value = this.state.user[0].sexe
+                                        this.textInput3.value = this.state.user[0].mail
+                                        this.textInput4.value = this.state.user[0].phone
                                         this.setState({visible: false, newInfos: []})
                                         
                                     }}

@@ -260,7 +260,7 @@ app.get('/door/:id', async (req, res) => {
 
 app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
-    let user = parseInt(req.body.user)
+    let user = parseInt(req.body.user);
     let isExisting = false;
     let sql = `select * from access where door = ${id} and users = ${user}`
     pool.query(sql, (err,rows) => {
@@ -341,9 +341,10 @@ app.get('/doorTagUser/:tag/:users', async (req, res) => {
 
 app.get('/userTag/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/userTag/').pop());
-    let sql = 'select tag from access where users = ' + userId ;
+    let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
+        
         return res.send(rows.rows);
     })
 });
@@ -367,7 +368,6 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 
 app.get('/doorHistory/user/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/doorHistory/user/').pop());
-    console.log('door : '+userId)
     let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
     pool.query(sql, (err, rows) => {
         if (err) throw err;
