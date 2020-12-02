@@ -28,7 +28,7 @@ const MonCompteStackScreen = ({navigation}) => (
         <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
       )}}>
     </Drawer.Screen>
-    
+
     <Drawer.Screen name="Inscription" component={Inscription}
       options={{headerShown: false}}>
     </Drawer.Screen>
@@ -51,7 +51,7 @@ const listePortesStackScreen = ({navigation}) => (
       )}}>
     </Drawer.Screen>
 
-    <Drawer.Screen name="PorteDetail" component={PorteDetail} 
+    <Drawer.Screen name="PorteDetail" component={PorteDetail}
       options={{doorIdParam: 0, nickname: "", tagName: "",
       headerLeft: () => (
         <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
@@ -98,6 +98,16 @@ const DeconnectionStackScreen = ({navigation}) => (
       )}}>
     </Drawer.Screen>
   </Drawer.Navigator>
+)
+const AdminStackScreen = ({navigation}) => (
+    <Drawer.Navigator screenOptions={{headerShown: true}}>
+        <Drawer.Screen name="Administration" component={Admin}
+                       options={{
+                           headerLeft: () => (
+                               <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+                           )}}>
+        </Drawer.Screen>
+    </Drawer.Navigator>
 )
 const isAdmin = true;
 export default function App() {

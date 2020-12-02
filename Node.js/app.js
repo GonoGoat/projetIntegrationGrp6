@@ -74,9 +74,12 @@ app.put('/resetPassword/', async (req, res) => {
     let hash;
     let mail = req.body.user.mail;
     let newPass = "";
-    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#","?","!","@","$","%","^","&","*","-"]                                   
-    for (let i =0; i <15; i++){
-        newPass += random[Math.round(Math.random()*72)];
+    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#","?","!","@","$","%","^","&","*","-"]
+    for (let i =0; i <4; i++){
+        newPass += random[Math.round(Math.random()*10)];
+        newPass += random[(Math.round(Math.random()*26) + 10)];
+        newPass += random[(Math.round(Math.random()*26) + 36)];
+        newPass += random[(Math.round(Math.random()*10) + 62)];
     }
     hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
@@ -148,9 +151,9 @@ app.post('/newUsers', async (req, res) => {  //argon2 test
     if (!errors.isEmpty()) {
         return res.send(errors);
     } else {
-        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password) VALUES ($1,$2,$3,$4,$5,$6)";
+        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password, isAdmin) VALUES ($1,$2,$3,$4,$5,$6,$7)";
         hash = await argon2.hash(req.body.user.password, {type: argon2.argon2id});
-        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash,];
+        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash, true];
         pool.query(query, valeur, (err) => {
             if (err) {
                 console.log(err);
@@ -345,7 +348,7 @@ app.get('/userTag/:userId', async (req, res) => {
     let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
-        
+
         return res.send(rows.rows);
     })
 });
