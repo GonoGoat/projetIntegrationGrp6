@@ -24,7 +24,7 @@ class Inscription extends React.Component {
         let user = {
             mail : this.state.mail.trim().toLowerCase()
         };
-        await axios.post('http://localhost:8081/userMail/', {user})
+        await axios.post('http://82.165.248.136:8081/userMail/', {user})
              .then(res => {
                 const verif = res.data;
                 if (verif) {
@@ -105,7 +105,7 @@ class Inscription extends React.Component {
         };
 
 
-        axios.post('http://localhost:8081/newUsers',{user})
+        axios.post('http://82.165.248.136:8081/newUsers',{user})
 
             .catch(err => console.log(err));
 
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         color: '#ffffff'
     },
     button: {
-        height : '100%',
+        height : '60%',
         width : '48%',
         color: '#fff',
         textAlign: 'center',
@@ -199,10 +199,10 @@ const styles = StyleSheet.create({
     },
     buttonZone: {
         height : '11%',
-        marginTop : "4%"
+        marginTop : "12%"
     },
     connect: {
-        height : '100%',
+        height : '60%',
         width : '48%',
         position : 'absolute',
         right : "0%",
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#d0d0d0',
     },
     input: {
-        height : '6%',
+        height : '5%',
         padding: '2%',
         marginBottom : '1%',
         justifyContent: 'center',

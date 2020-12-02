@@ -58,7 +58,7 @@ var mailOptions = {                         //Création du mail
 
 function CreateMail(mail, password) {
     mailOptions.to = mail;
-    mailOptions.text = "Votre mot de passe temporaire est : '" + password + "'. Veuillez le changer le plus rapidement possible dans l'onglet prévu à cet effet de la section 'profil'";
+    mailOptions.text = "Votre mot de passe temporaire est : \"" + password + "\". Veuillez le changer le plus rapidement possible dans l'onglet prévu à cet effet de la section 'profil'";
 
     transporter.sendMail(mailOptions, function(error, info){  // Envoie le mail
         if (error) {
@@ -126,15 +126,12 @@ app.post('/userConnection/', async (req, res) => {
     pool.query(sql, async (error, rows) => {
         if (error) console.log('ok'), res.send({status : false, msg : error});
         if (rows.rowCount != 1) {
-            console.log('ici')
             return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
         } else {
         if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
             id = rows.rows[0].id;
-            console.log('la')
             return res.send({status : true, msg : id});
         } else {
-            console.log('ou la')
             return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
         }
     }
@@ -151,9 +148,9 @@ app.post('/newUsers', async (req, res) => {  //argon2 test
     if (!errors.isEmpty()) {
         return res.send(errors);
     } else {
-        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password, isAdmin) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password, isadmin) VALUES ($1,$2,$3,$4,$5,$6,$7)";
         hash = await argon2.hash(req.body.user.password, {type: argon2.argon2id});
-        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash, true];
+        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash, false];
         pool.query(query, valeur, (err) => {
             if (err) {
                 console.log(err);

@@ -16,33 +16,41 @@ class Connection extends React.Component {
     }
   }
 
-  /* 
+  /*
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
   getHistory = async (id) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
+    axios.get('http://82.165.248.136:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
         }
         AsyncStorage.setItem('user', id);
         AsyncStorage.setItem('doors', doors);
-        this.redirect(); 
+        this.redirect();
       })
   };
 
   setData = (id, doors) => {
     AsyncStorage.setItem('user', id.toString());
     AsyncStorage.setItem('doors', doors.toString());
-  }
+  };
 
   redirect () {
     this.props.navigation.navigate('Afficher la liste de vos portes');
     this.setState({errorMessage: ''});
     this.setState({mail : ''});
     this.setState({password: ''});
+  }
+
+  async userConnection() {
+    return await axios.post('http://82.165.248.136:8081/userConnection/', {user : {
+        mail: this.state.mail.toLowerCase(),
+        password : this.state.password
+      }
+    })
   }
 
   async checkUser() {
@@ -64,14 +72,14 @@ class Connection extends React.Component {
 
   render() {
     const nav = this.props.navigation;
-    var isSubmitted = this.props.route.params.inscriptionSubmitted
+    var isSubmitted = this.props.route.params.inscriptionSubmitted;
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
-        <TextInput 
-          placeholder='E-mail' style={styles.input} 
+        <TextInput
+          placeholder='E-mail' style={styles.input}
           onChangeText={(text)=> this.setState({mail: text.trim()})}
-          testID='mail' 
+          testID='mail'
           value={this.state.mail}
           autoCapitalize = 'none'
           />

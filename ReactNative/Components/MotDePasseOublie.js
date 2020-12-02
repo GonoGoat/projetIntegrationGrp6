@@ -20,7 +20,7 @@ class MotDePasseOublie extends React.Component {
         let user = { mail : this.mail };
         this.setState({type : checkmail(mail).type});
         this.setState({error : checkmail(mail).message});
-        axios.post('http://localhost:8081/userMail/', {user})
+        axios.post('http://82.165.248.136:8081/userMail/', {user})
             .then(res => {
                 const verif = !res.data;
                 if (verif) {
@@ -41,7 +41,7 @@ class MotDePasseOublie extends React.Component {
         let user = {
             mail : mail
         };
-        axios.put('http://localhost:8081/resetPassword/', {user})
+        axios.put('http://82.165.248.136:8081/resetPassword/', {user})
     }
 
 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         alignContent: 'center'
     },
     input: {
-        padding: '4%',
+        padding: '3%',
         justifyContent: 'center',
         alignContent: 'center',
         borderColor: '#000',

@@ -33,7 +33,7 @@ class MonCompte extends React.Component {
                 }
             }
         })
-        axios.get('http://192.168.0.27:8081/user/' + user)
+        axios.get('http://82.165.248.136:8081/user/' + user)
             .then(res => {
                 this.setState({
                     isLoading:false,
@@ -41,7 +41,7 @@ class MonCompte extends React.Component {
                     newInfos:[res.data[0].lastname, res.data[0].firstname, res.data[0].sexe, res.data[0].mail, res.data[0].phone]
                 })
             })
-            
+
             .catch(error => {
                 console.log(error)
             })
@@ -52,7 +52,7 @@ class MonCompte extends React.Component {
             let user = {
                 mail : mail
             };
-            await axios.post('http://192.168.0.27:8081/userMail/', {user})
+            await axios.post('http://82.165.248.136:8081/userMail/', {user})
             .then(res => {
                 const verif = res.data;
                 if (verif) {
@@ -128,7 +128,7 @@ class MonCompte extends React.Component {
         };
 
 
-        axios.post('http://localhost:8081/newUsers',{user})
+        axios.post('http://82.165.248.136:8081/newUsers',{user})
 
             .catch(err => console.log(err));
 
@@ -197,7 +197,7 @@ class MonCompte extends React.Component {
                                         this.textInput3.value = this.state.user[0].mail
                                         this.textInput4.value = this.state.user[0].phone
                                         this.setState({visible: false, newInfos: []})
-                                        
+
                                     }}
                                     >
                                         <Text style={{fontSize: 20}}>Annuler </Text>
