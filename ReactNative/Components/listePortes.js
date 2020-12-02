@@ -3,12 +3,12 @@ import {StyleSheet, Text, TouchableHighlight, View, Dimensions} from 'react-nati
 import axios from 'axios';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {FlatList} from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
-export function _loadTag () {
+export async function _loadTag () {
   let user = 8;
-  AsyncStorage.getItem('user', function(errs, result) {
+  await AsyncStorage.getItem('user', function(errs, result) {
     if (!errs) {
       if (result !== null) {
         user = result
@@ -26,9 +26,9 @@ export function _loadTag () {
       })
   }
 
-export function _loadDoor (tag) {
+export async function _loadDoor (tag) {
   let user = 8;
-  AsyncStorage.getItem('user', function(errs, result) {
+  await AsyncStorage.getItem('user', function(errs, result) {
     if (!errs) {
       if (result !== null) {
         user = result
@@ -56,7 +56,7 @@ class listPortes extends React.Component {
       user: ''
     }
   }
-  
+
   _getTag() {
     _loadTag().then(data => {
       this.setState({

@@ -1,8 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, AppState} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useEffect } from 'react';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -15,6 +15,7 @@ import Historique from './Components/Historique'
 import PorteDetail from './Components/PorteDetail';
 import Deconnection from './Components/Deconnection';
 import MotDePasseOublie from './Components/MotDePasseOublie';
+import MonCompte from './Components/MonCompte';
 
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -134,7 +135,25 @@ const DeconnectionStackScreen = ({navigation}) => (
         </Drawer.Screen>
     </Drawer.Navigator>
 )
-
+const monCompteStackScreen = ({navigation}) => (
+    <MonCompteScreen.Navigator screenOptions={{
+        headerStyle: {
+            // backgroundcolor: "blue",
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight:'bold'
+        },
+        headerShown : false,
+    }}>
+        <MonCompteScreen.Screen name="MonCompte" component={MonCompte} options={{
+    headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25}
+                     onPress={() => navigation.openDrawer()}></Icon.Button>
+    )
+}}/>
+    </MonCompteScreen.Navigator>
+)
 export default function App() {
   return (
     <NavigationContainer>
