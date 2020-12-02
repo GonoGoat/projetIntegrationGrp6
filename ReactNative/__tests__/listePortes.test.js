@@ -1,22 +1,43 @@
-import React, { Component } from "react";
-import listePortes from "../Components/listePortes"
-import {_loadTag, _loadDoor}  from '../Components/listePortes'
+import {_loadDoor, _loadTag} from '../Functions/functionListePorte'
 
-/* describe("listePortes Class Component", () => {
-    it("should call _storedata", () => {
-      const wrapper = shallow(<listePortes />);
-      expect(wrapper.length).toBe(1);
-    })
-}) */
+const axios = require('axios');
+jest.mock('axios');
 
-it('return correct tags by user', () => {
-    let tag = [{"tag":"maman"},{"tag":"test"}];
-    let ListeTag = _loadTag()
-    expect(ListeTag).toBe(tag)
+
+describe('getTag', () => {
+ it('return correct tags by user', async () => {
+    axios.get.mockResolvedValue({
+      data: [{"tag":"Salon"}]
+    });
+    const firstTag = await _loadTag(33);
+    expect(firstTag).toEqual("Salon");
+  });
+
+//test .catch
+  it('detect when an error occured', async () => {
+    const errorMessage = 'Network Error';
+    axios.get.mockImplementationOnce(() =>
+      Promise.reject(new Error(errorMessage)),
+    );
+    const tagError = await _loadTag(33)
+    expect(tagError).toEqual(errorMessage)
+  })
 })
 
-it('return correct doors by tag', () => {
-    let door = [{"door":1,"users":1,"tag":"maman","nickname":"porte1"},{"door":1,"users":8,"tag":"maman","nickname":"porte1"}];
-    let ListeDoor = _loadDoor()
-    expect(ListeDoor).toBe(tag)
-})
+describe('getDoor', () => {
+  it('return correct doors by tag and by user', async () => {
+    axios.get.mockResolvedValue({
+      data: [{"door":6,"users":33,"tag":"test","nickname":"maman"}]
+    });
+    const firstDoor = await _loadDoor("test", 33);
+    expect(firstDoor).toEqual("maman");
+  })
+  it('detect when an error occured', async () => {
+    const errorMessage = 'Network Error';
+    axios.get.mockImplementationOnce(() =>
+      Promise.reject(new Error(errorMessage)),
+    );
+    const DoorError = await _loadDoor("test", 33)
+    expect(DoorError).toEqual(errorMessage)
+  })
+});

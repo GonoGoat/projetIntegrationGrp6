@@ -6,6 +6,7 @@ import axios from 'axios';
 import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString} from '../Functions/functionsHistorique'
 import {Modal} from "react-native-paper";
 
+
 export default class Historique extends React.Component {
   constructor(props){
     super(props)

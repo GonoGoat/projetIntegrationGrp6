@@ -332,12 +332,26 @@ app.get('/doorTagUser/:tag/:users', async (req, res) => {
 });
 
 /*************************************************
+		GET DOOR BY SPECIFIC DOOR ID & USER
+*************************************************/	//TEST OK
+
+app.get('/doorIdUser/:door/:users', async (req, res) => {
+    let door=req.params.door;
+    let users=req.params.users;
+    let sql = 'select door.id,access.nickname,access.tag,door.status,door.adresseip from access inner join door on access.door =  door.id where door.id = ' +  door + 'and access.users =  \'' + users + '\'';
+    pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+  });
+
+/*************************************************
 		GET TAGS BY USER
 *************************************************/	//TEST OK
 
 app.get('/userTag/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/userTag/').pop());
-    let sql = 'select tag from access where users = ' + userId ;
+    let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);
