@@ -10,6 +10,8 @@ var fs = require('fs');
 const nodemailer = require("nodemailer");
 var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
+var Chance = require('chance')
+var chance = new Chance();
 
 const argon2 = require("argon2");
 const saltRounds = 5;
@@ -381,8 +383,13 @@ app.get('/doorHistory/user/:userId', async (req, res) => {
 app.post('/newaccess', async (req, res) => {
     const query = 'INSERT INTO access (door, users, tag, nickname) VALUES ($1,$2,$3,$4)';
     let values = [parseInt(req.body.door),parseInt(req.body.user),req.body.tag, req.body.nickname];
-    await pool.query(query, values, (err) => {
-        if (err) return res.send(false);
+    pool.query(query, values, (err) => {
+        if (err) {
+            if (err.code === "23505") {
+                return res.status(403).send(false)
+            }
+            return res.send(false);
+        }
 	    return res.send(true);
     });
 });
@@ -392,12 +399,14 @@ app.post('/newaccess', async (req, res) => {
 *************************************************/	//TEST OK
 
 app.post('/newdoor', async (req, res) => {
-  const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
-  let valeur = [req.query.password, req.query.status];
-  pool.query(query, valeur, (err) => {
-        if (err)
+  let pswd = chance.string({length : 10, alpha : true});
+  const query = "insert into door (password, status, adresseip) values ($1,$2,$3) returning *";
+  let valeur = [pswd, parseInt(req.body.status),req.body.ipAdress];
+  pool.query(query, valeur,(err, rows) => {
+        if (err) {
             return res.send(false);
-        return res.send(true);
+        }
+        return res.send(rows.rows[0]);
     });
 });
 
