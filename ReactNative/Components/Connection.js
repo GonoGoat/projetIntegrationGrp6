@@ -90,7 +90,7 @@ class Connection extends React.Component {
           <Text style={styles.textConnection}>Connexion</Text>
         </TouchableOpacity>
         <TouchableOpacity testID='inscription' style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
-          <Text style={styles.text}>Pas encore de compte ? </Text>
+          <Text style={styles.textInscription}>Pas encore de compte ? </Text>
         </TouchableOpacity>
         <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
         "Votre compte a bien été validé"
@@ -103,7 +103,6 @@ class Connection extends React.Component {
 
 const styles = StyleSheet.create({
   component: {
-    minWidth: '40%',
     flex : 1,
     justifyContent: 'center',
     alignContent: 'center',
@@ -112,7 +111,7 @@ const styles = StyleSheet.create({
   },
   text: {
     paddingVertical: '3%',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   input: {
     paddingVertical: '2%',
@@ -145,6 +144,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#d8d8d8',
     justifyContent: 'center',
     alignContent: 'center'
+  },
+  textInscription: {
+    textAlign: 'center',
+    paddingVertical: '3%',
+    alignContent: 'center',
   },
   password: {
     textDecorationLine: 'underline',
