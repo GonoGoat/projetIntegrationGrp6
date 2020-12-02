@@ -1,60 +1,70 @@
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
-import Inscription from "./Inscription";
-import MotDePasseOublie from "./MotDePasseOublie"
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
+import { verify } from "../Functions/functionsConnection";
 import {Snackbar} from "react-native-paper";
 
 class Connection extends React.Component {
 
   constructor(props) {
     super(props);
-    this.mail = "";
-    this.password = "";
     this.state={
       errorMessage: "",
+      mail: "",
+      password: ""
     }
   }
 
-
-  /*
+  /* 
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
-  getHistory = (id) => {
+  getHistory = async (id) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
-      .then(res => {
-        for(let i = 0; i<res.data.length; i ++) {
-          doors[i] = parseInt(res.data[i].door);
-        }
-        AsyncStorage.setItem('user', id);
-        AsyncStorage.setItem('doors', doors);
-        this.redirect();
-      })
+    await axios.get('http://192.168.1.61:8081/doorHistory/user/'+id)
+    .then(res => {
+      for(let i = 0; i<res.data.length; i ++) {
+        doors[i] = parseInt(res.data[i].door);
+      }
+    })
+    this.setData(id, doors);
   };
+
+  setData = (id, doors) => {
+    AsyncStorage.setItem('user', id.toString());
+    AsyncStorage.setItem('doors', doors.toString());
+  }
 
   redirect () {
     this.props.navigation.navigate('Afficher la liste de vos portes');
-}
+    this.setState({errorMessage: ''});
+    this.setState({mail : ''});
+    this.setState({password: ''});
+  }
 
-  checkUser(){
-    if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : {
-        mail: this.mail,
-        password : this.password
-      }
+  async userConnection() {
+    return await axios.post('http://192.168.1.61:8081/userConnection/', {user : { 
+      mail: this.state.mail.toLowerCase(),
+      password : this.state.password
+    }
     })
-      .then((response) => {
-        if (response.data != false) {
-          this.getHistory(response.data);
-        } else {
-          this.setState({errorMessage:'Mail ou mot de passe incorrect'});
+  }
+
+  async checkUser(){
+    if(verify(this.state.mail.toLowerCase(), this.state.password).state){
+      await this.userConnection()
+        .then(response => {
+        if (!response.data.status) {
+          this.setState({errorMessage:response.data.msg})
         }
-      })
+        else {
+          this.setState({errorMessage:''});
+          this.getHistory(response.data.msg);
+          this.redirect();
+        }});
     } else {
-      this.setState({errorMessage:'Veuillez renseigner une valeur dans chaque champ'});
+      this.setState({errorMessage:verify(this.state.mail.toLowerCase(), this.state.password).msg});
     }
   }
 
@@ -62,91 +72,97 @@ class Connection extends React.Component {
     const nav = this.props.navigation;
     var isSubmitted = this.props.route.params.inscriptionSubmitted
     return (
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.component}>
-            <Text style={styles.text}>E-mail : </Text>
-            <TextInput placeholder='E-mail' style={styles.input} onChangeText={(text)=> this.mail =  text.trim().toLowerCase()}/>
-            <Text style={styles.text}>Mot de passe : </Text>
-            <TextInput placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.password = text }/>
-            <Text style={styles.error}>{this.state.errorMessage}</Text>
-            <TouchableOpacity style={styles.connect} onPress={()=> this.checkUser()}>
-              <Text style={styles.textConnection}>Connexion</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
-              <Text style={styles.text}>Pas encore de compte ? </Text>
-            </TouchableOpacity>
-              <TouchableOpacity style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
-                <Text style={styles.password}>Mot de passe oublié ? </Text>
-              </TouchableOpacity>
-            <Snackbar visible={isSubmitted} onDismiss={true} style={this.state.type = styles.success } duration={2000} >
-              "Votre compte a bien été validé"
-            </Snackbar>
-          </View>
-        </View>
-      </ScrollView>
+      <View style={styles.component}>
+        <Text style={styles.text}>E-mail : </Text>
+        <TextInput 
+          placeholder='E-mail' style={styles.input} 
+          onChangeText={(text)=> this.setState({mail: text.trim()})}
+          testID='mail' 
+          value={this.state.mail}
+          autoCapitalize = 'none'
+          />
+        <Text style={styles.text}>Mot de passe : </Text>
+        <TextInput testID='password' value={this.state.password} placeholder='Mot de passe' secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.setState({password: text}) }/>
+        <Text style={styles.error}>{this.state.errorMessage}</Text>
+        <TouchableOpacity testID='forgot' style={styles.password} onPress={() => nav.navigate("MotDePasseOublie")}>
+          <Text style={styles.password}>Mot de passe oublié ?</Text>
+        </TouchableOpacity>
+        <TouchableOpacity testID='connexion' style={styles.connect} onPress={()=> this.checkUser()}>
+          <Text style={styles.textConnection}>Connexion</Text>
+        </TouchableOpacity>
+        <TouchableOpacity testID='inscription' style={styles.inscript} onPress={() => nav.navigate("Inscription")} >
+          <Text style={styles.textInscription}>Pas encore de compte ? </Text>
+        </TouchableOpacity>
+        <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
+        "Votre compte a bien été validé"
+        </Snackbar>
+
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    component: {
-        justifyContent: 'center',
-        alignContent: 'center',
-        margin: '12%',
-        marginTop: '10%'
-    },
-    text: {
-        padding: 5,
-        justifyContent: 'center',
-        alignContent: 'center'
-    },
-    input: {
-        padding: 5,
-        justifyContent: 'center',
-        alignContent: 'center',
-        borderColor: '#000',
-        borderWidth: 1,
-    },
-    connect: {
-        color: 'white',
-        textAlign: 'center',
-        margin: '6%',
-        padding: 10,
-        backgroundColor: '#719ada',
-        justifyContent: 'center',
-        alignContent: 'center',
-    },
-    textConnection: {
-        color: 'white',
-        textAlign: 'center'
-    },
-    inscript: {
-        textAlign: 'center',
-        margin: '6%',
-        padding: 10,
-        backgroundColor: '#d8d8d8',
-        justifyContent: 'center',
-        alignContent: 'center'
-    },
-    password: {
-        textDecorationLine: 'underline',
-        marginTop : '12%',
-        marginLeft: '8%',
-        justifyContent: 'flex-start',
-        alignContent: 'flex-start',
-    },
-    error: {
-        color : 'red',
-        textAlign: 'center',
-        paddingTop: 5
-    },
-    success : {
-        backgroundColor : "green",
-    }
+  component: {
+    flex : 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    marginHorizontal : '12%',
+    marginVertical : '5%'
+  },
+  text: {
+    paddingVertical: '3%',
+    alignContent: 'center',
+  },
+  input: {
+    paddingVertical: '2%',
+    paddingHorizontal: '2%',
+    justifyContent: 'center',
+    alignContent: 'center',
+    borderColor: '#000',
+    borderWidth: 1,
+  },
+  connect: {
+    color: 'white',
+    textAlign: 'center',
+    backgroundColor: '#719ada',
+    justifyContent: 'center',
+    alignContent: 'center',
+    marginHorizontal: '10%',
+    marginVertical: '5%',
+    marginTop: '20%',
+    paddingVertical: '5%'
+  },
+  textConnection: {
+    color: 'white',
+    textAlign: 'center'
+  },
+  inscript: {
+    textAlign: 'center',
+    marginHorizontal: '10%',
+    marginVertical: '5%',
+    paddingVertical: '5%',
+    backgroundColor: '#d8d8d8',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  textInscription: {
+    textAlign: 'center',
+    paddingVertical: '3%',
+    alignContent: 'center',
+  },
+  password: {
+    textDecorationLine: 'underline',
+    textAlign: 'right'
+  },
+  error: {
+    color : 'red',
+    textAlign: 'center',
+    paddingTop: '5%'
+  },
+  success : {
+    backgroundColor : "green",
+  }
 });
 
 export default Connection;

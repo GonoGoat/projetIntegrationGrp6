@@ -12,11 +12,12 @@
   "jest": {
     "preset": "react-native",
     "testEnvironment": "jsdom",
-    "setupFiles": ["./jestSetup.js"]
+    "setupFiles": [
+      "./jestSetup.js"
+    ]
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",
-    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/picker": "^1.6.6",

@@ -12,7 +12,6 @@ var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
 
 const argon2 = require("argon2");
-const bcrypt = require('bcrypt');
 const saltRounds = 5;
 
 const app = express();
@@ -117,20 +116,19 @@ app.get('/users/name', async (req, res) => {
 *************************************************/	// TEST OK
 
 app.post('/userConnection/', async (req, res) => {
-    let sql = "select * from users WHERE mail = '" + req.body.user.mail + "'";
+    let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
-    await pool.query(sql, async (error, rows) => {
-        if (error) throw error;
+    pool.query(sql, async (error, rows) => {
+        if (error) res.send({status : false, msg : error});
         if (rows.rowCount != 1) {
-            return res.send(false);
+            return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
         } else {
-        await bcrypt.compare(req.body.user.password, rows.rows[0].password, (err, result) => {
-            if (err) return res.send(err);
-            if(result) {
-                id = rows.rows[0].id;
-            }
-            return res.json(id);
-        });
+        if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
+            id = rows.rows[0].id;
+            return res.send({status : true, msg : id});
+        } else {
+            return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
+        }
     }
     })
   });
@@ -260,7 +258,7 @@ app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
     let user = parseInt(req.body.user)
     let isExisting = false;
-    let sql = `select * from access where door = ${id} and users = ${user}`
+    let sql = `select * from access where door = ${id} AND users = ${user}`
     pool.query(sql, (err,rows) => {
         if (err) throw err;
         if (rows.rows.length > 0) {
@@ -365,10 +363,9 @@ app.get('/doorHistory/:doorId', async (req, res) => {
 
 app.get('/doorHistory/user/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/doorHistory/user/').pop());
-    console.log('door : '+userId)
     let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
     pool.query(sql, (err, rows) => {
-        if (err) throw err;
+        if (err) return res.send(err);
         return res.send(rows.rows);
     })
 });
