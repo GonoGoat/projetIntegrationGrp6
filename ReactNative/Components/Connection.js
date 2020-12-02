@@ -45,15 +45,6 @@ class Connection extends React.Component {
     this.setState({password: ''});
   }
 
-  checkUser(){
-    if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : { 
-        mail: this.mail,
-        password : this.password
-      }
-    })
-  }
-
   async checkUser() {
     if(verify(this.state.mail.toLowerCase(), this.state.password).state){
       await this.userConnection()
