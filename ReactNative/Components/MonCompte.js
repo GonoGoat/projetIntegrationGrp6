@@ -52,7 +52,7 @@ class MonCompte extends React.Component {
             let user = {
                 mail : mail
             };
-            await axios.post('http://192.168.0.29:8081/userMail/', {user})
+            await axios.post('http://192.168.0.27:8081/userMail/', {user})
             .then(res => {
                 const verif = res.data;
                 if (verif) {

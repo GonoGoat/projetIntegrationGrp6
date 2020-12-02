@@ -51,14 +51,3 @@ export function _verifyconfirm(confirm, password){
     }
     return {"state" : false, "msg" : error};
 }
-
-export function _reset(prenom, name, phone, gender, mail, password, confirm) {
-    prenom = "";
-    name = "" ;
-    phone = "";
-    gender = "";
-    mail = "";
-    password = "";
-    confirm = "";
-}
-
