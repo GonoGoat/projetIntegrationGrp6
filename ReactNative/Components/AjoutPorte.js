@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import AjoutPorte_FormVerif from "./AjoutPorte_FormVerif"
 import AjoutPorte_FormAjout from "./AjoutPorte_FormAjout"
 import {Snackbar,Button,Text} from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class AjoutPorte extends React.Component {

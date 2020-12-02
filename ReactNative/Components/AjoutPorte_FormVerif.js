@@ -1,9 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+//import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {StyleSheet, View,TextInput} from 'react-native';
 import { Button,Text } from 'react-native-paper';
 import {checkVerif,checkVerifAPI} from "../Functions/functionsAjoutPorte"
-//import AsyncStorage from "@react-native-community/async-storage"
+import AsyncStorage from "@react-native-community/async-storage"
 
 const axios = require('axios')
 
