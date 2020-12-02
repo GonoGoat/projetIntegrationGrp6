@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         color : "#D0D0D0"
     },
     button : {
-        marginTop : 50
+        marginTop : 20
     },
     form : {
         marginVertical : 50,
