@@ -19,7 +19,7 @@ export async function _loadTag () {
     }
   })
      return axios
-      .get('http://82.165.248.136:8081/userTag/' + user)
+      .get('http://localhost:8081/userTag/' + user)
       .catch(function(error) {
         // to do error
         //alert(error.message);
@@ -39,7 +39,7 @@ export async function _loadDoor (tag) {
     }
   })
   return axios
-    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
+    .get("http://localhost:8081/doorTagUser/" + tag + "/" + user)
 
     .catch(function(error) {
       //alert(error.message);
@@ -78,10 +78,8 @@ class listPortes extends React.Component {
     this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
-
   this._getTag()
-
-  }
+}
 
   render() {
   return (

@@ -13,22 +13,22 @@ export default class Historique extends React.Component {
       isLoading: true,
       histo: [],
       users: [],
-      errorVisible: false
+      errorVisible: false,
     }
   }
 
   getData(doorId) {
-    axios.get(`http://82.165.248.136:8081/doorHistory/`+ doorId)
+    axios.get(`http://localhost:8081/doorHistory/`+ doorId)
     .then(res => {
       this.setState({histo: res.data})
     })
     .catch(error => {
       this.setState({errorVisible: true})
-  })
+    })
   }
 
   getUsers() {
-    axios.get(`http://192.168.0.29:8081/users/name`)
+    axios.get(`http://localhost:8081/users/name`)
     .then(res => {
       this.setState({isLoading:false, users: res.data})
     })
@@ -40,8 +40,8 @@ export default class Historique extends React.Component {
   render() {
     const doorIdParam = this.props.route.params.doorIdParam;
     const nickname = this.props.route.params.nickname;
+    this.getData(doorIdParam);
     if(this.state.isLoading) {
-      this.getData(doorIdParam);
       this.getUsers();
       return (
         <View style={styles.container}>
@@ -72,7 +72,8 @@ export default class Historique extends React.Component {
             </SafeAreaView>
             <View style={{flex: 1}}>
               <TouchableOpacity style={styles.backButton}
-                onPress={() => this.props.navigation.goBack()}>
+                onPress={() => 
+                  this.props.navigation.goBack()}>
                 <Text>Retour</Text>
               </TouchableOpacity>
             </View>
@@ -100,7 +101,8 @@ export default class Historique extends React.Component {
             </SafeAreaView>
               <View style={{flex: 1}}>
                 <TouchableOpacity style={styles.backButton}
-                  onPress={() => this.props.navigation.goBack()}>
+                  onPress={() => 
+                    this.props.navigation.goBack()}>
                   <Text>Retour</Text>
                 </TouchableOpacity>
             </View>

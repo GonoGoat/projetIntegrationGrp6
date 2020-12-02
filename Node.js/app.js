@@ -72,9 +72,9 @@ app.put('/resetPassword/', async (req, res) => {
     let hash;
     let mail = req.body.user.mail;
     let newPass = "";
-    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#","?","!","@","$","%","^","&","*","-"]                                   
     for (let i =0; i <15; i++){
-        newPass += random[Math.round(Math.random()*62)];
+        newPass += random[Math.round(Math.random()*72)];
     }
     hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
@@ -119,14 +119,17 @@ app.post('/userConnection/', async (req, res) => {
     let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
     pool.query(sql, async (error, rows) => {
-        if (error) res.send({status : false, msg : error});
+        if (error) console.log('ok'), res.send({status : false, msg : error});
         if (rows.rowCount != 1) {
+            console.log('ici')
             return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
         } else {
         if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
             id = rows.rows[0].id;
+            console.log('la')
             return res.send({status : true, msg : id});
         } else {
+            console.log('ou la')
             return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
         }
     }
@@ -256,7 +259,7 @@ app.get('/door/:id', async (req, res) => {
 
 app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
-    let user = parseInt(req.body.user)
+    let user = parseInt(req.body.user);
     let isExisting = false;
     let sql = `select * from access where door = ${id} AND users = ${user}`
     pool.query(sql, (err,rows) => {
@@ -337,9 +340,10 @@ app.get('/doorTagUser/:tag/:users', async (req, res) => {
 
 app.get('/userTag/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/userTag/').pop());
-    let sql = 'select tag from access where users = ' + userId ;
+    let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
+        
         return res.send(rows.rows);
     })
 });

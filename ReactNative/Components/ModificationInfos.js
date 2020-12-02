@@ -78,7 +78,7 @@ function ModificationInfos(props) {
         visible={visible}
         ariaHideApp={false}
         >
-            <View style={styles.centeredView,styles.containerO}>
+            <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Text style={styles.title}>Modification infos</Text>
                     <Text style={{fontSize: 15}}>Nom : </Text>

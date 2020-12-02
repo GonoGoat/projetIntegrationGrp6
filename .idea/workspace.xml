@@ -3,7 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="0c3293cc-73f1-41d5-a7be-53566e14bfc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Node.js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/Node.js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ReactNative/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/AjoutPorte.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/AjoutPorte.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/AjoutPorte_FormVerif.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/AjoutPorte_FormVerif.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/Connection.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/Connection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/Deconnection.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/Deconnection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/Historique.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/Historique.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/ModificationInfos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/MonCompte.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/MonCompte.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/MotDePasseOublie.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/MotDePasseOublie.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/PorteDetail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Components/listePortes.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Components/listePortes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Functions/functionsHistorique.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Functions/functionsHistorique.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReactNative/Functions/functionsPorteDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/ReactNative/Functions/functionsPorteDetail.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -108,7 +121,7 @@
       <workItem from="1605132800187" duration="626000" />
       <workItem from="1605169005106" duration="48994000" />
       <workItem from="1606251795810" duration="7117000" />
-      <workItem from="1606354405514" duration="15147000" />
+      <workItem from="1606354405514" duration="15409000" />
     </task>
     <servers />
   </component>

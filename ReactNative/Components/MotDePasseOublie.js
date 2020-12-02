@@ -47,7 +47,7 @@ class MotDePasseOublie extends React.Component {
 
 
     render() {
-         const nav = this.props.navigation;
+        const nav = this.props.navigation;
         return (
             <View style={styles.component}>
                 <Text style={styles.text}>Veuillez rentrer votre addresse mail, nous allons vous envoyer un mail contenant un mot de passe a utiliser temporairement, nous vous conseillons de directement modifer votre nouveau mot de passe une fois connecter dans la section prévue a cet effet dans 'profil'.</Text>

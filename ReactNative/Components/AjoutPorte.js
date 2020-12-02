@@ -1,11 +1,10 @@
 import React from 'react';
-import {StyleSheet, View,Text,Button, TextInput} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import AjoutPorte_FormVerif from "./AjoutPorte_FormVerif"
 import AjoutPorte_FormAjout from "./AjoutPorte_FormAjout"
 import {Snackbar} from 'react-native-paper';
 
 export default class AjoutPorte extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {

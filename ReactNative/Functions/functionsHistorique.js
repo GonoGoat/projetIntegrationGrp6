@@ -11,8 +11,14 @@ export function getDateFormat(date) {
   dateFormatee += date[2];
   dateFormatee += date[3];
   dateFormatee += " ";
-  dateFormatee += date[11];
-  dateFormatee += date[12];
+  var heureHiver = (date[11] + date[12]);
+  if(heureHiver == "23") {
+    dateFormatee += '00'
+  }
+  else {
+    dateFormatee += (parseInt(heureHiver) + 1)
+  }
+
   dateFormatee += ":";
   dateFormatee += date[14];
   dateFormatee += date[15];

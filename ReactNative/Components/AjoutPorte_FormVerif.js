@@ -25,6 +25,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
             password : this.password,
             id : this.idPorte
         }
+        console.log(AsyncStorage.getItem('user'))
         await getCheck(valeurs).then(res => {
             let rep = checkVerifAPI(res,true);
             if (rep === true) {

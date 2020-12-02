@@ -54,7 +54,7 @@ class Connection extends React.Component {
     })
   }
 
-  async checkUser(){
+  async checkUser() {
     if(verify(this.state.mail.toLowerCase(), this.state.password).state){
       await this.userConnection()
         .then(response => {
