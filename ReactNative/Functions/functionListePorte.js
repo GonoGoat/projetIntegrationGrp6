@@ -5,17 +5,20 @@ export async function _loadTag (utili) {
      .get('http://82.165.248.136:8081/userTag/' + utili)
      .catch(function(error) {
        if (error.response) {
-        throw error
+        return error.response
        } else if (error.request) {
-        throw error
+        return error.request
        } else {
-         console.log(error.message)
-          throw error.message
+          return error.message
        }
      })
      .then(response => {
+       if(response.data) {
          return response.data[0].tag
-     })   
+     }
+    else {
+      return 'Network Error'
+    }})   
 };
 
 
@@ -24,14 +27,18 @@ export async function _loadDoor (tag, utili) {
       .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + utili)
       .catch(function(error) {
         if (error.response) {
-          alert("40X Not Found page")
+          return "40X Not Found page"
         } else if (error.request) {
-          alert("Network Error")
+          return "Network Error"
         } else {
-          alert('Erreur ' + error.message)
+          return error.message
         }
       })
       .then(response => {
-        return response.data[0].nickname
-    }) 
+        if(response.data) {
+          return response.data[0].nickname
+      }
+     else {
+       return 'Network Error'
+     }})  
   };
