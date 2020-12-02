@@ -22,7 +22,7 @@ class Connection extends React.Component {
   */
   getHistory = (id) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
+    axios.get('http://82.165.248.136:8081/doorHistory/user/'+id)
       .then(res => {
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
@@ -39,7 +39,7 @@ class Connection extends React.Component {
 
   checkUser(){
     if(this.password.length > 0 && this.mail.length > 0){
-    axios.post('http://localhost:8081/userConnection/', {user : { 
+    axios.post('http://82.165.248.136:8081/userConnection/', {user : {
         mail: this.mail,
         password : this.password
       }
