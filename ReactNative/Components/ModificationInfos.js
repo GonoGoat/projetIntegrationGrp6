@@ -3,7 +3,8 @@ import {StyleSheet, View, Text, TextInput, TouchableOpacity, TouchableHighlight}
 import Modal from "modal-react-native-web";
 import {Snackbar} from 'react-native-paper';
 import axios from "axios";
-import PorteDetail from "./PorteDetail";
+import {check} from "../Functions/functionsModificationInfos";
+
 
 function ModificationInfos(props) {
 
@@ -16,10 +17,8 @@ function ModificationInfos(props) {
     const [message, setMessage] = React.useState({
         type : "fail"});
 
-    const axios = require('axios')
 
-    function updateAccess() {
-        console.log(tagName +" "+nickname+" "+door)
+    function updateAccess(nickname, tagName, door) {
 
         axios.patch('http://82.165.248.136:8081/access/update',{tagName : tagName, nickname : nickname, door : door})
             .then(res => {
@@ -44,37 +43,22 @@ function ModificationInfos(props) {
             });
     }
 
-
-    function check() {
-        if (nickname.length === 0) {
-            setMessage({
-                message : "Veuillez insérer un nom pour la porte.",
-                type : "fail"
-            })
-            return false;
-        }
-        if (tagName.length === 0) {
-            setMessage({
-                message : "Veuillez insérer un tag pour la porte.",
-                type : "fail"
-            })
-            return false;
-        }
-
-        return true;
-    }
-
     function back(){
         setTagName(data.tagName);
         setNickname(data.nickname);
         setVisible(!visible);
-    };
+    }
+
+    function fail(messageErreur){
+        setMessage(messageErreur);
+        setVisible(visible);
+    }
 
     function save(){
-        check() ? updateAccess() :
-            //navigation.push(PorteDetail);
-            setVisible(visible);
-    };
+        let messageErreur = check(nickname,tagName);
+        console.log(messageErreur);
+        messageErreur === true ?  updateAccess(nickname, tagName, door) : fail(messageErreur);
+    }
 
     return (
         <View >
