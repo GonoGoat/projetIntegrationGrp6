@@ -22,7 +22,8 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 const MonCompteStackScreen = ({navigation}) => (
-    <Drawer.Navigator screenOptions={{headerShown: true}}>
+    <Drawer.Navigator screenOptions={
+        {headerShown: false}}>
 <Drawer.Screen name="Connexion" component={Connection} options={{inscriptionSubmitted: false,
     headerLeft: () => (
     <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
@@ -45,68 +46,100 @@ options={{
 )
 
 const listePortesStackScreen = ({navigation}) => (
-    <Drawer.Navigator screenOptions={{headerShown: true}}>
-<Drawer.Screen name="ListePortes" component={listePortes}
-options={{
-    headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-)}}>
-</Drawer.Screen>
+    <Drawer.Navigator screenOptions={{
+        headerShown: true,
+        headerTintColor: '#719ada',
+        headerTitleStyle: {
+        fontWeight:'bold',
+            textAlign: 'center'
+        },
+        title:"Doorz"
+    }}>
+        <Drawer.Screen name="ListePortes" component={listePortes}
+            options={{
+                headerLeft: () => (
+                <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+            )}}>
+        </Drawer.Screen>
 
-<Drawer.Screen name="PorteDetail" component={PorteDetail}
-options={{doorIdParam: 0, nickname: "", tagName: "",
-    headerLeft: () => (
-    <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-)}}>
-</Drawer.Screen>
+        <Drawer.Screen name="PorteDetail" component={PorteDetail}
+            options={{doorIdParam: 0, nickname: "", tagName: "",
+                headerLeft: () => (
+                <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+                )}}>
+        </Drawer.Screen>
 
-<Drawer.Screen name="Historique" component={Historique} options={{doorIdParam: 0,nickname: ""}}
-options={{
-    headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-)}}>
-</Drawer.Screen>
-</Drawer.Navigator>
+        <Drawer.Screen name="Historique" component={Historique} options={{doorIdParam: 0,nickname: ""}}
+            options={{
+                headerLeft: () => (
+                <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+                )}}>
+        </Drawer.Screen>
+    </Drawer.Navigator>
 )
 
 const FavoriteStackScreen = ({navigation}) => (
-    <Drawer.Navigator screenOptions={{headerShown: true}}>
-<Drawer.Screen name="Portes favorites" component={PorteFavorite}
-options={{
-    headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-)}}>
-</Drawer.Screen>
-</Drawer.Navigator>
+    <Drawer.Navigator screenOptions={{
+        headerShown: true,
+        headerTintColor: '#719ada',
+        headerTitleStyle: {
+        fontWeight:'bold',
+            textAlign: 'center'
+        },
+        title:"Doorz"
+    }}>
+        <Drawer.Screen name="Portes favorites" component={PorteFavorite}
+            options={{
+                headerLeft: () => (
+                <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+            )}}>
+        </Drawer.Screen>
+    </Drawer.Navigator>
 )
 
 const AjoutPorteStackScreen = ({navigation}) => (
-    <Drawer.Navigator screenOptions={{headerShown: true}}>
-<Drawer.Screen name="Ajouter une porte" component={AjoutPorte}
-options={{
-    headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-)}}>
-</Drawer.Screen>
-</Drawer.Navigator>
+    <Drawer.Navigator screenOptions={{
+        headerShown: true,
+        headerTintColor: '#719ada',
+        headerTitleStyle: {
+            fontWeight:'bold',
+            textAlign: 'center'
+        },
+        title:"Doorz"
+    }}>
+        <Drawer.Screen name="Ajouter une porte" component={AjoutPorte}
+            options={{
+                headerLeft: () => (
+                <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+            )}}>
+        </Drawer.Screen>
+    </Drawer.Navigator>
 )
 
 const DeconnectionStackScreen = ({navigation}) => (
-    <Drawer.Navigator screenOptions={{headerShown: true}}>
-<Drawer.Screen name="Deconnexion" component={Deconnection}
-options={{
-    headerLeft: () => (
-        <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
-)}}>
-</Drawer.Screen>
-</Drawer.Navigator>
+    <Drawer.Navigator screenOptions={{
+        headerShown: true,
+        headerTintColor: '#719ada',
+        headerTitleStyle: {
+        fontWeight:'bold',
+            textAlign: 'center'
+        },
+        title:"Doorz"
+    }}>
+        <Drawer.Screen name="Deconnexion" component={Deconnection}
+            options={{
+                headerLeft: () => (
+                <Icon.Button name="md-menu" size={25} onPress={ () => { navigation.openDrawer()}}></Icon.Button>
+            )}}>
+        </Drawer.Screen>
+    </Drawer.Navigator>
 )
 
 export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Connexion">
-        <Stack.Screen name="Connexion" options={{ drawerLabel: '' }}component={MonCompteStackScreen}/>
+        <Stack.Screen name="Connexion" component={MonCompteStackScreen}/>
         <Stack.Screen name="Portes favorites" component={FavoriteStackScreen} />
         <Stack.Screen name="Ajouter une porte" component={AjoutPorteStackScreen} />
         <Stack.Screen name="Afficher la liste de vos portes" component={listePortesStackScreen} />
