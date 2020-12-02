@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         color: '#ffffff'
     },
     button: {
-        height : '30',
+        height : '100%',
         width : '48%',
         color: '#fff',
         textAlign: 'center',
@@ -198,11 +198,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#719ada',
     },
     buttonZone: {
-        height : '10%',
+        height : '11%',
         marginTop : "4%"
     },
     connect: {
-        height : '50',
+        height : '100%',
         width : '48%',
         position : 'absolute',
         right : "0%",

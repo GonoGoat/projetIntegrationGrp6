@@ -62,8 +62,6 @@ function CreateMail(mail, password) {
     transporter.sendMail(mailOptions, function(error, info){  // Envoie le mail
         if (error) {
             console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
         }
     });
 }
