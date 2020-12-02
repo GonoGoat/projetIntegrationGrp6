@@ -1,12 +1,13 @@
+//import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import {StyleSheet, View,Text, TextInput} from 'react-native';
-import { Button } from 'react-native-paper';
+import {StyleSheet, View,TextInput} from 'react-native';
+import { Button,Text } from 'react-native-paper';
 import {checkVerif,checkVerifAPI} from "../Functions/functionsAjoutPorte"
 import AsyncStorage from "@react-native-community/async-storage"
 
 const axios = require('axios')
 
-async function getCheck(valeurs) {
+export async function getCheck(valeurs) {
     return axios.post("http://localhost:8081/door/check", valeurs);
 }
 
@@ -14,21 +15,24 @@ export default class AjoutPorte_FormVerif extends React.Component {
 
     constructor(props) {
         super(props);
-        this.idPorte = "";
-        this.password = "";
+        this.state = {
+            idPorte : "",
+            password : "",
+        }
     }
 
     async isDoorExisting() {
         let storedUser = await AsyncStorage.getItem('user');
         let valeurs = {
-            user : storedUser,
-            password : this.password,
-            id : this.idPorte
+            user : "",
+            password : this.state.password,
+            id : this.state.idPorte
         }
+        await AsyncStorage.getItem('user').then(res => valeurs.user = res);
         await getCheck(valeurs).then(res => {
             let rep = checkVerifAPI(res,true);
             if (rep === true) {
-                this.props.setDoor(parseInt(this.idPorte));
+                this.props.setDoor(parseInt(this.state.idPorte));
             }
             else {
                 this.props.setMessage(rep);
@@ -38,7 +42,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
     }
 
     submit() {
-        let valeurs = checkVerif(this.idPorte,this.password);
+        let valeurs = checkVerif(this.state.idPorte,this.state.password);
         if (valeurs === true) {
             this.isDoorExisting();
         }
@@ -58,7 +62,9 @@ export default class AjoutPorte_FormVerif extends React.Component {
                         testID='id'
                         keyboardType={"numeric"}
                         onSubmitEditing={() => this.submit()}
-                        onChangeText={(text) => this.idPorte = text}
+                        onChangeText={(text) => this.setState({idPorte : text})}
+                        value={this.state.idPorte}
+                        multiline={false}
                     />
                     <Text style={styles.label}>Mot de passe :</Text>
                     <TextInput
@@ -67,7 +73,9 @@ export default class AjoutPorte_FormVerif extends React.Component {
                         testID='pswd'
                         secureTextEntry={true}
                         onSubmitEditing={() => this.submit()}
-                        onChangeText={(text) => this.password = text}
+                        onChangeText={(text) => this.setState({password : text})}
+                        value={this.state.password}
+                        multiline={false}
                     />
                 </View>
                 <Button
@@ -77,7 +85,7 @@ export default class AjoutPorte_FormVerif extends React.Component {
                     contentStyle = {styles.buttonIn}
                     labelStyle= {styles.buttonText}
                     style={styles.button}
-                    testID="button-verif"
+                    testID='button-verif'
                 >
                     Rechercher la porte
                 </Button>
@@ -111,7 +119,7 @@ const styles = StyleSheet.create({
         height : 40,
         fontSize : 18,
         padding : 7,
-        marginBottom : 50
+        marginBottom : 50,
     },
     buttonIn : {
         height : 50,
@@ -122,10 +130,10 @@ const styles = StyleSheet.create({
         color : "#D0D0D0"
     },
     button : {
-        marginTop : 50
+        marginTop : 20
     },
     form : {
-        marginVertical : 50
+        marginVertical : 50,
     }
 })
 

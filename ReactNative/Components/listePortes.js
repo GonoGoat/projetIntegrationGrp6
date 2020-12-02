@@ -22,7 +22,8 @@ export function _loadTag (utili) {
 
 export function _loadDoor (tag, utili) {
   return axios
-    .get("http://localhost:8081/doorTagUser/" + tag + "/" + utili)
+    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
+
     .catch(function(error) {
       if (error.response) {
         alert("40X Not Found page")
@@ -69,19 +70,11 @@ class listPortes extends React.Component {
     this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
-  AsyncStorage.getItem('user', function(errs, result) {
-    if (!errs) {
-      if (result !== null) {
-        user = result
-      }
-      else {
-        //alert("Connectez-vous avant de pouvoir accéder à vos portes")        
-        //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
-      }
-    }
-  })
-  this._getTag(user)
-}
+
+  this._getTag()
+
+  }
+
   render() {
     if ((this.state.erreur === false) && (this.state.listeTag.length !== 0)) {
   return (

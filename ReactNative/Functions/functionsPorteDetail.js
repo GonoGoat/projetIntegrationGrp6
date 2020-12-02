@@ -1,9 +1,15 @@
-export function getStatus(boolStatus) {
-    if(boolStatus == true) {
+export function getStatus(status) {
+    if(status == 0) {
+        return "Fermé";
+    }
+    else if (status == 1){
         return "Ouvert";
     }
-    else {
-        return "Fermé";
+    else if (status == 2){
+        return "Ouverture";
+    }
+    else if (status == 3){
+        return "Fermeture";
     }
 }
 
@@ -16,16 +22,16 @@ export function getDoorById(doorId, table) {
 }
 
 export function getTitle(status, bool) {
-    if(status == 0 && !bool) {
+    if(status == 0) {
         return("Ouvrir");
     } 
-    else if(status == 1 && !bool) {
+    else if(status == 1) {
         return("Fermer");
     }
-    else if(status == 0 && bool) {
-        return("Fermeture...");
-      } 
-    else if(status == 1 && bool) {
+    else if(status == 2) {
         return("Ouverture...");
+    }
+    else if(status == 3) {
+        return("Fermeture...");
     }
 }

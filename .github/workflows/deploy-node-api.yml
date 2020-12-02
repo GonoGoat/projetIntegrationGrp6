@@ -26,8 +26,8 @@ jobs:
           sudo docker exec node pm2 stop /home/app.js
           cd /usr/src/projet
           sudo git pull
-          sudo cp /usr/src/projet/Node.js/* /var/porte/
-          sudo docker exec node npm install -g 
+          sudo cp /usr/src/projet/Node.js/* /var/porte/ -r
+          sudo docker exec node npm install
           sudo docker exec node pm2 start /home/app.js -f
           
           

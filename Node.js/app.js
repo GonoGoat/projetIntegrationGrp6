@@ -10,6 +10,8 @@ var fs = require('fs');
 const nodemailer = require("nodemailer");
 var password = require('password');                 //générateur de mdp
 const { check, validationResult} = require('express-validator');
+var Chance = require('chance')
+var chance = new Chance();
 
 const argon2 = require("argon2");
 const saltRounds = 5;
@@ -56,7 +58,7 @@ var mailOptions = {                         //Création du mail
 
 function CreateMail(mail, password) {
     mailOptions.to = mail;
-    mailOptions.text = "Votre mot de passe temporaire est : '" + password + "'. Veuillez le changer le plus rapidement possible dans l'onglet prévu à cet effet de la section 'profil'";
+    mailOptions.text = "Votre mot de passe temporaire est : \"" + password + "\". Veuillez le changer le plus rapidement possible dans l'onglet prévu à cet effet de la section 'profil'";
 
     transporter.sendMail(mailOptions, function(error, info){  // Envoie le mail
         if (error) {
@@ -72,9 +74,12 @@ app.put('/resetPassword/', async (req, res) => {
     let hash;
     let mail = req.body.user.mail;
     let newPass = "";
-    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-    for (let i =0; i <15; i++){
-        newPass += random[Math.round(Math.random()*62)];
+    let random = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#","?","!","@","$","%","^","&","*","-"]
+    for (let i =0; i <4; i++){
+        newPass += random[Math.round(Math.random()*10)];
+        newPass += random[(Math.round(Math.random()*26) + 10)];
+        newPass += random[(Math.round(Math.random()*26) + 36)];
+        newPass += random[(Math.round(Math.random()*10) + 62)];
     }
     hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
@@ -119,7 +124,7 @@ app.post('/userConnection/', async (req, res) => {
     let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
     pool.query(sql, async (error, rows) => {
-        if (error) res.send({status : false, msg : error});
+        if (error) console.log('ok'), res.send({status : false, msg : error});
         if (rows.rowCount != 1) {
             return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
         } else {
@@ -143,9 +148,9 @@ app.post('/newUsers', async (req, res) => {  //argon2 test
     if (!errors.isEmpty()) {
         return res.send(errors);
     } else {
-        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password) VALUES ($1,$2,$3,$4,$5,$6)";
+        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password, isadmin) VALUES ($1,$2,$3,$4,$5,$6,$7)";
         hash = await argon2.hash(req.body.user.password, {type: argon2.argon2id});
-        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash,];
+        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash, false];
         pool.query(query, valeur, (err) => {
             if (err) {
                 console.log(err);
@@ -256,7 +261,7 @@ app.get('/door/:id', async (req, res) => {
 
 app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
-    let user = parseInt(req.body.user)
+    let user = parseInt(req.body.user);
     let isExisting = false;
     let sql = `select * from access where door = ${id} AND users = ${user}`
     pool.query(sql, (err,rows) => {
@@ -354,6 +359,7 @@ app.get('/userTag/:userId', async (req, res) => {
     let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
+
         return res.send(rows.rows);
     })
 });
@@ -391,8 +397,13 @@ app.get('/doorHistory/user/:userId', async (req, res) => {
 app.post('/newaccess', async (req, res) => {
     const query = 'INSERT INTO access (door, users, tag, nickname) VALUES ($1,$2,$3,$4)';
     let values = [parseInt(req.body.door),parseInt(req.body.user),req.body.tag, req.body.nickname];
-    await pool.query(query, values, (err) => {
-        if (err) return res.send(false);
+    pool.query(query, values, (err) => {
+        if (err) {
+            if (err.code === "23505") {
+                return res.status(403).send(false)
+            }
+            return res.send(false);
+        }
 	    return res.send(true);
     });
 });
@@ -402,12 +413,14 @@ app.post('/newaccess', async (req, res) => {
 *************************************************/	//TEST OK
 
 app.post('/newdoor', async (req, res) => {
-  const query = "INSERT INTO door (password, status) VALUES ($1,$2)";
-  let valeur = [req.query.password, req.query.status];
-  pool.query(query, valeur, (err) => {
-        if (err)
+  let pswd = chance.string({length : 10, alpha : true});
+  const query = "insert into door (password, status, adresseip) values ($1,$2,$3) returning *";
+  let valeur = [pswd, parseInt(req.body.status),req.body.ipAdress];
+  pool.query(query, valeur,(err, rows) => {
+        if (err) {
             return res.send(false);
-        return res.send(true);
+        }
+        return res.send(rows.rows[0]);
     });
 });
 

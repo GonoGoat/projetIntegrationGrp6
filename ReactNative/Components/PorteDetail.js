@@ -29,52 +29,72 @@ export default class PorteDetail extends React.Component {
   }
 
   send(doorId, status) {
-    this.setState({isLoading: true})
-    this.setState({isChangingStatus: true})
-    var newStatus;
-    var textStatus
-    if(status == 0) {
-      newStatus = 1
-      textStatus = "ouverture";
-    } else { 
-      newStatus = 0
-      textStatus = "fermeture";
+    if(status == 2 || status== 3) {
+      alert('Erreur')
     }
-    const door = {
-      id : doorId,
-      status : newStatus
-    };
+    else {
+      this.setState({isLoading: true})
+      var statusChanging = 2;
+      var newStatus;
+      var textStatus
+      if(status == 0) {
+        newStatus = 2
+        textStatus = "ouverture";
+      } else { 
+        newStatus = 3
+        textStatus = "fermeture";
+      }
+      var door = {
+        id : doorId,
+        status : newStatus
+      };
 
-    axios.get(`http://192.168.1.60/` + textStatus)
+      /*axios.get(`http://192.168.1.60/` + textStatus)
+        .then(res => {
+          this.setState({isLoading: false});
+        })
+        .catch(error => {
+          console.log(error)
+      })*/
+
+      axios.put('http://192.168.0.27:8081/doorStatus',{door})
       .then(res => {
-        this.setState({isLoading: false});
+          
       })
-      .catch(error => {
-        console.log(error)
-    })
-
-    axios.put('http://192.168.0.29:8081/doorStatus',{door})
-    .then(res => {
-        this.sendHistory(doorId, newStatus)
-    })
-    .catch(err => {
-        this.setState({isLoading: false})
-    });
-    this.timeoutHandle = setTimeout(()=>{
-      this.setState({isChangingStatus: false})
- }, 5000);
+      .catch(err => {
+          this.setState({isLoading: false})
+      });
+      this.timeoutHandle = setTimeout(()=>{
+        this.setState({isChangingStatus: false})
+        if(status == 0) {
+          newStatus = 1
+        } else { 
+          newStatus = 0
+        }
+        door = {
+          id : doorId,
+          status : newStatus
+        };
+        axios.put('http://192.168.0.27:8081/doorStatus',{door})
+        .then(res => {
+          this.sendHistory(doorId, newStatus)
+        })
+        .catch(err => {
+          this.setState({isLoading: false})
+        });
+      }, 5000);
+    }
   }
 
 
-  sendHistory(doorId, newStatus) {
+  async sendHistory(doorId, newStatus) {
     const history = {
       door: doorId,
       users: this.state.userLogged,
       date: new Date,
       action: newStatus
     }
-
-    axios.post('http://192.168.0.29:8081/newhistory',{history})
+    await axios.post('http://192.168.0.27:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -91,9 +111,9 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://192.168.0.29:8081/access/delete',{params})
+    axios.post('http://192.168.0.27:8081/access/delete',{params})
       .then(res => {
-        this.props.navigation.push("Accueil")
+        this.props.navigation.navigate("ListePortes")
         this.setState({isLoading: false})
       })
       .catch(err => {
@@ -103,16 +123,20 @@ export default class PorteDetail extends React.Component {
       });
   }
 
-  componentDidMount() {
-    axios.get(`http://192.168.0.29:8081/doors`)
-      .then(res => {
-        this.setState({isLoading: false, doors: res.data});
-      })
-      .catch(error => {
-        this.setState({errorMessage: "Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard."});
-        this.setState({errorVisible: true});
-        this.setState({isLoading: false})
+  getDoors() {
+    
+    axios.get(`http://192.168.0.27:8081/doors`)
+    .then(res => {
+      this.setState({isLoading: false, doors: res.data});
     })
+    .catch(error => {
+      this.setState({errorMessage: "Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard."});
+      this.setState({errorVisible: true});
+      this.setState({isLoading: false})
+  })
+  }
+
+  componentDidMount() {
     let user;
     AsyncStorage.getItem('user', function(errs, result) {
       if (!errs) {
@@ -120,11 +144,16 @@ export default class PorteDetail extends React.Component {
           user = result
         }
         else {
-          alert(errs)
+          //alert(errs)
         }
       }
     })
+    this.interval = setInterval(() => (this.getDoors()), 2000);
     this.setState({userLogged: user});
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
@@ -154,10 +183,15 @@ export default class PorteDetail extends React.Component {
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
       let modalVisible = this.state.modalVisible;
-      const nav = this.props.navigation.navigate;
       
       var dataDoor =  getDoorById(doorIdParam, this.state.doors);
-      var statusString = getStatus(dataDoor[2]);
+      var statusString = getStatus(dataDoor[1]);
+      if(dataDoor[1] == 2 || dataDoor[1] == 3) {
+        this.state.isChangingStatus = true
+      }
+      else {
+        this.state.isChangingStatus = false
+      }
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
@@ -192,15 +226,16 @@ export default class PorteDetail extends React.Component {
           <View style={{flex: 6}}>
             <TouchableHighlight disabled={this.state.isChangingStatus}
             style={styles.openButton}
-              onPress={() => this.send(doorIdParam, dataDoor[2])}
+              onPress={() => this.send(doorIdParam, dataDoor[1])}
               >
               <View>
-                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2], this.state.isChangingStatus)}</Text>
+                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[1])}</Text>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.histoButton}
-              onPress={() => this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
+              onPress={() => 
+              this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
               <View>
                 <Text style={{fontSize: 20}}>Historique</Text>
               </View>

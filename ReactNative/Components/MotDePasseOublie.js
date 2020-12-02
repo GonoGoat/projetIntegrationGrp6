@@ -20,7 +20,7 @@ class MotDePasseOublie extends React.Component {
         let user = { mail : this.mail };
         this.setState({type : checkmail(mail).type});
         this.setState({error : checkmail(mail).message});
-        axios.post('http://localhost:8081/userMail/', {user})
+        axios.post('http://82.165.248.136:8081/userMail/', {user})
             .then(res => {
                 const verif = !res.data;
                 if (verif) {
@@ -41,13 +41,13 @@ class MotDePasseOublie extends React.Component {
         let user = {
             mail : mail
         };
-        axios.put('http://localhost:8081/resetPassword/', {user})
+        axios.put('http://82.165.248.136:8081/resetPassword/', {user})
     }
 
 
 
     render() {
-         const nav = this.props.navigation;
+        const nav = this.props.navigation;
         return (
             <View style={styles.component}>
                 <Text style={styles.text}>Veuillez rentrer votre addresse mail, nous allons vous envoyer un mail contenant un mot de passe a utiliser temporairement, nous vous conseillons de directement modifer votre nouveau mot de passe une fois connecter dans la section prévue a cet effet dans 'profil'.</Text>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         alignContent: 'center'
     },
     input: {
-        padding: '4%',
+        padding: '3%',
         justifyContent: 'center',
         alignContent: 'center',
         borderColor: '#000',
