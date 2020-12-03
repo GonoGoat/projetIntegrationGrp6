@@ -72,7 +72,6 @@ class Connection extends React.Component {
 
   render() {
     const nav = this.props.navigation;
-    var isSubmitted = this.props.route.params.inscriptionSubmitted;
     return (
       <View style={styles.component}>
         <Text style={styles.text}>E-mail : </Text>
