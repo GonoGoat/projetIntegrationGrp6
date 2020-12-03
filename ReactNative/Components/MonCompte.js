@@ -18,6 +18,7 @@ class MonCompte extends React.Component {
             newInfos:[],
             mailVerified : false,
             error : "",
+            modifBoolean : false
         };
     }
 
@@ -78,9 +79,9 @@ class MonCompte extends React.Component {
 
     componentDidMount() {
         AsyncStorage.getItem('user').then((result) => {
-          let user = result;
-          console.log(user)
-          if(user == null) {
+          this.setState({user : result});
+          console.log(this.state.user);
+          if(this.state.user == null) {
             this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
           }
         })
@@ -92,10 +93,12 @@ class MonCompte extends React.Component {
                if (_verifyMail(this.state.newInfos[3]).state){
                    if (this.state.newInfos[2] == "M" || this.state.newInfos[2] == "F") {
                         if (this.state.mailVerified){
-                            //this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                            //_reset(this.firstname, this.name, this.phone, this.gender, this.mail, this.password, this.confirm);
-                            /* IL FAUT CLEAR*/
-                            alert('Vérification ok. A continuer.')
+                            let id = this.state.user[0].id;
+                            console.log(id);
+                            this.send(this.state.newInfos[1], this.state.newInfos[0], this.state.newInfos[4], this.state.newInfos[2], this.state.newInfos[3], id);
+                            this.setState({newInfos : []});
+                            this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4]}]})
+                            alert('modif faite')
                         }
                     }
                     else {
@@ -118,19 +121,23 @@ class MonCompte extends React.Component {
         }
     };
 
-    send(firstname, name, phone, gender, mail) {
+    send(firstname, name, phone, gender, mail, id) {
         const user = {
             firstname : firstname,
             name:  name,
             phone : phone,
             gender : gender,
             mail : mail,
+            id : id
         };
 
 
-        axios.post('http://82.165.248.136:8081/newUsers',{user})
-
+        axios.put('http://localhost:8081/modifUsers',{user})
+            .then(() => {
+                this.setState({modifBoolean : true})
+            })
             .catch(err => console.log(err));
+
 
     }
 
@@ -197,7 +204,6 @@ class MonCompte extends React.Component {
                                         this.textInput3.value = this.state.user[0].mail
                                         this.textInput4.value = this.state.user[0].phone
                                         this.setState({visible: false, newInfos: []})
-
                                     }}
                                     >
                                         <Text style={{fontSize: 20}}>Annuler </Text>

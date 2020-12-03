@@ -163,6 +163,28 @@ app.post('/newUsers', async (req, res) => {  //argon2 test
     ;
 });
 
+/*************************************************
+ MODIF USER
+ *************************************************/	// TEST OK
+
+app.put('/modifUsers', async (req, res) => {  //argon2 test
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.send(errors);
+    } else {
+        const query = "UPDATE users SET firstname = $1 , lastname = $2 , phone = $3 , sexe = $4 , mail = $5 where id ="  + req.body.user.id;
+        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail];
+        pool.query(query, valeur, (err) => {
+            if (err) {
+                console.log(err);
+                return res.send(false);
+            } else {
+                return res.send(true);
+            }
+        });
+    }
+    ;
+});
 
 /*************************************************
  GET USER BY MAIL
