@@ -203,6 +203,45 @@ app.put('/modifUsers', async (req, res) => {  //argon2 test
     })
 });
 
+/*************************************************
+ VERIFY PASSWORD
+ *************************************************/	// TEST OK
+
+app.post('/verifyPassword/', async (req, res) => {
+    let sql = 'select password from users where id = ' + req.body.user.id ;
+    pool.query(sql,async (err, rows) => {
+        if (err) throw err;
+        if (await argon2.verify(rows.rows[0].password, req.body.user.old)) {
+            id = rows.rows[0].id;
+            res.send(true);
+        }
+        else {
+            res.send(false)
+        }
+    })
+});
+
+/*************************************************
+CHANGE  PASSWORD
+ *************************************************/	// TEST OK
+
+app.put('/changePassword/', async (req, res) => {
+    let hash;
+    let sql = 'UPDATE users SET password = $1 where id = $2'  ;
+    hash = await argon2.hash(req.body.user.new, {type: argon2.argon2id});
+    let valeur = [hash, req.body.user.id];
+    console.log(hash);
+    pool.query(sql,valeur,async (err, rows) => {
+        if (err) {
+            console.log(err);
+            return res.send(false);
+        } else {
+            return res.send(true);
+        }
+    })
+});
+
+
 
 
 /*************************************************

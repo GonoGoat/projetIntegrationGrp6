@@ -14,11 +14,13 @@ class MonCompte extends React.Component {
         this.state={
             isLoading: true,
             user: [],
-            visible: false,
+            visible1: false,
+            visible2: false,
             newInfos:[],
             mailVerified : false,
             error : "",
-            modifBoolean : false
+            modifBoolean : false,
+            pass : {}
         };
     }
 
@@ -75,6 +77,46 @@ class MonCompte extends React.Component {
             this.setState({mailVerified: true})
         }
         this.submit()
+    }
+
+    changePassword() {
+        let user ={
+            old : this.state.pass.old,
+            id : this.state.user[0].id
+        };
+        axios.post('http://localhost:8081/verifyPassword/', {user})
+            .then(res => {
+                const verif = res.data;
+                if (verif) {
+                    console.log("l'ancien mot de passe est bon")
+                    if (_verifyPassword(this.state.pass.new).state){
+                        if(_verifyconfirm(this.state.pass.confirm, this.state.pass.new).state){
+                            user ={
+                                new : this.state.pass.new,
+                                id : this.state.user[0].id
+                            };
+                            axios.put('http://localhost:8081/changePassword/', {user})
+
+                        }
+                        else{
+                            console.log(_verifyconfirm(this.state.pass.new, this.state.pass.confirm).msg)
+                        }
+                    }
+                else {
+                    console.log(_verifyPassword(this.state.pass.new).msg)
+                    }
+                    /* axios.post('http://82.165.248.136:8081/verifyPassword/', {old})
+                        .then(res => {
+
+                        })*/
+                }
+                else {
+                    this.setState({error : "l'ancien mot de passe indiqué n'est pas bon"});
+                    console.log("l'ancien mot de passe indiqué n'est pas bon")
+                }
+            })
+
+
     }
 
     componentDidMount() {
@@ -161,16 +203,16 @@ class MonCompte extends React.Component {
                     <Text style={styles.textUt}>{this.state.user[0].phone}</Text>
                     <View style={{flex: 6}}>
                         <TouchableHighlight style={styles.editButton}
-                            onPress={() => this.setState({visible: true})}>
+                            onPress={() => this.setState({visible1: true})}>
                             <View>
-                                <Text style={{fontSize: 20}}>Modifier</Text>
+                                <Text style={{fontSize: 15, color :"#ffffff"}}>Modifier</Text>
                             </View>
                         </TouchableHighlight>
                     </View>
                     <Modal
                     animationType="slide"
                     transparent={true}
-                    visible={this.state.visible}
+                    visible={this.state.visible1}
                     ariaHideApp={false}
                     >
                         <View style={styles.centeredView}>
@@ -203,8 +245,62 @@ class MonCompte extends React.Component {
                                         this.textInput2.value = this.state.user[0].sexe
                                         this.textInput3.value = this.state.user[0].mail
                                         this.textInput4.value = this.state.user[0].phone
-                                        this.setState({visible: false, newInfos: []})
+                                        this.setState({visible1: false, newInfos: []})
                                     }}
+                                    >
+                                        <Text style={{fontSize: 20}}>Annuler </Text>
+                                    </TouchableOpacity>
+
+
+                                </View>
+                                <Snackbar
+                                    visible={false}
+                                    onDismiss={() => console.log('ok')}
+                                    style = {styles.fail}
+                                    duration={2000}
+                                >
+                                    {'ouke'}
+                                </Snackbar>
+                            </View>
+                        </View>
+                    </Modal>
+                    <View style={{flex: 6}}>
+                        <TouchableHighlight style={styles.editButton}
+                                            onPress={() => this.setState({visible2: true})}>
+                            <View>
+                                <Text style={{fontSize: 15, color :"#ffffff"}}>Nouveau mot de passe</Text>
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.visible2}
+                        ariaHideApp={false}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text>Modification infos</Text>
+                                <Text style={{fontSize: 15}}>Mot de passe actuel: </Text>
+                                <TextInput ref={input => { this.textInput5 = input }} style={styles.input} onChangeText={(text)=> this.state.pass.old= text}/>
+                                <Text style={{fontSize: 15}}>Nouveau mot de passe : </Text>
+                                <TextInput ref={input => { this.textInput6 = input }} style={styles.input} onChangeText={(text)=> this.state.pass.new= text}/>
+                                <Text style={{fontSize: 15}}>Confirmation nouveau mot de passe : </Text>
+                                <TextInput ref={input => { this.textInput7 = input }} style={styles.input} onChangeText={(text)=> this.state.pass.confirm= text}/>
+                                <View style={{flex: 6}}>
+                                    <TouchableOpacity
+                                        style={styles.saveButton}
+                                        onPress={() => {
+                                            this.changePassword()
+                                        }}
+                                    >
+                                        <Text style={{fontSize: 20, color: "white"}}>Confirmer </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.returnButton}
+                                        onPress={() => {
+                                            this.setState({visible2: false, newInfos: []})
+                                        }}
                                     >
                                         <Text style={{fontSize: 20}}>Annuler </Text>
                                     </TouchableOpacity>
