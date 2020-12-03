@@ -70,10 +70,8 @@ class listPortes extends React.Component {
     this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
-
   this._getTag()
-
-  }
+}
 
   render() {
     if ((this.state.erreur === false) && (this.state.listeTag.length !== 0)) {
