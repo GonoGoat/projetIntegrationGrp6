@@ -60,9 +60,13 @@ class listPortes extends React.Component {
       listeDoor: []
     })
     _loadDoor(item.tag, utili).then(data => {
+      if(data) {
       this.setState({
         listeDoor : [ ...this.state.listeDoor, ...data.data]
-      })
+      })}
+      else {
+        this.setState({erreur : true})
+      }
     })
   }
   _goToDetail = item => {
