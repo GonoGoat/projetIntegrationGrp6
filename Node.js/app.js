@@ -302,10 +302,10 @@ app.post('/door/check', async (req, res) => {
 *************************************************/
 
 app.put('/doorStatus', (req, res) => {
-    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id;
-    pool.query(query, (err) => {
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id + ' returning password';
+    pool.query(query, (err, rows) => {
         if (err) return res.send(false);
-        return res.send(true);
+        return res.send(rows.rows);
     });
 });
 
@@ -335,20 +335,6 @@ app.get('/doorTagUser/:tag/:users', async (req, res) => {
     return res.send(rows.rows);
   })
 });
-
-/*************************************************
-		GET DOOR BY SPECIFIC DOOR ID & USER
-*************************************************/	//TEST OK
-
-app.get('/doorIdUser/:door/:users', async (req, res) => {
-    let door=req.params.door;
-    let users=req.params.users;
-    let sql = 'select door.id,access.nickname,access.tag,door.status,door.adresseip from access inner join door on access.door =  door.id where door.id = ' +  door + 'and access.users =  \'' + users + '\'';
-    pool.query(sql, (err, rows) => {
-      if (err) throw err;
-      return res.send(rows.rows);
-    })
-  });
 
 /*************************************************
 		GET TAGS BY USER
