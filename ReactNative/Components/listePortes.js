@@ -71,8 +71,18 @@ class listPortes extends React.Component {
   }
 componentDidMount() {
 
-  this._getTag()
-
+  AsyncStorage.getItem('user', function(errs, result) {
+    if (!errs) {
+      if (result !== null) {
+        user = result
+      }
+      else {
+        //alert("Connectez-vous avant de pouvoir accéder à vos portes")        
+        //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
+      }
+    }
+  })
+  this._getTag(user)
   }
 
   render() {

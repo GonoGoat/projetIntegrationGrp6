@@ -1,5 +1,5 @@
 import React from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 import axios from 'axios';
 import {FlatList} from 'react-native-gesture-handler';

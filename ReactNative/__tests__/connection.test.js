@@ -14,7 +14,7 @@ describe("Connection Class Component", () => {
 
   const navigation = { navigate: jest.fn() };
 
-  it('calls storeData twice on getHistory', async () => {
+  it('calls setData twice on getHistory', async () => {
     let id = 1;
     doors = [8,3]
 
