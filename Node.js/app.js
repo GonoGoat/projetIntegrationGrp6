@@ -230,7 +230,6 @@ app.put('/changePassword/', async (req, res) => {
     let sql = 'UPDATE users SET password = $1 where id = $2'  ;
     hash = await argon2.hash(req.body.user.new, {type: argon2.argon2id});
     let valeur = [hash, req.body.user.id];
-    console.log(hash);
     pool.query(sql,valeur,async (err, rows) => {
         if (err) {
             console.log(err);

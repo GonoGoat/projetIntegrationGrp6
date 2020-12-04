@@ -20,7 +20,8 @@ class MonCompte extends React.Component {
             mailVerified : false,
             error : "",
             modifBoolean : false,
-            pass : {}
+            pass : {},
+            reussite : ""
         };
     }
 
@@ -80,43 +81,46 @@ class MonCompte extends React.Component {
     }
 
     changePassword() {
-        let user ={
-            old : this.state.pass.old,
-            id : this.state.user[0].id
+        let user = {
+            old: this.state.pass.old,
+            id: this.state.user[0].id
         };
-        axios.post('http://localhost:8081/verifyPassword/', {user})
-            .then(res => {
-                const verif = res.data;
-                if (verif) {
-                    console.log("l'ancien mot de passe est bon")
-                    if (_verifyPassword(this.state.pass.new).state){
-                        if(_verifyconfirm(this.state.pass.confirm, this.state.pass.new).state){
-                            user ={
-                                new : this.state.pass.new,
-                                id : this.state.user[0].id
-                            };
-                            axios.put('http://localhost:8081/changePassword/', {user})
+        if (this.state.pass.old !== undefined && this.state.pass.old !== "" && this.state.pass.new !== undefined && this.state.pass.new !== "" && this.state.pass.confirm !== undefined && this.state.pass.confirm !== "") {
+            axios.post('http://localhost:8081/verifyPassword/', {user})
+                .then(res => {
+                    const verif = res.data;
+                    if (verif) {
+                        if (_verifyPassword(this.state.pass.new).state) {
+                            if (_verifyconfirm(this.state.pass.confirm, this.state.pass.new).state) {
+                                user = {
+                                    new: this.state.pass.new,
+                                    id: this.state.user[0].id
+                                };
+                                axios.put('http://localhost:8081/changePassword/', {user})
+                                    .catch(err => console.log(err));
+                                this.setState({reussite : "Votre mot de passe a bien été modifié"});
+                                this.setState({visible2: false});
+                                this.textInput5.clear();
+                                this.textInput6.clear();
+                                this.textInput7.clear();
 
+                            } else {
+                                this.setState({error:_verifyconfirm(this.state.pass.new, this.state.pass.confirm).msg});
+                            }
+                        } else {
+                            this.setState({error:_verifyPassword(this.state.pass.new).msg});
                         }
-                        else{
-                            console.log(_verifyconfirm(this.state.pass.new, this.state.pass.confirm).msg)
-                        }
+                    } else {
+                        this.setState({error: "l'ancien mot de passe indiqué n'est pas bon"});
                     }
-                else {
-                    console.log(_verifyPassword(this.state.pass.new).msg)
-                    }
-                    /* axios.post('http://82.165.248.136:8081/verifyPassword/', {old})
-                        .then(res => {
-
-                        })*/
-                }
-                else {
-                    this.setState({error : "l'ancien mot de passe indiqué n'est pas bon"});
-                    console.log("l'ancien mot de passe indiqué n'est pas bon")
-                }
-            })
+                })
+                .catch(err => console.log(err));
 
 
+        }
+        else {
+            this.setState({error : "veuillez remplir les champs"})
+        }
     }
 
     componentDidMount() {
@@ -136,30 +140,26 @@ class MonCompte extends React.Component {
                    if (this.state.newInfos[2] == "M" || this.state.newInfos[2] == "F") {
                         if (this.state.mailVerified){
                             let id = this.state.user[0].id;
-                            console.log(id);
                             this.send(this.state.newInfos[1], this.state.newInfos[0], this.state.newInfos[4], this.state.newInfos[2], this.state.newInfos[3], id);
-                            this.setState({newInfos : []});
                             this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4]}]})
-                            alert('modif faite')
+                            this.setState({reussite : "Votre compte a bien été modifié"});
+                            this.setState({visible1: false});
                         }
                     }
                     else {
-                        console.log('Erreur sexe')
+                       this.setState({error :"Erreur sexe"});
                     }
                 }
                 else {
-                    this.setState({error : _verifyMail(this.mail).msg});
-                    console.log('Erreur mail')
+                    this.setState({error : _verifyMail(this.state.newInfos[3]).msg});
                 }
             }
             else {
-                this.setState({error : _verifyPhone(this.phone).msg});
-                console.log('Erreur phone')
+                this.setState({error : _verifyPhone(this.state.newInfos[4]).msg});
             }
         }
         else {
-            this.setState({error : _verifyname(this.firstname, this.name).msg});
-            console.log('Erreur nom prenom')
+            this.setState({error : _verifyname(this.state.newInfos[1], this.state.newInfos[0]).msg});
         }
     };
 
@@ -185,7 +185,7 @@ class MonCompte extends React.Component {
 
     render(){
         if(this.state.isLoading) {
-            this.getUser()
+            this.getUser();
             return <Text>Loading...</Text>
         }
         else {
@@ -217,17 +217,18 @@ class MonCompte extends React.Component {
                     >
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
-                                <Text>Modification infos</Text>
-                                <Text style={{fontSize: 15}}>Nom de famille: </Text>
+                                <Text style={{marginBottom: 8, textDecorationLine: 'underline'}}>Modification infos</Text>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Nom de famille: </Text>
                                 <TextInput ref={input => { this.textInput0 = input }} placeholder={this.state.user[0].lastname} style={styles.input} onChangeText={(text)=> this.state.newInfos[0]= text} defaultValue={this.state.user[0].lastname}/>
-                                <Text style={{fontSize: 15}}>Prénom : </Text>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Prénom : </Text>
                                 <TextInput ref={input => { this.textInput1 = input }} placeholder={this.state.user[0].firstname} style={styles.input} onChangeText={(text)=> this.state.newInfos[1]= text} defaultValue={this.state.user[0].firstname}/>
-                                <Text style={{fontSize: 15}}>Sexe : </Text>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Sexe : </Text>
                                 <TextInput ref={input => { this.textInput2 = input }} placeholder={this.state.user[0].sexe} style={styles.input} onChangeText={(text)=> this.state.newInfos[2]= text} defaultValue={this.state.user[0].sexe}/>
-                                <Text style={{fontSize: 15}}>Mail : </Text>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Mail : </Text>
                                 <TextInput ref={input => { this.textInput3 = input }} placeholder={this.state.user[0].mail} style={styles.input} onChangeText={(text)=> this.state.newInfos[3]= text} defaultValue={this.state.user[0].mail}/>
-                                <Text style={{fontSize: 15}}>Téléphone : </Text>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Téléphone : </Text>
                                 <TextInput ref={input => { this.textInput4 = input }} placeholder={this.state.user[0].phone} style={styles.input} onChangeText={(text)=> this.state.newInfos[4]= text} defaultValue={this.state.user[0].phone}/>
+                                <Text style={{color : 'red', marginTop : 8, marginHorizontal: 25, textAlign: "center"}}>{this.state.error}</Text>
                                 <View style={{flex: 6}}>
                                     <TouchableOpacity
                                     style={styles.saveButton}
@@ -235,40 +236,34 @@ class MonCompte extends React.Component {
                                         this.getMail(this.state.newInfos[3])
                                     }}
                                     >
-                                        <Text style={{fontSize: 20, color: "white"}}>Sauver </Text>
+                                        <Text style={{fontSize: 15, color: "white"}}>Sauver </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                     style={styles.returnButton}
                                     onPress={() => {
-                                        this.textInput0.value = this.state.user[0].lastname
-                                        this.textInput1.value = this.state.user[0].firstname
-                                        this.textInput2.value = this.state.user[0].sexe
-                                        this.textInput3.value = this.state.user[0].mail
-                                        this.textInput4.value = this.state.user[0].phone
-                                        this.setState({visible1: false, newInfos: []})
+                                        this.textInput0.value = this.state.user[0].lastname;
+                                        this.textInput1.value = this.state.user[0].firstname;
+                                        this.textInput2.value = this.state.user[0].sexe;
+                                        this.textInput3.value = this.state.user[0].mail;
+                                        this.textInput4.value = this.state.user[0].phone;
+                                        this.setState({visible1: false});
+                                        this.setState({error : ""})
                                     }}
                                     >
-                                        <Text style={{fontSize: 20}}>Annuler </Text>
+                                        <Text style={{fontSize: 15}}>Annuler </Text>
                                     </TouchableOpacity>
 
 
                                 </View>
-                                <Snackbar
-                                    visible={false}
-                                    onDismiss={() => console.log('ok')}
-                                    style = {styles.fail}
-                                    duration={2000}
-                                >
-                                    {'ouke'}
-                                </Snackbar>
+
                             </View>
                         </View>
                     </Modal>
                     <View style={{flex: 6}}>
-                        <TouchableHighlight style={styles.editButton}
+                        <TouchableHighlight style={styles.editPassword}
                                             onPress={() => this.setState({visible2: true})}>
                             <View>
-                                <Text style={{fontSize: 15, color :"#ffffff"}}>Nouveau mot de passe</Text>
+                                <Text style={{fontSize: 15}}>Nouveau mot de passe</Text>
                             </View>
                         </TouchableHighlight>
                     </View>
@@ -280,44 +275,41 @@ class MonCompte extends React.Component {
                     >
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
-                                <Text>Modification infos</Text>
-                                <Text style={{fontSize: 15}}>Mot de passe actuel: </Text>
-                                <TextInput ref={input => { this.textInput5 = input }} style={styles.input} onChangeText={(text)=> this.state.pass.old= text}/>
-                                <Text style={{fontSize: 15}}>Nouveau mot de passe : </Text>
-                                <TextInput ref={input => { this.textInput6 = input }} style={styles.input} onChangeText={(text)=> this.state.pass.new= text}/>
-                                <Text style={{fontSize: 15}}>Confirmation nouveau mot de passe : </Text>
-                                <TextInput ref={input => { this.textInput7 = input }} style={styles.input} onChangeText={(text)=> this.state.pass.confirm= text}/>
+                                <Text style={{marginBottom: 8, textDecorationLine: 'underline'}}>Modification mot de passe</Text>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Mot de passe actuel: </Text>
+                                <TextInput ref={input => { this.textInput5 = input }} secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.state.pass.old= text}/>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Nouveau mot de passe : </Text>
+                                <TextInput ref={input => { this.textInput6 = input }} secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.state.pass.new= text}/>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Confirmation nouveau mot de passe : </Text>
+                                <TextInput ref={input => { this.textInput7 = input }} secureTextEntry={true} style={styles.input} onChangeText={(text)=> this.state.pass.confirm= text}/>
+                                <Text style={{color : 'red', marginTop : 8, marginHorizontal: 25, textAlign: "center"}}>{this.state.error}</Text>
                                 <View style={{flex: 6}}>
                                     <TouchableOpacity
                                         style={styles.saveButton}
                                         onPress={() => {
-                                            this.changePassword()
+                                            this.changePassword();
                                         }}
                                     >
-                                        <Text style={{fontSize: 20, color: "white"}}>Confirmer </Text>
+                                        <Text style={{fontSize: 15, color: "white"}}>Confirmer </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={styles.returnButton}
                                         onPress={() => {
-                                            this.setState({visible2: false, newInfos: []})
+                                            this.setState({visible2: false})
+                                            this.setState({error : ""});
                                         }}
                                     >
-                                        <Text style={{fontSize: 20}}>Annuler </Text>
+                                        <Text style={{fontSize: 15}}>Annuler </Text>
                                     </TouchableOpacity>
 
 
                                 </View>
-                                <Snackbar
-                                    visible={false}
-                                    onDismiss={() => console.log('ok')}
-                                    style = {styles.fail}
-                                    duration={2000}
-                                >
-                                    {'ouke'}
-                                </Snackbar>
                             </View>
                         </View>
                     </Modal>
+                    <Snackbar visible={this.state.reussite !== ""} onDismiss={() => this.setState({reussite: ""})} style = {this.state.type = styles.success } duration={2000} action={{label: 'Ok', onPress: () => {this.setState({reussite: ""})}}}>
+                        {this.state.reussite}
+                    </Snackbar>
                 </View>
             )
         }
@@ -342,6 +334,13 @@ const styles = StyleSheet.create({
     },
 
     textUt: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         padding: 5,
         justifyContent: 'center',
         alignContent: 'center',
@@ -354,24 +353,50 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         backgroundColor: "#719ada",
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: 10,
+        marginRight: 10,
         marginTop: 25,
         marginBottom: 15,
-        padding: 5,
+        padding: 12,
+        paddingHorizontal : 45
     },
     editButton: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         flex:1,
         alignItems: "center",
         justifyContent: 'center',
         backgroundColor: "#719ada",
         marginLeft: 20,
         marginRight: 20,
-        marginTop: 15,
-        marginBottom: 15,
-        padding: 22,
+        marginTop: 40,
+        padding: 15,
+    },
+    editPassword: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        flex:1,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "#d0d0d0",
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 40,
+        padding: 15,
     },
     input: {
+        marginBottom: 8,
+        marginHorizontal :32,
         padding: 5,
         justifyContent: 'center',
         alignContent: 'center',
@@ -394,23 +419,24 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         backgroundColor: "#d0d0d0",
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: 10,
+        marginRight: 10,
         marginTop: 15,
         marginBottom: 15,
-        padding: 5,
+        padding: 12,
+        paddingHorizontal : 45
     },
     centeredView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22
     },
     modalView: {
-        margin: 20,
+        marginHorizontal: 22,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
+        paddingHorizontal: 35,
+        paddingVertical: 15,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
