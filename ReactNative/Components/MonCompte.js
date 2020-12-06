@@ -86,7 +86,7 @@ class MonCompte extends React.Component {
             id: this.state.user[0].id
         };
         if (this.state.pass.old !== undefined && this.state.pass.old !== "" && this.state.pass.new !== undefined && this.state.pass.new !== "" && this.state.pass.confirm !== undefined && this.state.pass.confirm !== "") {
-            axios.post('http://localhost:8081/verifyPassword/', {user})
+            axios.post('http://82.165.248.136:8081/verifyPassword/', {user})
                 .then(res => {
                     const verif = res.data;
                     if (verif) {
@@ -174,7 +174,7 @@ class MonCompte extends React.Component {
         };
 
 
-        axios.put('http://localhost:8081/modifUsers',{user})
+        axios.put('http://82.165.248.136:8081/modifUsers',{user})
             .then(() => {
                 this.setState({modifBoolean : true})
             })

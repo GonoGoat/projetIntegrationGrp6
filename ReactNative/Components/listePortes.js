@@ -8,7 +8,7 @@ let user;
 
 export function _loadTag (utili) {
      return axios
-      .get('http://localhost:8081/userTag/' + user)
+      .get('http://82.165.248.136:8081/userTag/' + user)
       .catch(function(error) {
         if (error.response) {
           alert("40X Not Found page")
@@ -22,7 +22,7 @@ export function _loadTag (utili) {
 
 export function _loadDoor (tag, utili) {
   return axios
-    .get("http://localhost:8081/doorTagUser/" + tag + "/" + user)
+    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
 
     .catch(function(error) {
       if (error.response) {
@@ -77,7 +77,7 @@ componentDidMount() {
         user = result
       }
       else {
-        //alert("Connectez-vous avant de pouvoir accéder à vos portes")        
+        //alert("Connectez-vous avant de pouvoir accéder à vos portes")
         //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
       }
     }
