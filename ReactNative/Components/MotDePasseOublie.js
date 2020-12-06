@@ -52,14 +52,14 @@ class MotDePasseOublie extends React.Component {
             <View style={styles.component}>
                 <Text style={styles.text}>Veuillez rentrer votre addresse mail, nous allons vous envoyer un mail contenant un mot de passe a utiliser temporairement, nous vous conseillons de directement modifer votre nouveau mot de passe une fois connecter dans la section prévue a cet effet dans 'profil'.</Text>
                 <Text style={styles.mail}>E-mail : </Text>
-                <TextInput placeholder='E-mail' style={styles.input} ref={input => (this.mailInput = input)} onChangeText={(text)=> this.mail = text.trim().toLowerCase()}/>
-                <TouchableOpacity style={styles.envoi} onPress={()=> this._verifyMail(this.mail)}>
+                <TextInput testID='mail' placeholder='E-mail' style={styles.input} ref={input => (this.mailInput = input)} onChangeText={(text)=> this.mail = text.trim().toLowerCase()}/>
+                <TouchableOpacity testID='submit' style={styles.envoi} onPress={()=> this._verifyMail(this.mail)}>
                     <Text style={styles.textEnvoi}>Envoyer</Text>
                 </TouchableOpacity>
                 <Snackbar visible={this.state.error != ""} onDismiss={() => this.setState({type : this.state.type})} style = {this.state.type === "success" ? styles.success : styles.fail}duration={2000} >
                     {this.state.error}
                 </Snackbar>
-                <TouchableOpacity style={styles.text} onPress={() => nav.goBack()}>
+                <TouchableOpacity testID='back' style={styles.text} onPress={() => nav.goBack()}>
                     <Text style={styles.retour}>Retour</Text>
                 </TouchableOpacity>
             </View>

@@ -8,7 +8,7 @@ let user;
 
 export function _loadTag (utili) {
      return axios
-      .get('http://82.165.248.136:8081/userTag/' + user)
+      .get('http://localhost:8081/userTag/' + user)
       .catch(function(error) {
         if (error.response) {
           alert("40X Not Found page")
@@ -22,7 +22,7 @@ export function _loadTag (utili) {
 
 export function _loadDoor (tag, utili) {
   return axios
-    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
+    .get("http://localhost:8081/doorTagUser/" + tag + "/" + user)
 
     .catch(function(error) {
       if (error.response) {
@@ -44,7 +44,7 @@ class listPortes extends React.Component {
       erreur : false
     }
   }
-  
+
   _getTag(utili) {
     _loadTag(utili).then(data => {
       if(data) {
@@ -67,7 +67,7 @@ class listPortes extends React.Component {
     })
   }
   _goToDetail = item => {
-    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
+    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})
   }
 componentDidMount() {
 
@@ -91,19 +91,19 @@ componentDidMount() {
     <View style={styles.MainContainer}>
         <Text style={styles.Title}>Mes tags :</Text>
         <View style={styles.tagContainer}>
-            <FlatList        
+            <FlatList
             data={this.state.listeTag}
             keyExtractor={(item) => item}
             numColumns={3}
             renderItem={({item}) =>
             <TouchableHighlight
-            style={styles.tagList}  
+            style={styles.tagList}
             onPress={() => this._getDoor(item, user)}
             >
-              <Text style={styles.tagText}>{item.tag}</Text>  
+              <Text style={styles.tagText}>{item.tag}</Text>
             </TouchableHighlight>}
             />
-          </View>          
+          </View>
           <Text style={styles.Title}>Mes portes :</Text>
           <ScrollView style={styles.contentDoor}>
             <FlatList
@@ -114,9 +114,9 @@ componentDidMount() {
             <Text style={styles.doorText}>{item.nickname}</Text>
             </TouchableHighlight>}
             />
-            </ScrollView>      
+            </ScrollView>
     </View>
-  )} //Si la personne ne possède pas encore de tag 
+  )} //Si la personne ne possède pas encore de tag
   else if ((this.state.erreur === false) && (this.state.listeTag.length == 0)) {
     return (
     <View>
@@ -126,8 +126,8 @@ componentDidMount() {
             <TouchableHighlight style={styles.addDoor} onPress={() => this.props.navigation.navigate('Ajouter une porte')}>
               <Text style={styles.tagText}  >Commencez par ajouter une porte</Text>
               </TouchableHighlight>
-          </View>          
-            </View>      
+          </View>
+            </View>
     </View>
   )
   } //Si une erreur survient lors de la requête
@@ -141,7 +141,7 @@ componentDidMount() {
     </View>
     )
   }
-} 
+}
 };
 
 const styles = StyleSheet.create({
