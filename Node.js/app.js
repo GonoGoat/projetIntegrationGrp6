@@ -402,7 +402,7 @@ app.post('/newaccess', async (req, res) => {
 app.post('/newdoor', async (req, res) => {
   let pswd = chance.string({length : 10, alpha : true});
   const query = "insert into door (password, status, adresseip) values ($1,$2,$3) returning *";
-  let valeur = [pswd, parseInt(req.body.status),req.body.ipAdress];
+  let valeur = [pswd, parseInt(req.body.status),req.body.ipAddress];
   pool.query(query, valeur,(err, rows) => {
         if (err) {
             return res.send(false);

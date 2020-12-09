@@ -3,11 +3,11 @@ import {StyleSheet, View} from 'react-native';
 import AjoutPorte_FormVerif from "./AjoutPorte_FormVerif"
 import AjoutPorte_FormAjout from "./AjoutPorte_FormAjout"
 import {Snackbar,Button,Text} from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Error from "./Error"
 
 export default class AjoutPorte extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +21,7 @@ export default class AjoutPorte extends React.Component {
   checkUser() {
     AsyncStorage.getAllKeys().then(res => {
       if (res.indexOf('user') != -1) {
-        AsyncStorage.getItem('user').then(res => this.setState({user : {id : parseInt(res)}}));
+        AsyncStorage.getItem('user').then(res => this.setState({user : parseInt(res)}));
       }
       else {
         this.setState({user : false});
@@ -37,29 +37,11 @@ export default class AjoutPorte extends React.Component {
     clearInterval(this.interval);
   }
 
-  setUser() {
-    AsyncStorage.setItem("user", "104");
-    this.setState({user : {id : 104}})
-  }
-
   displayComponent() {
     if (this.state.user === false) {
       return (
         <View style={styles.container}>
-          <Text>Vous devez être connecté pour accéder à cette fonctionnalité.</Text>
-            <Button
-              mode="contained"
-              onPress={() => this.props.navigation.navigate('Connexion')}
-
-            >
-              Se connecter
-            </Button>
-            <Button
-              mode="contained"
-              onPress={() => this.setUser()}
-              >
-                Add
-            </Button>
+          <Error/>
         </View>
       )
     }
