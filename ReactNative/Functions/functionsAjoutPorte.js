@@ -99,25 +99,9 @@ export function checkVerifAPI(req,type) {
                         message : "ID de la porte incorrect. Veuillez rentrer un ID valide.",
                         type : "fail"
                     })
-                default :
-                    return({
-                        message : "Une erreur s'est produite. Veuillez réessayer.",
-                        type : "fail"
-                    })
             }
         }
-        else if (req.request) {
-            return({
-                message : "Une erreur est survenue lors de l'envoi de votre requête. Veuillez réessayer.",
-                type : "fail"
-            })
-        }
-        else {
-            return({
-                message : "Une erreur s'est produite. Veuillez réessayer.",
-                type : "fail"
-            })
-        }
+        return error(req);
     }
 }
 
@@ -137,37 +121,43 @@ export function checkAjoutAPI(req,type) {
         }
     }
     else {
-        if (err.response) {
-            switch(Math.floor(err.response/100)) {
-                case 4 :
-                    props.setMessage({
-                    message : "Erreur client. Veuillez réessayer ou modifier votre requête.",
-                    type : "fail"
-                    });
-                case 5 :
-                    props.setMessage({
-                    message : "Erreur serveur. Veuillez réessayer ultérieurement.",
-                    type : "fail"
-                    });
-                default : 
-                    props.setMessage({
-                    message : "Une erreur est survenue. Veuillez réessayer.",
+        if (req.response) {
+            if (req.response.status === 403) {
+                return ({
+                    message : "Ce nom existe déjà sous ce tag. Veuillez utiliser un nom ou un tag différent.",
                     type : "fail"
                 })
             }
         }
-        else if (err.request) {
-            props.setMessage({
-            message : "Une erreur est survenue lors de l'envoi de votre requête. Veuillez réessayer.",
-            type : "fail"
-            })
-        }
-        else {
-            props.setMessage({
-            message : "Une erreur est survenue. Veuillez réessayer.",
-            type : "fail"
-            })
+        return error(req);
+    }
+};
+
+function error(err) {
+    if (err.response) {
+        switch(Math.floor(err.response.status/100)) {
+            case 4 :
+                return({
+                message : "Erreur client. Veuillez réessayer ou modifier votre requête.",
+                type : "fail"
+                });
+            case 5 :
+                return({
+                message : "Erreur serveur. Veuillez réessayer ultérieurement.",
+                type : "fail"
+                });
         }
     }
-}
-    
+    else if (err.request) {
+        return({
+        message : "Une erreur est survenue lors de l'envoi de votre requête. Veuillez réessayer.",
+        type : "fail"
+        })
+    }
+    else {
+        return({
+        message : "Une erreur est survenue. Veuillez réessayer.",
+        type : "fail"
+        })
+    }
+};

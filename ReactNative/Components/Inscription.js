@@ -1,33 +1,38 @@
 import {Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import axios from 'axios';
-import { _verify, _redirect} from '../Functions/functionsInscription'
+import { _verifyMail, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone, _reset} from '../Functions/functionsInscription';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Inscription extends React.Component {
     constructor(props){
         super(props);
-        this.name = "";
-        this.firstname = "" ;
-        this.phone = "";
-        this.gender = "";
-        this.mail = "";
-        this.password = "";
-        this.confirm = "";
     }
     state = {
+        name : "",
+        firstname : "",
+        phone : "",
+        mail : "",
+        password : "",
+        confirm : "",
         mailVerified : false,
-        error : ""
+        error : "",
+        gender : ""
     };
 
-    async _getMail(mail){
-         await axios.get('http://82.165.248.136:8081/userMail/' + mail)
+    async _getMail(){
+        let user = {
+            mail : this.state.mail.trim().toLowerCase()
+        };
+        await axios.post('http://82.165.248.136:8081/userMail/', {user})
              .then(res => {
                 const verif = res.data;
-                console.log(verif.length);
-                if (verif.length === 0) {
+                if (verif) {
                     this.setState({
-                        mailVerified: true
+                        mailVerified: true,
+                        error : ""
                     });
+                    this._submit();
                 }
                 else{
                     this.setState({error : "vous possédez déjà un compte avec cette adresse mail"});
@@ -35,30 +40,54 @@ class Inscription extends React.Component {
                         mailVerified: false
                     });
                 }
-                this._submit();
+
             });
     }
 
-
-
      _submit(){
-
-        if (_verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).state){
-            console.log(this.state.mailVerified);
-            if (this.state.mailVerified){
-                this._send(this.firstname, this.name, this.phone, this.gender, this.mail, this.password);
-                this._redirect();
-            }
+        let name = this.state.name.trim();
+        let firstname = this.state.firstname.trim();
+        let phone = this.state.phone.trim();
+        let password  = this.state.password.trim();
+        let confirm = this.state.confirm.trim();
+        let mail = this.state.mail.trim().toLowerCase();
+        if (_verifyname(firstname, name).state){
+           if (_verifyPhone(phone).state){
+               if (_verifyMail(mail).state){
+                   if (_verifyPassword(password).state){
+                       if (_verifyconfirm(confirm, password).state){
+                           if (this.state.mailVerified){
+                               this._send(firstname, name, phone, this.state.gender, mail, password);
+                               this.setState({password : ""});
+                               this.setState({confirm : ""});
+                               this.setState({mail : ""});
+                               this.setState({firstname : ""});
+                               this.setState({name : ""});
+                               this.setState({phone : ""});
+                               this.props.navigation.navigate('Connexion', {inscriptionSubmitted: true});
+                           }
+                       }
+                       else {
+                           this.setState({error : _verifyconfirm(confirm, password).msg});
+                       }
+                   }
+                   else {
+                       this.setState({error : _verifyPassword(password).msg});
+                   }
+               }
+               else {
+                   this.setState({error : _verifyMail(mail).msg});
+               }
+           }
+           else {
+               this.setState({error : _verifyPhone(phone).msg});
+           }
         }
         else {
-            this.setState({error : _verify(this.firstname, this.name, this.mail, this.phone, this.password, this.confirm).msg});
+            this.setState({error : _verifyname(firstname, name).msg});
         }
 
     };
-
-    _redirect (test) {
-        this.props.navigation.navigate('Connexion');
-    }
 
     _send(firstname, name, phone, gender, mail, password) {
 
@@ -78,103 +107,119 @@ class Inscription extends React.Component {
 
         axios.post('http://82.165.248.136:8081/newUsers',{user})
 
-            .then(res => {
-                console.log(res.data);
-            })
             .catch(err => console.log(err));
 
     }
 
+    componentDidMount() {
+        AsyncStorage.getItem('user').then((result) => {
+          let user = result;
+          console.log(user);
+          if(user != null) {
+            this.props.navigation.navigate('Afficher la liste de vos portes')
+          }
+          else {
+            this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
+          }
+        })
+      }
+
     render() {
-        const nav = this.props.navigation.navigate;
         return (
-            <ScrollView style={styles.scrollView}>
             <View style={styles.component}>
-            <Text style={styles.text}>Nom : </Text>
-        <TextInput style={styles.input} onChangeText = {(text) => this.name = text.trim() }  placeholder='Nom de famille' />
-            <Text style={styles.text}>Prénom : </Text>
-        <TextInput style={styles.input} onChangeText ={text => this.firstname = text.trim() }  placeholder='Prénom'/>
-            <Text style={styles.text}>Téléphone : </Text>
-        <TextInput style={styles.input}  onChangeText ={text => this.phone = text.trim() } placeholder='Téléphone'/>
-            <Text style={styles.text}>Sexe : </Text>
-        <Picker style={styles.input} onValueChange={value => this.gender = value }>
-    <Picker.Item label='' value=''/>
-            <Picker.Item label='F' value='F'/>
-            <Picker.Item label='M' value='M'/>
-            </Picker>
-            <Text style={styles.text}>E-mail : </Text>
-        <TextInput style={styles.input} textContentType='emailAddress' id={"mail"} autoCompleteType='email' onChangeText ={text => this.mail = text.trim().toLowerCase() }  placeholder='E-mail'/>
-            <Text style={styles.text}>Mot de passe : </Text>
-        <TextInput style={styles.input} secureTextEntry={true}  onChangeText ={text => this.password = text.trim() }  placeholder='Ecrivez votre mot de passe'/>
-            <Text style={styles.text}>Confirmation : </Text>
-        <TextInput style={styles.input} secureTextEntry={true}  onChangeText ={text => this.confirm = text.trim() } placeholder='Réécrivez le même mot de passe'/>
-            <Text style={styles.warning}>{this.state.error}</Text>
-            <TouchableOpacity style={styles.button}>
-            <Text onPress={()=> this._getMail(this.mail)}  style={styles.textButtonBlue}>Inscription</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => nav("Connexion")} style={styles.connect}>
-            <Text style={styles.textButton}>Déjà un compte ? </Text>
-        </TouchableOpacity>
-        </View>
-        </ScrollView>
-    );
+
+                    <Text style={styles.text}>Nom : </Text>
+                    <TextInput style={styles.input} testID='name' id ={"nom"} onChangeText={(text)=> this.setState({name: text}) }  value={this.state.name}  placeholder='Nom de famille' />
+                    <Text style={styles.text}>Prénom : </Text>
+                    <TextInput style={styles.input} testID='firstname' id ={"prenom"} onChangeText={(text)=> this.setState({firstname: text}) }  value={this.state.firstname}  placeholder='Prénom'/>
+                    <Text style={styles.text}>Téléphone : </Text>
+                    <TextInput style={styles.input} testID='phone' id ={"phone"}  onChangeText={(text)=> this.setState({phone: text}) }  value={this.state.phone} placeholder='Téléphone'/>
+                    <Text style={styles.text}>Sexe : </Text>
+                    <Picker style={styles.input} testID='gender' onValueChange={value => this.setState({gender: value}) } value={this.state.gender}>
+                        <Picker.Item label='' value=''/>
+                        <Picker.Item label='F' value='F'/>
+                        <Picker.Item label='M' value='M'/>
+                    </Picker>
+                    <Text style={styles.text}>E-mail : </Text>
+                    <TextInput style={styles.input} textContentType='emailAddress'  id={"mail"} testID='mail' autoCompleteType='email' onChangeText={(text)=> this.setState({mail: text}) }  value={this.state.mail} placeholder='E-mail'/>
+                    <Text style={styles.text}>Mot de passe : </Text>
+                    <TextInput style={styles.input} secureTextEntry={true}  id ={"password"} testID='password' onChangeText={(text)=> this.setState({password: text}) }  value={this.state.password}  placeholder='Ecrivez votre mot de passe'/>
+                    <Text style={styles.text}>Confirmation : </Text>
+                    <TextInput style={styles.input} secureTextEntry={true} id ={"confirm"} testID='confirm' onChangeText={(text)=> this.setState({confirm: text}) }  value={this.state.confirm} placeholder='Réécrivez le même mot de passe'/>
+                    <Text style={styles.warning}>{this.state.error}</Text>
+
+                <View style={styles.buttonZone}>
+                    <TouchableOpacity style={styles.button}>
+                    <Text onPress={()=> this._getMail()} testID="submit"  style={styles.textButtonBlue}>Inscription</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity testID='redirect' onPress={() => this.props.navigation.navigate("Connexion")} style={styles.connect}>
+                    <Text style={styles.textButton}>Déjà un compte ? </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
     }
 }
 
 const styles = StyleSheet.create({
     component: {
+        flex : 1,
         justifyContent: 'center',
         alignContent: 'center',
-        marginLeft: 60,
-        marginRight: 60,
-        marginTop: 20,
-        marginBottom:20
+        marginHorizontal : '12%',
+        marginVertical : '2%'
     },
     text: {
-        paddingVertical: 5,
+        paddingVertical: '1%',
         justifyContent: 'center',
         alignContent: 'center'
     },
     textButton: {
-        paddingVertical: 5,
-        paddingHorizontal: 22,
+        paddingVertical: '5%',
+        paddingHorizontal: '3%',
+        textAlign : 'center',
         justifyContent: 'center',
-        alignContent: 'center'
+        alignContent: 'center',
     },
     textButtonBlue: {
-        paddingVertical: 5,
-        paddingHorizontal: 22,
+        paddingVertical: '5%',
+        paddingHorizontal: '3%',
+        textAlign : 'center',
         justifyContent: 'center',
         alignContent: 'center',
         color: '#ffffff'
     },
     button: {
+        height : '60%',
+        width : '48%',
         color: '#fff',
         textAlign: 'center',
-        marginHorizontal: 50,
-        marginVertical: 30,
-        padding: 10,
+        padding: '3%',
         backgroundColor: '#719ada',
-        justifyContent: 'center',
-        alignContent: 'center'
+    },
+    buttonZone: {
+        height : '11%',
+        marginTop : "12%"
     },
     connect: {
+        height : '60%',
+        width : '48%',
+        position : 'absolute',
+        right : "0%",
         textAlign: 'center',
-        marginHorizontal: 50,
-        padding: 10,
+        padding: '3%',
         backgroundColor: '#d0d0d0',
-        justifyContent: 'center',
-        alignContent: 'center'
     },
     input: {
-        padding: 5,
+        height : '5%',
+        padding: '2%',
+        marginBottom : '1%',
         justifyContent: 'center',
         alignContent: 'center',
         borderColor: '#000',
         borderWidth: 1,
     },
     warning : {
-        paddingTop : 15,
         textAlign : 'center',
         justifyContent: 'center',
         alignContent: 'center',

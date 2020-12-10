@@ -1,8 +1,8 @@
 import React from "react"
-import {StyleSheet, View,Text, TextInput} from 'react-native';
-import { Button } from 'react-native-paper';
+import {StyleSheet, View,TextInput} from 'react-native';
+import { Button,Text,Modal} from 'react-native-paper';
 import {checkAjout,checkAjoutAPI} from "../Functions/functionsAjoutPorte"
-import AsyncStorage from "@react-native-community/async-storage"
+import AsyncStorage from '@react-native-community/async-storage';
 
 const axios = require('axios')
 
@@ -14,17 +14,21 @@ export default class AjoutPorte_FormAjout extends React.Component {
 
   constructor(props) {
     super(props);
-    this.tag = "";
-    this.nickname = "";
+    this.state = {
+      tag : "",
+      nickname : ""
+    }
   }
 
   async addNewAccess() {
+    let storedUser = await AsyncStorage.getItem('user')
     let valeurs = {
         door : this.props.doorId,
-        user : AsyncStorage.getItem('user'),
-        tag : this.tag,
-        nickname : this.nickname,
-    }
+        user : "",
+        tag : this.state.tag,
+        nickname : this.state.nickname,
+    };
+    await AsyncStorage.getItem('user').then(res => valeurs.user = res);
     await checkAccess(valeurs).then(res => {
       let rep = checkAjoutAPI(res,true);
       this.props.setMessage(rep);
@@ -36,7 +40,7 @@ export default class AjoutPorte_FormAjout extends React.Component {
   }
 
   submit() {
-    let valeurs = checkAjout(this.tag,this.nickname);
+    let valeurs = checkAjout(this.state.tag,this.state.nickname);
     if (valeurs === true) {
       this.addNewAccess();
     }
@@ -55,13 +59,19 @@ export default class AjoutPorte_FormAjout extends React.Component {
             style={styles.input}
             placeholder="Nommez la nouvelle porte"
             onSubmitEditing={() => this.submit()}
-            onChangeText={(text) => this.nickname = text}></TextInput>
+            onChangeText={(text) => this.setState({nickname : text})}
+            testID='name'
+            value={this.state.nickname}
+          />
           <Text style={styles.label}>Tag</Text>
           <TextInput 
             style={styles.input}
             placeholder="Créez un tag"
             onSubmitEditing={() => this.submit()}
-            onChangeText={(text) =>this.tag = text}></TextInput>
+            onChangeText={(text) =>this.setState({tag : text})}
+            testID='tag'
+            value={this.state.tag}
+          />
         </View>
         <Button
           color="#719ADA"
@@ -70,18 +80,19 @@ export default class AjoutPorte_FormAjout extends React.Component {
           contentStyle = {styles.buttonIn}
           labelStyle= {styles.buttonText}
           style={styles.button}
+          testID='button-ajout'
         >
           Rechercher la porte
         </Button>
-        <Text onPress = {() => this.props.setDoor(undefined)} style={styles.retour}>Retour</Text>
+        <Text testID='back' onPress = {() => this.props.setDoor(undefined)} style={styles.retour}>Retour</Text>
       </View>
     )
   }
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
+    flex : 1
   },
   description : {
       height : 100,
@@ -105,7 +116,7 @@ const styles = StyleSheet.create({
       height : 40,
       fontSize : 18,
       padding : 7,
-      marginBottom : 50
+      marginBottom : 50,
   },
   buttonIn : {
       height : 50,
@@ -119,7 +130,7 @@ const styles = StyleSheet.create({
       marginBottom : 50
   },
   form : {
-      marginVertical : 50
+      marginVertical : 50,
   },
   retour : {
     color : "#719ADA",
