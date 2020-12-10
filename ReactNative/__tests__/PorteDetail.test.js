@@ -28,3 +28,8 @@ it('Returns -Fermer- when status is 1', () => {
     let receivedStatus = getTitle(status);
     expect(receivedStatus).toBe('Fermer')
 })
+it('Returns -Fermer- when status is 2', () => {
+    let status = 2;
+    let receivedStatus = getTitle(status);
+    expect(receivedStatus).toBe('Ouverture...')
+})
