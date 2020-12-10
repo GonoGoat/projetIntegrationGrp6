@@ -33,3 +33,8 @@ it('Returns -Fermer- when status is 2', () => {
     let receivedStatus = getTitle(status);
     expect(receivedStatus).toBe('Ouverture...')
 })
+it('Returns -Fermer- when status is 3', () => {
+    let status = 3;
+    let receivedStatus = getTitle(status);
+    expect(receivedStatus).toBe('Fermeture...')
+})
