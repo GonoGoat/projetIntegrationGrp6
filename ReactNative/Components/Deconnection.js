@@ -9,13 +9,13 @@ class Deconnection extends React.Component {
     
   async clearAllData() {
     await AsyncStorage.clear()
-    this.props.navigation.navigate('Connexion');
+    this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false});
   };
 
   render() {
     return (
       <View style={styles.component}>
-        <Text style={styles.text}>Êtes-vous sur de vouloir vous déconnecter ?</Text>
+        <Text style={styles.text_deco}>Êtes-vous sur de vouloir vous déconnecter ?</Text>
         <TouchableOpacity style={styles.deconnect} onPress={()=> this.clearAllData()}>
           <Text style={styles.text}>Confirmer</Text>
         </TouchableOpacity>
@@ -29,29 +29,37 @@ class Deconnection extends React.Component {
 
 const styles = StyleSheet.create({
   component: {
+    flex : 1,
     justifyContent: 'center',
     alignContent: 'center',
-    margin: 75,
-    marginTop: 100
+    marginHorizontal : '12%',
+    marginVertical : '5%' 
   },
   deconnect: {
     textAlign: 'center',
-    margin: 50,
-    padding: 10,
-    backgroundColor: '#719ada',
+    marginHorizontal: '5%',
+    marginVertical: '10%',
+    paddingVertical: '5%',
+    paddingHorizontal: '10%',
+    backgroundColor: '#71daa5',
     justifyContent: 'center',
     alignContent: 'center'
   },
   cancel: {
     textAlign: 'center',
-    margin: 50,
-    padding: 10,
-    backgroundColor: 'red',
+    marginHorizontal: '5%',
+    marginVertical: '10%',
+    paddingVertical: '5%',
+    paddingHorizontal: '10%',
+    backgroundColor: '#da7171',
     justifyContent: 'center',
     alignContent: 'center'
   },
   text: {
-    fontSize: 20,
+    textAlign: 'center'
+  },
+  text_deco: {
+    marginVertical: '25%',
     textAlign: 'center'
   }
 });

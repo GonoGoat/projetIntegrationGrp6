@@ -1,10 +1,12 @@
 
 import React, { Component } from 'react';
-import {Alert , Button, StyleSheet, Text, View, TextInput, TouchableOpacity,TouchableHighlight} from 'react-native';
+import {StyleSheet, Text, View,TouchableHighlight, ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Modal} from "react-native-paper";
 import axios from 'axios';
 import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
 import ModificationInfos from "./ModificationInfos";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class PorteDetail extends React.Component {
 
@@ -14,7 +16,11 @@ export default class PorteDetail extends React.Component {
     this.state={
       doors : [],
       isLoading: true,
-      modalVisible: false
+      modalVisible: false,
+      errorVisible: false,
+      errorMessage: "",
+      userLogged: 0,
+      isChangingStatus: false
     }
   }
 
@@ -23,127 +29,175 @@ export default class PorteDetail extends React.Component {
   }
 
   send(doorId, status) {
-    this.setState({isLoading: true})
-    var newStatus;
-    var textStatus
-    if(status == 0) {
-      newStatus = 1
-      textStatus = "ouverture";
-    } else { 
-      newStatus = 0
-      textStatus = "fermeture";
+    if(status == 2 || status== 3) {
+      alert('Erreur')
     }
-    const door = {
-      id : doorId,
-      status : newStatus
-    };
+    else {
+      this.setState({isLoading: true})
+      var statusChanging = 2;
+      var newStatus;
+      var textStatus
+      if(status == 0) {
+        newStatus = 2
+        textStatus = "ouverture";
+      } else { 
+        newStatus = 3
+        textStatus = "fermeture";
+      }
+      var door = {
+        id : doorId,
+        status : newStatus
+      };
 
-    axios.get(`http://192.168.1.60/` + textStatus)
-      .then(res => {
-        this.setState({isLoading: false, doors: res.data});
+      axios.get(`http://192.168.1.60/` + textStatus)
+        .then(res => {
+          this.setState({isLoading: false});
+        })
+        .catch(error => {
+          console.log(error)
       })
-      .catch(error => {
-        console.log(error)
-    })
 
-    axios.put('http://82.165.248.136:8081/doorStatus',{door})
-    .then(res => {
-        this.sendHistory(doorId, status)
-    })
-    .catch(err => {
-        console.log(err),
-        this.setState({isLoading: false})
-    });
+      axios.put('http://192.168.0.27:8081/doorStatus',{door})
+      .then(res => {
+          axios.get(`http://192.168.1.60/` + textStatus + '/' + res.data[0].password)
+          .then(res => {
+            this.setState({isLoading: false});
+          })
+          .catch(error => {
+          console.log(error)
+      })
+      })
+      .catch(err => {
+          this.setState({isLoading: false})
+      });
+      this.timeoutHandle = setTimeout(()=>{
+        this.setState({isChangingStatus: false})
+        if(status == 0) {
+          newStatus = 1
+        } else { 
+          newStatus = 0
+        }
+        door = {
+          id : doorId,
+          status : newStatus
+        };
+        axios.put('http://192.168.0.27:8081/doorStatus',{door})
+        .then(res => {
+          this.sendHistory(doorId, newStatus)
+        })
+        .catch(err => {
+          this.setState({isLoading: false})
+        });
+      }, 5000);
+    }
   }
 
 
-  sendHistory(doorId, status) {
-    var newStatus;
-    if(status == 0) {
-      newStatus = 1
-    } else { 
-      newStatus = 0
-    }
-
+  async sendHistory(doorId, newStatus) {
     const history = {
       door: doorId,
-      users : 1,
+      users: this.state.userLogged,
       date: new Date,
       action: newStatus
     }
-
-    axios.post('http://localhost:8081/newhistory',{history})
+    await axios.post('http://192.168.0.27:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
       })
       .catch(err => {
-          console.log(err),
+          this.setState({errorVisible: true})
           this.setState({isLoading: false})
       });
-  }
-
-  confirmDelete(userId, doorId) {
-    Alert.alert(  
-      'Suppression',  
-      'Voulez-vous vraiment supprimer cette porte de votre liste ?',  
-      [  
-          {  
-              text: 'Annuler',  
-                  
-          },  
-          {
-              text: 'OK',
-              onPress: () => (this.deleteAccess(userId, doorId),
-                Alert.alert(  
-                  'Suppression',  
-                  'Porte supprimée'
-                )
-              )
-          }  
-      ]  
-  );
   }
 
   deleteAccess(userId, doorId) {
-    const params = {
+    this.setState({modalVisible: false})
+    var params = {
       door: doorId,
       users : userId,
     }
-    axios.post('http://localhost:8081/access/delete',{params})
+    axios.post('http://192.168.0.27:8081/access/delete',{params})
       .then(res => {
-        this.props.navigation.push("Accueil")
+        this.props.navigation.navigate("ListePortes")
+        this.setState({isLoading: false})
       })
       .catch(err => {
-          console.log(err),
-          this.setState({isLoading: false})
+        this.setState({isLoading: false})
+        this.setState({errorMessage: "Une erreur du système s'est produite. La suppression n'a pas été prise en compte. Veuillez réessayer. Si l'erreur persiste, revenez plus tard."});
+        this.setState({errorVisible: true})
       });
   }
 
-  componentDidMount() {
-    axios.get(`http://82.165.248.136:8081/doors`)
-      .then(res => {
-        this.setState({isLoading: false, doors: res.data});
-      })
-      .catch(error => {
-        console.log(error)
+  getDoors() {
+    
+    axios.get(`http://192.168.0.27:8081/doors`)
+    .then(res => {
+      this.setState({isLoading: false, doors: res.data});
     })
+    .catch(error => {
+      this.setState({errorMessage: "Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard."});
+      this.setState({errorVisible: true});
+      this.setState({isLoading: false})
+  })
+  }
+
+  componentDidMount() {
+    let user;
+    AsyncStorage.getItem('user', function(errs, result) {
+      if (!errs) {
+        if (result !== null) {
+          user = result
+        }
+        else {
+          //alert(errs)
+        }
+      }
+    })
+    this.interval = setInterval(() => (this.getDoors()), 2000);
+    this.setState({userLogged: user});
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
     if(this.state.isLoading) {
-      return <Text>Loading...</Text>
+      return (
+
+        <View style={styles.container}>
+        <ActivityIndicator style={{alignContent: "center", justifyContent: "space-around", padding: 10}}/>
+          <Modal visible={this.state.errorVisible} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+            <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Erreur !</Text>
+            <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>{this.state.errorMessage}</Text>
+            <TouchableHighlight style={styles.okErrorModal}
+              onPress={() => this.props.navigation.goBack()             
+              }>
+              <View>
+                <Text style={{fontSize: 15}}>Ok</Text>
+              </View>
+            </TouchableHighlight>
+          </Modal>
+
+
+        </View>
+      )
     }
     else {
       const doorIdParam = this.props.route.params.doorIdParam;
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
       let modalVisible = this.state.modalVisible;
-
-      const nav = this.props.navigation.navigate;
       
       var dataDoor =  getDoorById(doorIdParam, this.state.doors);
-      var statusString = getStatus(dataDoor[2]);
+      var statusString = getStatus(dataDoor[1]);
+      if(dataDoor[1] == 2 || dataDoor[1] == 3) {
+        this.state.isChangingStatus = true
+      }
+      else {
+        this.state.isChangingStatus = false
+      }
       return (
         <View style={styles.container}>
           <View style={{flex: 1}}>
@@ -152,8 +206,8 @@ export default class PorteDetail extends React.Component {
               <Icon.Button  
               name="ios-trash" 
               size={30} 
-              onPress={() => this.confirmDelete(8,doorIdParam)}
-              style={{backgroundColor: "#719ada",}} >
+              onPress={() => this.setState({modalVisible: true})}
+              style={{backgroundColor: "#719ada",}}>
                 Delete door
               </Icon.Button>
             </View>
@@ -176,15 +230,18 @@ export default class PorteDetail extends React.Component {
           </View>
 
           <View style={{flex: 6}}>
-            <TouchableHighlight style={styles.openButton}
-              onPress={() => this.send(doorIdParam, dataDoor[2])}>
+            <TouchableHighlight disabled={this.state.isChangingStatus}
+            style={styles.openButton}
+              onPress={() => this.send(doorIdParam, dataDoor[1])}
+              >
               <View>
-                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[2])}</Text>
+                <Text style={{fontSize: 20, color: "white"}}>{getTitle(dataDoor[1])}</Text>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.histoButton}
-              onPress={() => this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
+              onPress={() => 
+              this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
               <View>
                 <Text style={{fontSize: 20}}>Historique</Text>
               </View>
@@ -204,7 +261,25 @@ export default class PorteDetail extends React.Component {
               </View>
             </TouchableHighlight>
           </View>
+          <Modal visible={this.state.modalVisible} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+            <Text style={{fontSize: 18, textAlign: "center", marginBottom: 5}}>Voulez-vous vraiment supprimer cette porte ?</Text>
+            <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Attention !</Text>
+            <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>Cette action est irréversible. Pour trouver à nouveau cette porte dans vos portes enregistrées, vous aurez à nouveau besoin de l'identifiant et du mot de passe de cette porte.</Text>
+            <TouchableHighlight style={styles.cancelModal}
+              onPress={() => this.setState({modalVisible: false})}>
+              <View>
+                <Text style={{fontSize: 20}}>Non</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight style={styles.okModal}
+              onPress={() => this.deleteAccess(this.state.userLogged, doorIdParam)}>
+              <View>
+                <Text style={{fontSize: 20}}>Oui</Text>
+              </View>
+            </TouchableHighlight>
+          </Modal>
         </View>
+        
       );
     }
   }
@@ -316,34 +391,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center'
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center"
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
+cancelModal: {
+  position: "absolute",
+  bottom: 10,
+  left: 100,
+  backgroundColor: "#d0d0d0",
+  paddingHorizontal: 25,
+  paddingVertical: 10
+},
+okModal: {
+ position: "absolute",
+ bottom: 10,
+ right: 100,
+ backgroundColor: '#719ada',
+ paddingHorizontal: 25,
+  paddingVertical: 10
+},
+okErrorModal: {
+  position: "absolute",
+  bottom: 20,
+  alignSelf: "center",
+  backgroundColor: '#719ada',
+  paddingHorizontal: 20,
+   paddingVertical: 7
+ }
 })
