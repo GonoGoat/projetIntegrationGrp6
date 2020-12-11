@@ -63,7 +63,6 @@ class Connection extends React.Component {
         else {
           this.setState({errorMessage:''});
           this.getHistory(response.data.msg);
-          this.redirect();
         }});
     } else {
       this.setState({errorMessage:verify(this.state.mail.toLowerCase(), this.state.password).msg});
@@ -95,7 +94,7 @@ class Connection extends React.Component {
           <Text style={styles.textInscription}>Pas encore de compte ? </Text>
         </TouchableOpacity>
         <Snackbar visible={this.state.inscriptionSubmitted === true} style = {this.state.type = styles.success } duration={2000} >
-        "Votre compte a bien été validé" 
+        "Votre compte a bien été validé"
         </Snackbar>
 
       </View>

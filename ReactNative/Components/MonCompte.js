@@ -5,6 +5,7 @@ import axios from "axios";
 import Modal from "modal-react-native-web";
 import {Snackbar} from 'react-native-paper';
 import { _verifyMail, _verifyconfirm, _verifyname, _verifyPassword, _verifyPhone, _reset} from '../Functions/functionsInscription'
+//import Modal from "react-native-paper/src/components/Modal";
 
 
 class MonCompte extends React.Component {
@@ -26,7 +27,7 @@ class MonCompte extends React.Component {
     }
 
     getUser () {
-        let user = 1;
+        let user = 8;
         AsyncStorage.getItem('user', function(errs, result) {
             if (!errs) {
                 if (result !== null) {
