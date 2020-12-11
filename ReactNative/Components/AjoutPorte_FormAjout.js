@@ -1,6 +1,6 @@
 import React from "react"
 import {StyleSheet, View,TextInput} from 'react-native';
-import { Button,Text,Modal} from 'react-native-paper';
+import { Button,Text} from 'react-native-paper';
 import {checkAjout,checkAjoutAPI} from "../Functions/functionsAjoutPorte"
 import AsyncStorage from '@react-native-community/async-storage';
 
