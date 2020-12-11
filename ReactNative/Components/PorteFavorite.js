@@ -15,7 +15,8 @@ class PorteFavorite extends React.Component {
       listePorte: [],
       erreur : false,
       reload: true,
-      backgroundColor : ""
+      backgroundColor : "",
+      isChangingStatus: false
     }
   }
   loadDoors() {
@@ -81,52 +82,65 @@ componentDidMount() {
 }
 
 openDoor(doorId, status){
+  if(status == 2 || status == 3) {
+    alert('Erreur')
+  }
+  else {
   var newStatus;
   var textStatus
   if(status == 0) {
-    newStatus = 1
+    newStatus = 2
     textStatus = "ouverture";
   } else { 
-    newStatus = 0
+    newStatus = 3
     textStatus = "fermeture";
   }
-  const door = {
+  var door = {
     id : doorId,
     status : newStatus
-  };
-
-  axios.get(`http://192.168.1.60/` + textStatus)
-    .then(res => {
-      this.setState({doors: res.data});
-    })
-    .catch(error => {
-      console.log(error)
-  })
+  }
 
   axios.put('http://localhost:8081/doorStatus',{door})
   .then(res => {
-      this.sendHistory(doorId, status)
+      axios.get(`http://192.168.1.60/` + textStatus + '/' + res.data[0].password)
+      .then(res => {
+      })
+      .catch(error => {
+      console.log(error)
+  })
   })
   .catch(err => {
-      console.log(err)
+    console.log(err)
   });
+  this.timeoutHandle = setTimeout(()=>{
+    this.setState({isChangingStatus: false})
+    if(status == 0) {
+      newStatus = 1
+    } else { 
+      newStatus = 0
+    }
+    door = {
+      id : doorId,
+      status : newStatus
+    };
+    axios.put('localhost:8081/doorStatus',{door})
+    .then(res => {
+      this.sendHistory(doorId, newStatus)
+    })
+    .catch(err => {
+      alert(err)
+    });
+  }, 5000);
+}
 }
 
-sendHistory(doorId, status) {
-  var newStatus;
-  if(status == 0) {
-    newStatus = 1
-  } else { 
-    newStatus = 0
-  }
-
+sendHistory (doorId, newStatus) {
   const history = {
     door: doorId,
-    users : 1,
+    users : user,
     date: new Date,
     action: newStatus
   }
-
   axios.post('http://localhost:8081/newhistory',{history})
     .then(res => {
       this.setState({reload : false})
@@ -148,22 +162,29 @@ sendHistory(doorId, status) {
 renderItem = ({item}) => {
   var statusString = getStatus(item.status);
   var colorButton = this.getColorButton(item.status)
-  var colorText = this.getColorButton(!item.status)
+  var colorText = this.getColorButton(!item.status)    
+    if(item.status == 2 || item.status == 3) {
+      this.state.isChangingStatus = true
+    }
+    else {
+      this.state.isChangingStatus = false
+    }
   return (
     <View style={styles.zonePorte}>
   <Text style={styles.textPorte}>Nom : {item.nickname}</Text>
   <Text style={styles.textPorte}>Tag : {item.tag}</Text>
   <Text style={{position: "absolute" , right: 10, fontSize: 20}}>Status : <Text style={{color: colorText, fontSize: 20}}>{statusString}</Text></Text>
-  <TouchableHighlight style={{backgroundColor : colorButton, marginTop : 10}}
+  <TouchableHighlight style={{backgroundColor : colorButton, marginTop : 10, width : '50%', left: '25%', height:35}} 
               onPress={() => this.openDoor(item.id, item.status)}>
               <View>
-                <Text style={{fontSize: 20, textAlign : "center"}}>{getTitle(item.status)}</Text>
+                <Text style={{fontSize: 20, textAlign : "center", justifyContent:"center", color:'white'}}>{getTitle(item.status)}</Text>
               </View>
   </TouchableHighlight>
   </View>
   )
 }
   render() {
+
     if (this.state.erreur === false) {
     return (
       <View style={styles.container}>

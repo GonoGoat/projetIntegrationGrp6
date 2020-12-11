@@ -270,10 +270,10 @@ app.post('/door/check', async (req, res) => {
 *************************************************/
 
 app.put('/doorStatus', (req, res) => {
-    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id; 
-    pool.query(query, (err) => {
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id + ' returning password';
+    pool.query(query, (err, rows) => {
         if (err) return res.send(false);
-        return res.send(true);
+        return res.send(rows.rows);
     });
 });
 
