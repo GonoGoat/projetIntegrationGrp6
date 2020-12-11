@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StyleSheet, Text, View, TouchableHighlight} from 'react-native';
 import axios from 'axios';
 import {FlatList} from 'react-native-gesture-handler';
-import { getStatus, getDoorById, getTitle } from '../Functions/functionsPorteDetail'
+import { getStatus, getTitle } from '../Functions/functionsPorteDetail'
 
 let idPorte = [];
 let user;
@@ -28,9 +28,10 @@ class PorteFavorite extends React.Component {
       this.setState({erreur: true})
   }
   else if(idPorte[0].length > 0) {
-        for(let i = 0; i < idPorte[0].length +1; i=i+2) {
+    let numero = idPorte[0].split(',')
+        for(let i of numero) {
        axios
-        .get('http://localhost:8081/doorIdUser/' + idPorte[0][i] + "/" + user)
+        .get('http://localhost:8081/doorIdUser/' + i + "/" + user)
         .catch(function(error) {
           if (error.response) {
             alert("40X Not Found page")
@@ -100,8 +101,9 @@ openDoor(doorId, status){
     status : newStatus
   }
 
-  axios.put('http://localhost:8081/doorStatus',{door})
+  axios.put('http://82.165.248.136:8081/doorStatus',{door})
   .then(res => {
+      this.componentDidMount()
       axios.get(`http://192.168.1.60/` + textStatus + '/' + res.data[0].password)
       .then(res => {
       })
@@ -123,7 +125,7 @@ openDoor(doorId, status){
       id : doorId,
       status : newStatus
     };
-    axios.put('localhost:8081/doorStatus',{door})
+    axios.put('http://82.165.248.136:8081/doorStatus',{door})
     .then(res => {
       this.sendHistory(doorId, newStatus)
     })
@@ -134,7 +136,7 @@ openDoor(doorId, status){
 }
 }
 
-sendHistory (doorId, newStatus) {
+async sendHistory (doorId, newStatus) {
   const history = {
     door: doorId,
     users : user,
@@ -150,8 +152,9 @@ sendHistory (doorId, newStatus) {
         console.log(err)
     });
 }
+
  getColorButton(boolStatus) {
-  if(boolStatus == true) {
+  if((boolStatus == 1) || (boolStatus == 3)) {
       return "#DC143C";
   }
   else {
