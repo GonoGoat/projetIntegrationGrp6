@@ -8,6 +8,8 @@ import AjoutPorte_FormVerif from "../Components/AjoutPorte_FormVerif"
 
 import {Snackbar} from 'react-native-paper';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
 import axios from 'axios';
 
 jest.mock('axios');

@@ -1,7 +1,7 @@
 import React from "react"
 import {StyleSheet, View,TextInput} from "react-native"
 import { Modal, Text, Button,ActivityIndicator,RadioButton,Snackbar} from 'react-native-paper';
-import {checkIp} from '../Functions/functionsAdmin'
+import {checkIp,error} from '../Functions/functionsAdmin'
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from "@react-native-community/async-storage"
 import Error from "./Error"
@@ -29,7 +29,6 @@ export default class Admin extends React.Component {
     }
 
     checkUser() {
-        let state = this.state.isLoading;
         AsyncStorage.getAllKeys().then(res => {
           if (res.indexOf('user') != -1 && res.indexOf('isAdmin') != -1) {
             AsyncStorage.getItem('isAdmin').then(res => {
@@ -77,7 +76,7 @@ export default class Admin extends React.Component {
                 isLoading: false
             })
         })
-        .catch(err => {this.setState({message : error(err)})}
+        .catch(err => {this.setState({message : error(err),isSnackVisible : true})}
         );
     }
 
@@ -102,19 +101,25 @@ export default class Admin extends React.Component {
     getText() {
         if (this.state.id.length != 0) {
             return (
-                <React.Fragment>
-                    <View>
-                        <Text>Une nouvelle porte a bien été créée !</Text>
-                        <Text>Voici les identifiants :</Text>
+                <View style={styles.container}>
+                    <View style={styles.final}>
+                        <Text style={styles.finalDesc}>Une nouvelle porte a bien été créée !</Text>
+                        <Text style={styles.finalDesc}>Voici les identifiants :</Text>
                     </View>
-                    <View>
-                        <Text>Numéro identifiant : {this.state.id}</Text>
-                        <Text>Mot de passe : {this.state.password}</Text>
-                        <Text>Etat de la porte : {this.state.status === 1 ? "Ouverte" : "Fermée"}</Text>
-                        <Text>Adresse IP de la porte : {this.state.ipAddress}</Text>
+                    <View style={styles.final}>
+                        <Text style={styles.finalText}>Numéro identifiant : {this.state.id}</Text>
+                        <Text style={styles.finalText}>Mot de passe : {this.state.password}</Text>
+                        <Text style={styles.finalText}>Etat de la porte : {this.state.status === 1 ? "Ouverte" : "Fermée"}</Text>
+                        <Text style={styles.finalText}>Adresse IP de la porte : {this.state.ipAddress}</Text>
                     </View>
-                    <Text onPress={() => this.setState({id : ""})}>Revenir au menu principal</Text>
-                </React.Fragment>
+                    <Button
+                        color="#D0D0D0"
+                        onPress={() => this.setState({id : ""})}
+                        mode="contained"
+                    >
+                        Revenir au menu principal
+                    </Button>
+                </View>
             )
         }
         else {
@@ -194,19 +199,35 @@ export default class Admin extends React.Component {
                     {this.getText()}
                     <Modal
                         visible = {this.state.isModalVisible}
-                    >
-                        <Text>Vous vous apprêtez à ajouter une nouvelle porte.</Text>
-                        <Text>Êtes-vous sûr de votre opération ?</Text>
-                        <Button 
-                            onPress = {() => this.setState({isModalVisible : false})}
-                        >
-                            Non
-                        </Button>
-                        <Button 
-                            onPress = {() => this.displayNewDoor()}
-                        >
-                            Oui
-                        </Button>
+                        style={styles.modal}
+                    >   
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalDesc}>Êtes-vous sûr de vouloir rajouter la porte ayant l'addresse ip :</Text>
+                            <Text style={styles.modalDesc,styles.value}>{this.state.ipAddress}</Text>
+                            <Text style={styles.modalDesc}>et que celle-ci est :</Text>
+                            <Text style={styles.modalDesc,styles.value}>{this.state.status === 1 ? "Ouverte" : "Fermée"}</Text>
+                            <View style={styles.buttons}>
+                                <Button
+                                    color="#719ADA"
+                                    onPress = {() => this.displayNewDoor()}
+                                    contentStyle = {styles.modalButtonIn}
+                                    labelStyle= {styles.buttonText}
+                                    style={styles.modalButton}
+                                    mode="contained"
+                                >
+                                    Oui
+                                </Button>    
+                                <Button
+                                    color="#D0D0D0"
+                                    onPress = {() => this.setState({isModalVisible : false})}
+                                    contentStyle = {styles.modalButtonIn}
+                                    labelStyle= {styles.buttonText,styles.modalButtonText}
+                                    mode="contained"
+                                >
+                                    Non
+                                </Button>
+                            </View>
+                        </View>
                     </Modal>
                     <Snackbar
                         visible={this.state.isSnackVisible === true}
@@ -301,4 +322,54 @@ const styles = StyleSheet.create({
     button : {
         marginBottom : 50
     },
+    modal : {
+        flex : 1
+    },
+    modalContent : {
+        backgroundColor : "white",
+        borderColor : "black",
+        borderWidth : 2,
+        justifyContent : "center",
+        alignItems : "center",
+        position : "absolute",
+        left : "50%",
+        top : "50%",
+        textAlign : "center",
+        padding : 5
+    },
+    modalDesc : {
+        textAlign : "center",
+        fontSize : 16
+    },
+    value : {
+        fontWeight : "bold"
+    },
+    buttons : {
+        flexDirection : "row",
+        justifyContent : "center"
+    },
+    modalButton : {
+        marginHorizontal : 20
+    },
+    modalButtonIn : {
+        height : 40,
+        width : 100
+    },
+    modalButtonText : {
+        color : "black"
+    },
+    final : {
+        borderBottomColor : "black",
+        borderBottomWidth : 3,
+        paddingBottom : 50
+    },
+    finalText : {
+        paddingVertical : 7,
+        fontSize : 16
+    },
+    finalDesc : {
+        paddingVertical : 7,
+        fontSize : 16,
+        textAlign : "center"
+    }
 })

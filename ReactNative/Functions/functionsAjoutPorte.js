@@ -1,7 +1,7 @@
 export function checkAjout(tag, nickname) {
     let valeurs;
     if (!/^[a-zA-Z ]+$/.test(tag)) {
-        if (tag.length === 0) {
+        if (!tag) {
             valeurs = {
                 message : "Veuillez insérer un tag.",
                 type : "fail"
@@ -16,7 +16,7 @@ export function checkAjout(tag, nickname) {
         return valeurs;
     }
     if (!/^[a-zA-Z ]+$/.test(nickname)) {
-        if (nickname.length === 0) {
+        if (!nickname) {
             valeurs = {
                 message : "Veuillez insérer un nom pour la porte.",
                 type : "fail"
@@ -36,7 +36,7 @@ export function checkAjout(tag, nickname) {
 export function checkVerif(idPorte,password) {
     let valeurs;
     if (!/^[0-9]+$/.test(idPorte)) {
-        if (idPorte.length === 0) {
+        if (!idPorte) {
             valeurs = {
                 message : "Veuillez insérer un ID de porte.",
                 type : "fail"
@@ -51,7 +51,7 @@ export function checkVerif(idPorte,password) {
         return valeurs;
     }
     if (!/^[a-zA-Z]{10}$/.test(password)) {
-        if (password.length === 0) {
+        if (!password) {
             valeurs = {
                 message : "Veuillez insérer le mot de passe de la porte.",
                 type : "fail"
@@ -150,14 +150,14 @@ function error(err) {
     }
     else if (err.request) {
         return({
-        message : "Une erreur est survenue lors de l'envoi de votre requête. Veuillez réessayer.",
-        type : "fail"
+            message : "Une erreur est survenue lors de l'envoi de votre requête. Veuillez réessayer.",
+            type : "fail"
         })
     }
     else {
         return({
-        message : "Une erreur est survenue. Veuillez réessayer.",
-        type : "fail"
+            message : "Une erreur est survenue. Veuillez réessayer.",
+            type : "fail"
         })
     }
 };
