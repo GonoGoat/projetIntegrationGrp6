@@ -16,6 +16,7 @@ class MonCompte extends React.Component {
             user: [],
             visible1: false,
             visible2: false,
+            visible3: false,
             newInfos:[],
             mailVerified : false,
             error : "",
@@ -50,7 +51,33 @@ class MonCompte extends React.Component {
                 console.log(error)
             })
     }
+    async clearAllData() {
+        await AsyncStorage.clear()
+        this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false});
+    };
 
+    deleteUser () {
+        let user = 1;
+        AsyncStorage.getItem('user', function(errs, result) {
+            if (!errs) {
+                if (result !== null) {
+                    user = result
+                }
+                else {
+                    //alert(errs)
+                }
+            }
+        })
+        axios.delete('http://82.165.248.136:8081/user/' + user)
+            .then(res => {
+
+            })
+
+            .catch(error => {
+                console.log(error)
+            })
+        this.clearAllData();
+    }
     async getMail(mail){
         if(mail != this.state.user[0].mail) {
             let user = {
@@ -310,6 +337,50 @@ class MonCompte extends React.Component {
                     <Snackbar visible={this.state.reussite !== ""} onDismiss={() => this.setState({reussite: ""})} style = {this.state.type = styles.success } duration={2000} action={{label: 'Ok', onPress: () => {this.setState({reussite: ""})}}}>
                         {this.state.reussite}
                     </Snackbar>
+                    <View style={{flex: 6}}>
+                        <TouchableHighlight style={styles.editPassword}
+                                            onPress={() => this.setState({visible3: true})}>
+                            <View>
+                                <Text style={{fontSize: 15}}>Supprimer mon compte</Text>
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.visible3}
+                        ariaHideApp={false}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={{marginBottom: 8, textDecorationLine: 'underline'}}>Suppression de compte</Text>
+                                <Text style={{fontSize: 15, marginVertical: 8}}>Êtes-vous sûr de vouloir supprimer votre compte?</Text>
+                                <View style={{flex: 6}}>
+                                    <TouchableOpacity
+                                        style={styles.saveButton}
+                                        onPress={() => {
+                                            this.setState({visible3: false})
+                                            this.setState({error : ""});
+                                            this.deleteUser();
+                                        }}
+                                    >
+                                        <Text style={{fontSize: 15, color: "white"}}>Confirmer </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.returnButton}
+                                        onPress={() => {
+                                            this.setState({visible3: false})
+                                            this.setState({error : ""});
+                                        }}
+                                    >
+                                        <Text style={{fontSize: 15}}>Annuler </Text>
+                                    </TouchableOpacity>
+
+
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
             )
         }
