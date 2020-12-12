@@ -4,7 +4,9 @@ import Modal from "modal-react-native-web";
 import {Snackbar} from 'react-native-paper';
 import axios from "axios";
 import {check} from "../Functions/functionsModificationInfos";
+import AsyncStorage from "@react-native-community/async-storage";
 
+let user;
 
 function ModificationInfos(props) {
 
@@ -20,7 +22,10 @@ function ModificationInfos(props) {
 
     function updateAccess(nickname, tagName, door) {
 
-        axios.patch('http://82.165.248.136:8081/access/update',{tagName : tagName, nickname : nickname, door : door})
+        await AsyncStorage.getItem('user').then((result) => {
+            user = result
+        })
+        axios.patch('http://82.165.248.136:8081/access/update',{tagName : tagName, nickname : nickname, door : door, users: user})
             .then(res => {
                 console.log(res);
                 setMessage({

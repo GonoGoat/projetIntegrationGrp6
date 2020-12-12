@@ -187,7 +187,7 @@ app.put('/modifUsers', async (req, res) => {  //argon2 test
  GET USER BY MAIL
  *************************************************/	// TEST OK
 
- app.post('/userMail/', async (req, res) => {
+ app.post('/userMail', async (req, res) => {
     let mail = [req.body.user.mail];
     let sql = 'select mail from users where mail = $1' ;
     pool.query(sql, mail,(err, rows) => {
@@ -245,11 +245,12 @@ app.put('/changePassword/', async (req, res) => {
  *************************************************/	// TEST OK
 
 app.patch('/access/update', (req, res) => {
+    let user = parseInt(req.body.users);
     let door = parseInt(req.body.door);
     let tag = req.body.tagName;
     let nickname = req.body.nickname;
-
-    let query = `UPDATE access SET nickname = ${nickname}, tag =${tag} WHERE door = ${door}`;
+    let query = `UPDATE access SET nickname = '${nickname}', tag ='${tag}' WHERE access.door = ${door} AND access.users = ${user}`;
+    console.log(query)
     pool.query(query, (err) => {
         if (err) return res.send(err);
         return res.send(true);
@@ -411,6 +412,7 @@ app.get('/doorHistory/user/:userId', async (req, res) => {
 *************************************************/	//TEST OK
 
 app.post('/newaccess', async (req, res) => {
+    let sql = 'SELECT * FROM access WHERE '
     const query = 'INSERT INTO access (door, users, tag, nickname) VALUES ($1,$2,$3,$4)';
     let values = [parseInt(req.body.door),parseInt(req.body.user),req.body.tag, req.body.nickname];
     pool.query(query, values, (err) => {
