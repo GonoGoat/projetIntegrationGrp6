@@ -1,20 +1,16 @@
 const express = require('express');
 const pg = require('pg');
-const session = require('express-session');
 const bodyParser = require('body-parser');
-const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
 const nodemailer = require("nodemailer");
-var password = require('password');                 //générateur de mdp
-const { check, validationResult} = require('express-validator');
+const { validationResult} = require('express-validator');
 var Chance = require('chance')
 var chance = new Chance();
 
 const argon2 = require("argon2");
-const saltRounds = 5;
 
 const app = express();
 
@@ -87,7 +83,7 @@ app.put('/resetPassword/', async (req, res) => {
     pool.query(sql, values, (err, rows) => {
         if (err) throw err;
         CreateMail(mail, newPass);
-        return res.send(rows.rows);
+        return res.send(true);
     })
 
 });
@@ -117,20 +113,21 @@ app.get('/users/name', async (req, res) => {
   });
 
 /*************************************************
-		GET USER WITH MAIL AND PASSWORD
+		POST USER WITH MAIL AND PASSWORD (Connection)
 *************************************************/	// TEST OK
 
 app.post('/userConnection/', async (req, res) => {
-    let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
+    console.log(req.body.user.mail)
+    let sql = "select id, password, isadmin FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
     pool.query(sql, async (error, rows) => {
-        if (error) console.log('ok'), res.send({status : false, msg : error});
-        if (rows.rowCount != 1) {
+        if (error) res.send({status : false, msg : error});
+        if (rows.rowCount < 1) {
             return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
         } else {
         if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
             id = rows.rows[0].id;
-            return res.send({status : true, msg : id});
+            return res.send({status : true, msg : {id: id, admin: rows.rows[0].isadmin ? true : false }});
         } else {
             return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
         }
@@ -275,20 +272,6 @@ app.patch('/access/update', (req, res) => {
     });
 });
 
-
-
-/*************************************************
- GET ALL TAG
- *************************************************/	// TEST OK
-
- app.get('/listTag', async (req, res) => {
-  let sql = 'select DISTINCT tag from access';
-  pool.query(sql, (err, rows) => {
-      if (err) throw err;
-      return res.send(rows.rows);
-  })
-});
-
 /*************************************************
 		GET ALL DOORS
 *************************************************/	// TEST OK
@@ -299,20 +282,6 @@ app.get('/doors', async (req, res) => {
       if (err) throw err;
       return res.send(rows.rows);
     })
-});
-
-
-/*************************************************
-		GET DOOR by ID
-*************************************************/	// TEST OK
-
-app.get('/door/:id', async (req, res) => {
-  let doorId = parseInt(req.url.split('/door/').pop());
-  let sql = 'select * from door where id = ' + doorId;
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
 });
 
 /*************************************************
@@ -370,19 +339,6 @@ app.put('/doorStatus', (req, res) => {
 });
 
 /*************************************************
-		GET DOOR BY TAG
-*************************************************/	//TEST OK
-
-app.get('/doorTag/:tag', async (req, res) => {
-  let doorTag = req.url.split('/doorTag/').pop();
-  let sql = 'select * from access where tag = \'' + doorTag + '\'';
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
-});
-
-/*************************************************
 		GET DOORS BY SPECIFIC TAG & USER
 *************************************************/	//TEST OK
 
@@ -419,11 +375,11 @@ app.get('/userTag/:userId', async (req, res) => {
     let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
-
         return res.send(rows.rows);
     })
 });
 
+// TO REFACTOR : doorHistory/User and doorHistory/Door
 /*************************************************
 		GET DOOR HISTORY BY DOOR ID
 *************************************************/	//TEST OK
@@ -517,6 +473,3 @@ var httpsServer = https.createServer(httpsOptions, app);
 
 httpServer.listen(8081);
 httpsServer.listen(4433);
-
-
-//app.listen(8081);
