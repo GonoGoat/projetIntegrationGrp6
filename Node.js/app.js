@@ -83,7 +83,6 @@ app.put('/resetPassword/', async (req, res) => {
     pool.query(sql, values, (err, rows) => {
         if (err) throw err;
         CreateMail(mail, newPass);
-        console.log(rows)
         return res.send(true);
     })
 
@@ -122,8 +121,6 @@ app.post('/userConnection/', async (req, res) => {
     let sql = "select id, password, isadmin FROM users WHERE mail = '"+req.body.user.mail+"'";
     let id = false;
     pool.query(sql, async (error, rows) => {
-        console.log(rows.rows)
-        console.log(error)
         if (error) res.send({status : false, msg : error});
         if (rows.rowCount < 1) {
             return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
@@ -378,7 +375,6 @@ app.get('/userTag/:userId', async (req, res) => {
     let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
         if (err) throw err;
-        console.log(rows.rows)
         return res.send(rows.rows);
     })
 });

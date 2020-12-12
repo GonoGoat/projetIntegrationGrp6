@@ -20,15 +20,17 @@ class Connection extends React.Component {
   Fonction permettant de récupérer les 3 portes les plus utilisées par l'utilisateur
   @params: id => identifiant de l'utilisateur dont on souhaite récuperer les valeurs.
   */
-  getHistory = async (id) => {
+  getHistory = async (user) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+id)
+    axios.get('http://localhost:8081/doorHistory/user/'+user.id)
       .then(res => {
+        console.log(res.data)
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
         }
-        AsyncStorage.setItem('user', id);
+        AsyncStorage.setItem('user', user.id);
         AsyncStorage.setItem('doors', doors);
+        AsyncStorage.setItem('isadmin', user.admin)
         this.redirect();
       })
   };
@@ -62,6 +64,7 @@ class Connection extends React.Component {
         }
         else {
           this.setState({errorMessage:''});
+          console.log(response.data)
           this.getHistory(response.data.msg);
         }});
     } else {
