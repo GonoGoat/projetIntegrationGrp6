@@ -141,9 +141,9 @@ class Inscription extends React.Component {
                         <Picker.Item label='M' value='M'/>
                     </Picker>
                     <Text style={styles.text}>E-mail : </Text>
-                    <TextInput style={styles.input} textContentType='emailAddress'  id={"mail"} testID='mail' autoCompleteType='email' onChangeText={(text)=> this.setState({mail: text}) }  value={this.state.mail} placeholder='E-mail'/>
+                    <TextInput style={styles.input} textContentType='emailAddress'  id={"mail"} testID='mailInscript' autoCompleteType='email' onChangeText={(text)=> this.setState({mail: text}) }  value={this.state.mail} placeholder='E-mail'/>
                     <Text style={styles.text}>Mot de passe : </Text>
-                    <TextInput style={styles.input} secureTextEntry={true}  id ={"password"} testID='password' onChangeText={(text)=> this.setState({password: text}) }  value={this.state.password}  placeholder='Ecrivez votre mot de passe'/>
+                    <TextInput style={styles.input} secureTextEntry={true}  id ={"password"} testID='passwordInscript' onChangeText={(text)=> this.setState({password: text}) }  value={this.state.password}  placeholder='Ecrivez votre mot de passe'/>
                     <Text style={styles.text}>Confirmation : </Text>
                     <TextInput style={styles.input} secureTextEntry={true} id ={"confirm"} testID='confirm' onChangeText={(text)=> this.setState({confirm: text}) }  value={this.state.confirm} placeholder='Réécrivez le même mot de passe'/>
                     <Text style={styles.warning}>{this.state.error}</Text>
