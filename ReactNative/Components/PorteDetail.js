@@ -40,7 +40,7 @@ export default class PorteDetail extends React.Component {
       if(status == 0) {
         newStatus = 2
         textStatus = "ouverture";
-      } else { 
+      } else {
         newStatus = 3
         textStatus = "fermeture";
       }
@@ -57,9 +57,9 @@ export default class PorteDetail extends React.Component {
           console.log(error)
       })*/
 
-      axios.put('http://192.168.0.27:8081/doorStatus',{door})
+      axios.put('http://localhost:8081/doorStatus',{door})
       .then(res => {
-          
+
       })
       .catch(err => {
           this.setState({isLoading: false})
@@ -68,14 +68,14 @@ export default class PorteDetail extends React.Component {
         this.setState({isChangingStatus: false})
         if(status == 0) {
           newStatus = 1
-        } else { 
+        } else {
           newStatus = 0
         }
         door = {
           id : doorId,
           status : newStatus
         };
-        axios.put('http://192.168.0.27:8081/doorStatus',{door})
+        axios.put('http://localhost:8081/doorStatus',{door})
         .then(res => {
           this.sendHistory(doorId, newStatus)
         })
@@ -94,7 +94,7 @@ export default class PorteDetail extends React.Component {
       date: new Date,
       action: newStatus
     }
-    await axios.post('http://192.168.0.27:8081/newhistory',{history})
+    await axios.post('http://localhost:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -111,7 +111,7 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://192.168.0.27:8081/access/delete',{params})
+    axios.post('http://localhost:8081/access/delete',{params})
       .then(res => {
         this.props.navigation.navigate("ListePortes")
         this.setState({isLoading: false})
@@ -124,8 +124,8 @@ export default class PorteDetail extends React.Component {
   }
 
   getDoors() {
-    
-    axios.get(`http://192.168.0.27:8081/doors`)
+
+    axios.get(`http://localhost:8081/doors`)
     .then(res => {
       this.setState({isLoading: false, doors: res.data});
     })
@@ -166,7 +166,7 @@ export default class PorteDetail extends React.Component {
             <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Erreur !</Text>
             <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>{this.state.errorMessage}</Text>
             <TouchableHighlight style={styles.okErrorModal}
-              onPress={() => this.props.navigation.goBack()             
+              onPress={() => this.props.navigation.goBack()
               }>
               <View>
                 <Text style={{fontSize: 15}}>Ok</Text>
@@ -183,7 +183,7 @@ export default class PorteDetail extends React.Component {
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
       let modalVisible = this.state.modalVisible;
-      
+
       var dataDoor =  getDoorById(doorIdParam, this.state.doors);
       var statusString = getStatus(dataDoor[1]);
       if(dataDoor[1] == 2 || dataDoor[1] == 3) {
@@ -196,10 +196,10 @@ export default class PorteDetail extends React.Component {
         <View style={styles.container}>
           <View style={{flex: 1}}>
             <View style={styles.delete}>
-              
-              <Icon.Button  
-              name="ios-trash" 
-              size={30} 
+
+              <Icon.Button
+              name="ios-trash"
+              size={30}
               onPress={() => this.setState({modalVisible: true})}
               style={{backgroundColor: "#719ada",}}>
                 Delete door
@@ -234,7 +234,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.histoButton}
-              onPress={() => 
+              onPress={() =>
               this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
               <View>
                 <Text style={{fontSize: 20}}>Historique</Text>
@@ -273,7 +273,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
           </Modal>
         </View>
-        
+
       );
     }
   }
