@@ -1,75 +1,64 @@
-import 'react-native';
-import { getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString } from '../Functions/functionsHistorique'
+import React from "react"
+import Enzyme,{shallow} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-it('Send correct date format', () => {
-  let sendedDate = '2000-01-01T00:00:00.000Z';
-  let receivedDate = getDateFormat(sendedDate)
-  expect(receivedDate).toBe('01/01/2000 00:00')
-})
+import Historique from '../Components/Historique';
 
-it('Returns correct name format', () => {
-  let id = 1;
-  let table = [{"id":1,"firstname":"testingFirstname","lastname":"testingLastname","phone":null,"sexe":"M","mail":"testing@testing.testing","password":"testing"}]
-  let receivedName = getNomPrenom(id, table)
-  expect(receivedName).toBe('testingLastname testingFirstname')
-})
+import axios from 'axios';
 
-it('Returns correct style by pair Index', () => {
-  let index = 0
-  let receivedStyle = getStyleByIntex(index)
-  expect(receivedStyle).toMatchObject({
-    backgroundColor: '#719ada',
-    marginLeft: 15,
-    marginRight: 15,
-    paddingLeft: 15,
-    paddingVertical: 10
-  })
-})
+jest.mock('axios');
 
-it('Returns correct style by unpair Index', () => {
-  let index = 1
-  let receivedStyle = getStyleByIntex(index)
-  expect(receivedStyle).toMatchObject({
-    backgroundColor: '#d0d0d0',
-    marginLeft: 15,
-    marginRight: 15,
-    paddingLeft: 15,
-    paddingVertical: 10
-  })
-})
+Enzyme.configure({ adapter: new Adapter() });
 
-it('Returns correct style for pair action', () => {
-  let index = 0
-  let receivedStyle = getActionStyle(index)
-  expect(receivedStyle).toMatchObject({
-    position: "absolute",
-    color: "white",
-    top: 15,
-    right: 10,
-    fontSize: 20
-  })
-})
+describe('Historique', () => {
+    it('should render without crashing when histo not empty', () => {
+        axios.get.mockResolvedValue({
+            data : [{"id":1,"door":1,"users":1,"date":"2020-12-11T17:21:47.240Z","action":0}]
+        })
+        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
+        wrap = shallow(<Historique route={route}/>)
+        expect(wrap.exists()).toBe(true);
+    })
 
-it('Returns correct style for unpair action', () => {
-  let index = 1
-  let receivedStyle = getActionStyle(index)
-  expect(receivedStyle).toMatchObject({
-    position: "absolute",
-    color: "black",
-    top: 15,
-    right: 10,
-    fontSize: 20
-  })
-})
+    it('should render without crashing when histo empty', () => {
+        
+        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
+        wrap = shallow(<Historique route={route}/>)
+        wrap.setState({isLoading: false, histo: ""})
+        expect(wrap.exists()).toBe(true);
+    })
 
-it('Returns -Fermeture- for pair action', () => {
-  let action = 0
-  let receivedStyle = getActionString(action)
-  expect(receivedStyle).toBe('Fermeture')
-})
+    it('should render without crashing when histo not empty', () => {
+        histo = [{"id":1,"door":1,"users":1,"date":"2020-12-11T17:21:47.240Z","action":0}]
+        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
+        wrap = shallow(<Historique route={route} setState={{isLoading: false, histo: histo}}/>)
+        expect(wrap.exists()).toBe(true);
+    })
 
-it('Returns -Ouverture- for unpair action', () => {
-  let action = 1
-  let receivedStyle = getActionString(action)
-  expect(receivedStyle).toBe('Ouverture')
+    it('should error at axios.get', () => {
+        axios.get.mockRejectedValue({
+            response : {
+                status : 403
+            }
+        })
+        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
+        wrap = shallow(<Historique route={route}/>)
+        setTimeout(function(){ expect(wrap.state().errorVisible).toEqual(true);}, 100);
+    })
+
+    /*it('should press goBack button', () => {
+        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
+        wrap = shallow(<Historique route={route}/>)
+        wrap.find("[testID='goBackHistorique']").simulate('press')
+    })*/
+
+    /*it('should return when histo empty', () => {
+        axios.get.mockResolvedValue({
+            data : [""]
+        })
+        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
+        wrap = shallow(<Historique route={route}/>)
+        wrap.setState({histo: ""})
+        wrap.find("[testID='goBackHistoriqueEmpty']").first().props().onPress()
+    })*/
 })

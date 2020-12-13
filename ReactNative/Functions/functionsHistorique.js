@@ -86,3 +86,19 @@ export function getActionString(action) {
     return "Fermeture"
   }
 }
+
+export function getStyleInfosGauche(index) {
+  let infoImpair = {
+    color: "black",
+    fontSize: 15
+  }
+  let infoPair = {
+    color: "white",
+    fontSize: 15
+  }
+  if(index%2 == 0) {
+    return infoPair
+  } else {
+    return infoImpair
+  }
+}

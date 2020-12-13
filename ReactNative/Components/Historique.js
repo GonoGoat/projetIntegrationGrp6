@@ -3,7 +3,7 @@
 import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, TouchableHighlight, ActivityIndicator } from 'react-native';
 import React from 'react';
 import axios from 'axios';
-import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString} from '../Functions/functionsHistorique'
+import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString, getStyleInfosGauche} from '../Functions/functionsHistorique'
 import {Modal} from "react-native-paper";
 
 export default class Historique extends React.Component {
@@ -35,22 +35,6 @@ export default class Historique extends React.Component {
     .catch(error => {
       this.setState({errorVisible: true})
   })
-  }
-
-  getStyleInfosGauche(index) {
-    let infoImpair = {
-      color: "black",
-      fontSize: 15
-    }
-    let infoPair = {
-      color: "white",
-      fontSize: 15
-    }
-    if(index%2 == 0) {
-      return infoPair
-    } else {
-      return infoImpair
-    }
   }
 
   render() {
@@ -111,8 +95,8 @@ export default class Historique extends React.Component {
               initialNumToRender={10}
               renderItem={({item, index}) =>
                 <View style={styles.itemHisto, getStyleByIntex(index)}>
-                  <Text style={this.getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
-                  <Text style={this.getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>
+                  <Text style={getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
+                  <Text style={getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>
                   <Text style={getActionStyle(index)}>{getActionString(item.action)}</Text>
                 </View>
               }
