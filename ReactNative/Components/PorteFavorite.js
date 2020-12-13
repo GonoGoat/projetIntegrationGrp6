@@ -29,7 +29,7 @@ class PorteFavorite extends React.Component {
   else if(idPorte[0].length > 0) {
         for(let i = 0; i < idPorte[0].length +1; i=i+2) {
        axios
-        .get('http://localhost:8081/doorIdUser/' + idPorte[0][i] + "/" + user)
+        .get('http://82.165.248.136:8081/doorIdUser/' + idPorte[0][i] + "/" + user)
         .catch(function(error) {
           if (error.response) {
             alert("40X Not Found page")
@@ -103,7 +103,7 @@ openDoor(doorId, status){
       console.log(error)
   })
 
-  axios.put('http://localhost:8081/doorStatus',{door})
+  axios.put('http://82.165.248.136:8081/doorStatus',{door})
   .then(res => {
       this.sendHistory(doorId, status)
   })
@@ -127,7 +127,7 @@ sendHistory(doorId, status) {
     action: newStatus
   }
 
-  axios.post('http://localhost:8081/newhistory',{history})
+  axios.post('http://82.165.248.136:8081/newhistory',{history})
     .then(res => {
       this.setState({reload : false})
       this.componentDidMount();
