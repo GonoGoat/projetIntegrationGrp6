@@ -46,7 +46,7 @@ export default class Admin extends React.Component {
     componentDidMount() {
         this.interval = setInterval(() => this.checkUser(), 1000);
     }
-    
+
     componentWillUnmount() {
         clearInterval(this.interval);
     }
@@ -113,6 +113,7 @@ export default class Admin extends React.Component {
                         <Text style={styles.finalText}>Adresse IP de la porte : {this.state.ipAddress}</Text>
                     </View>
                     <Button
+                        testID='returnToMenu'
                         color="#D0D0D0"
                         onPress={() => this.setState({id : ""})}
                         mode="contained"
@@ -131,6 +132,7 @@ export default class Admin extends React.Component {
                     <View style={styles.sub}>
                         <Text style={styles.inputDesc}>Veuillez insérer une <Text style={styles.bold}>adresse ip :</Text></Text>
                         <TextInput
+                            testID='adminIp'
                             placeholder="Veuillez introduire l'adresse IP"
                             onSubmitEditing={() => this.submit()}
                             onChangeText={(text) =>this.setState({ipAddress : text})}
@@ -139,7 +141,7 @@ export default class Admin extends React.Component {
                             selectionColor="#719ADA"
                         />
                     </View>
-                
+
                     <View style={styles.radioContainer}>
                         <Text style={styles.radioDesc}>La porte est-elle <Text style={styles.bold}>ouverte</Text> ou <Text style={styles.bold}>fermée ?</Text></Text>
                         <View style={styles.radioDiv}>
@@ -187,7 +189,7 @@ export default class Admin extends React.Component {
             )
         }
         else if (this.state.user === false) {
-            return (            
+            return (
                 <View style={styles.container}>
                     <Error/>
                 </View>
@@ -200,7 +202,7 @@ export default class Admin extends React.Component {
                     <Modal
                         visible = {this.state.isModalVisible}
                         style={styles.modal}
-                    >   
+                    >
                         <View style={styles.modalContent}>
                             <Text style={styles.modalDesc}>Êtes-vous sûr de vouloir rajouter la porte ayant l'addresse ip :</Text>
                             <Text style={styles.modalDesc,styles.value}>{this.state.ipAddress}</Text>
@@ -208,6 +210,7 @@ export default class Admin extends React.Component {
                             <Text style={styles.modalDesc,styles.value}>{this.state.status === 1 ? "Ouverte" : "Fermée"}</Text>
                             <View style={styles.buttons}>
                                 <Button
+                                    testID='comfirmAddIp'
                                     color="#719ADA"
                                     onPress = {() => this.displayNewDoor()}
                                     contentStyle = {styles.modalButtonIn}
@@ -216,7 +219,7 @@ export default class Admin extends React.Component {
                                     mode="contained"
                                 >
                                     Oui
-                                </Button>    
+                                </Button>
                                 <Button
                                     color="#D0D0D0"
                                     onPress = {() => this.setState({isModalVisible : false})}
@@ -238,9 +241,9 @@ export default class Admin extends React.Component {
                             onPress: () => {
                                 this.setState({isSnackVisible : false})
                             },
-                        }}       
-                    > 
-                        {this.state.message.type === "success" ? 
+                        }}
+                    >
+                        {this.state.message.type === "success" ?
                         <Icon size={30} style={styles.icon} name="md-checkmark"></Icon> :
                         <Icon size={30} style={styles.icon} name="md-close-circle-outline"></Icon>}
                         {this.state.message.message != undefined ? this.state.message.message : ""}
