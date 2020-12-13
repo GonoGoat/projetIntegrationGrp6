@@ -69,7 +69,7 @@ class MonCompte extends React.Component {
                 }
             }
         })
-        axios.delete('http://82.165.248.136:8081/user/' + user)
+        axios.delete('http://localhost:8081/user/' + user)
             .then(res => {
 
             })
@@ -168,9 +168,11 @@ class MonCompte extends React.Component {
                    if (this.state.newInfos[2] == "M" || this.state.newInfos[2] == "F") {
                         if (this.state.mailVerified){
                             let id = this.state.user[0].id;
+                            console.log(id);
                             this.send(this.state.newInfos[1], this.state.newInfos[0], this.state.newInfos[4], this.state.newInfos[2], this.state.newInfos[3], id);
-                            this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4]}]})
+                            this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4], id : this.state.user[0].id }]})
                             this.setState({reussite : "Votre compte a bien été modifié"});
+                            this.setState({error : ""});
                             this.setState({visible1: false});
                         }
                     }
@@ -230,7 +232,7 @@ class MonCompte extends React.Component {
                     <Text style={styles.text}>Téléphone :</Text>
                     <Text style={styles.textUt}>{this.state.user[0].phone}</Text>
                     <View style={{flex: 6}}>
-                        <TouchableHighlight style={styles.editButton}
+                        <TouchableHighlight testID='modifAccount' style={styles.editButton}
                             onPress={() => this.setState({visible1: true})}>
                             <View>
                                 <Text style={{fontSize: 15, color :"#ffffff"}}>Modifier</Text>
@@ -246,20 +248,21 @@ class MonCompte extends React.Component {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 <Text style={{marginBottom: 8, textDecorationLine: 'underline'}}>Modification infos</Text>
-                                <Text style={{fontSize: 15, marginVertical: 8}}>Nom de famille: </Text>
-                                <TextInput ref={input => { this.textInput0 = input }} placeholder={this.state.user[0].lastname} style={styles.input} onChangeText={(text)=> this.state.newInfos[0]= text} defaultValue={this.state.user[0].lastname}/>
-                                <Text style={{fontSize: 15, marginVertical: 8}}>Prénom : </Text>
-                                <TextInput ref={input => { this.textInput1 = input }} placeholder={this.state.user[0].firstname} style={styles.input} onChangeText={(text)=> this.state.newInfos[1]= text} defaultValue={this.state.user[0].firstname}/>
-                                <Text style={{fontSize: 15, marginVertical: 8}}>Sexe : </Text>
-                                <TextInput ref={input => { this.textInput2 = input }} placeholder={this.state.user[0].sexe} style={styles.input} onChangeText={(text)=> this.state.newInfos[2]= text} defaultValue={this.state.user[0].sexe}/>
-                                <Text style={{fontSize: 15, marginVertical: 8}}>Mail : </Text>
-                                <TextInput ref={input => { this.textInput3 = input }} placeholder={this.state.user[0].mail} style={styles.input} onChangeText={(text)=> this.state.newInfos[3]= text} defaultValue={this.state.user[0].mail}/>
-                                <Text style={{fontSize: 15, marginVertical: 8}}>Téléphone : </Text>
-                                <TextInput ref={input => { this.textInput4 = input }} placeholder={this.state.user[0].phone} style={styles.input} onChangeText={(text)=> this.state.newInfos[4]= text} defaultValue={this.state.user[0].phone}/>
+                                <Text style={{fontSize: 15, marginVertical: 8}} >Nom de famille: </Text>
+                                <TextInput testID='modifName' ref={input => { this.textInput0 = input }} placeholder={this.state.user[0].lastname} style={styles.input} onChangeText={(text)=> this.state.newInfos[0]= text} defaultValue={this.state.user[0].lastname}/>
+                                <Text style={{fontSize: 15, marginVertical: 8}} >Prénom : </Text>
+                                <TextInput testID='modifFirstame' ref={input => { this.textInput1 = input }} placeholder={this.state.user[0].firstname} style={styles.input} onChangeText={(text)=> this.state.newInfos[1]= text} defaultValue={this.state.user[0].firstname}/>
+                                <Text style={{fontSize: 15, marginVertical: 8}} >Sexe : </Text>
+                                <TextInput testID='modifGender' ref={input => { this.textInput2 = input }} placeholder={this.state.user[0].sexe} style={styles.input} onChangeText={(text)=> this.state.newInfos[2]= text} defaultValue={this.state.user[0].sexe}/>
+                                <Text style={{fontSize: 15, marginVertical: 8}} >Mail : </Text>
+                                <TextInput testID='modifMail' ref={input => { this.textInput3 = input }} placeholder={this.state.user[0].mail} style={styles.input} onChangeText={(text)=> this.state.newInfos[3]= text} defaultValue={this.state.user[0].mail}/>
+                                <Text style={{fontSize: 15, marginVertical: 8}} >Téléphone : </Text>
+                                <TextInput testID='modifPhone' ref={input => { this.textInput4 = input }} placeholder={this.state.user[0].phone} style={styles.input} onChangeText={(text)=> this.state.newInfos[4]= text} defaultValue={this.state.user[0].phone}/>
                                 <Text style={{color : 'red', marginTop : 8, marginHorizontal: 25, textAlign: "center"}}>{this.state.error}</Text>
                                 <View style={{flex: 6}}>
                                     <TouchableOpacity
                                     style={styles.saveButton}
+                                    testID='confirmModifAccount'
                                     onPress={() => {
                                         this.getMail(this.state.newInfos[3])
                                     }}
@@ -288,7 +291,7 @@ class MonCompte extends React.Component {
                         </View>
                     </Modal>
                     <View style={{flex: 6}}>
-                        <TouchableHighlight style={styles.editPassword}
+                        <TouchableHighlight testID='changePassword' style={styles.editPassword}
                                             onPress={() => this.setState({visible2: true})}>
                             <View>
                                 <Text style={{fontSize: 15}}>Nouveau mot de passe</Text>
@@ -339,7 +342,7 @@ class MonCompte extends React.Component {
                         {this.state.reussite}
                     </Snackbar>
                     <View style={{flex: 6}}>
-                        <TouchableHighlight style={styles.editPassword}
+                        <TouchableHighlight testID='deleteAccount' style={styles.editPassword}
                                             onPress={() => this.setState({visible3: true})}>
                             <View>
                                 <Text style={{fontSize: 15}}>Supprimer mon compte</Text>
@@ -359,6 +362,7 @@ class MonCompte extends React.Component {
                                 <View style={{flex: 6}}>
                                     <TouchableOpacity
                                         style={styles.saveButton}
+                                        testID='confirmDeleteAccount'
                                         onPress={() => {
                                             this.setState({visible3: false})
                                             this.setState({error : ""});

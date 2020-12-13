@@ -64,7 +64,26 @@ describe('login page', () =>{
         cy.get('[data-testid="connexion"]').click();
         cy.get('[data-testid="connexion"]').click();
         cy.get('[data-testid="navigatorDoorList"]').click();
-        cy.get("a[href=\"/Mon%20compte\"]").click();
+        cy.reload();
+        cy.get('[data-testid="modifAccount"]').click();
+        cy.get('[data-testid="modifName"]').click();
+        cy.get('[data-testid="modifName"]').clear();
+        let nvnom = '';
+        let alphabet = ['a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n'];
+        for (let i = 0 ; i < 10 ; i++) {
+            nvnom += alphabet[Math.round(Math.random()*27)]
+        }
+        cy.get('[data-testid="modifName"]').type(nvnom);
+        cy.get('[data-testid="confirmModifAccount"]').click();
+        cy.get('[data-testid="confirmModifAccount"]').click();
+        cy.get('[data-testid="deleteAccount"]').click();
+        cy.get('[data-testid="confirmDeleteAccount"]').click();
+        cy.get('[data-testid="mail"]').type("arle060620@gmail.poland");
+        cy.get('[data-testid="password"]').type("Passw0rd!");
+    });
+
+    it ("should do createDoor-addDoor-ListDoor", () => {
+
     });
 
 });

@@ -111,18 +111,6 @@ class Inscription extends React.Component {
 
     }
 
-    componentDidMount() {
-        AsyncStorage.getItem('user').then((result) => {
-          let user = result;
-          console.log(user);
-          if(user != null) {
-            this.props.navigation.navigate('Afficher la liste de vos portes')
-          }
-          else {
-            this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
-          }
-        })
-      }
 
     render() {
         return (
