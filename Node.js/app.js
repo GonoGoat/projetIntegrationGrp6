@@ -9,6 +9,8 @@ const nodemailer = require("nodemailer");
 const { validationResult} = require('express-validator');
 var Chance = require('chance')
 var chance = new Chance();
+var Analytics = require('analytics-node');
+var analytics = new Analytics('bxdqVC7sHvozNzEePEduAcDECyFj4nuC');
 
 const argon2 = require("argon2");
 
@@ -281,6 +283,12 @@ app.get('/doors', async (req, res) => {
     let sql = 'select * from door ';
     pool.query(sql, (err, rows) => {
       if (err) throw err;
+      analytics.identify({
+        userId: 1,
+        traits: {
+            mail: "Essai@essai.be"
+        }
+      });
       return res.send(rows.rows);
     })
 });
