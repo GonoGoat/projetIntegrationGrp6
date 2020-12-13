@@ -19,7 +19,7 @@ export default class Historique extends React.Component {
   }
 
   getData(doorId) {
-    axios.get(`http://localhost:8081/doorHistory/`+ doorId)
+    axios.get(`http://localhost:8081/doorHistory/door/`+ doorId)
     .then(res => {
       this.setState({histo: res.data})
     })
