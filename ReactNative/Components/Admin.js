@@ -2,7 +2,7 @@ import React from "react"
 import {StyleSheet, View,TextInput} from "react-native"
 import { Modal, Text, Button,ActivityIndicator,RadioButton,Snackbar} from 'react-native-paper';
 import {checkIp,error} from '../Functions/functionsAdmin'
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-ionicons';
 import AsyncStorage from "@react-native-community/async-storage"
 import Error from "./Error"
 
@@ -116,6 +116,7 @@ export default class Admin extends React.Component {
                         color="#D0D0D0"
                         onPress={() => this.setState({id : ""})}
                         mode="contained"
+                        testID="back"
                     >
                         Revenir au menu principal
                     </Button>
@@ -137,6 +138,7 @@ export default class Admin extends React.Component {
                             value={this.state.ipAddress}
                             style={styles.input}
                             selectionColor="#719ADA"
+                            testID='ip'
                         />
                     </View>
                 
@@ -148,6 +150,7 @@ export default class Admin extends React.Component {
                                 status={this.state.status === 1 ? "checked" : "unchecked"}
                                 onPress={() => this.setState({status : 1})}
                                 color="#719ADA"
+                                testID='on'
                             />
                             <Text style={styles.radio}>Ouverte</Text>
                         </View>
@@ -157,6 +160,7 @@ export default class Admin extends React.Component {
                                 status={this.state.status === 0 ? "checked" : "unchecked"}
                                 onPress={() => this.setState({status : 0})}
                                 color="#719ADA"
+                                testID='off'
                             />
                             <Text style={styles.radio}>Fermée</Text>
                         </View>
@@ -169,7 +173,7 @@ export default class Admin extends React.Component {
                         labelStyle= {styles.buttonText}
                         style={styles.button}
                         testID='button-ajout'
-                        >
+                    >
                         Enregistrer
                     </Button>
                 </React.Fragment>
@@ -200,7 +204,7 @@ export default class Admin extends React.Component {
                     <Modal
                         visible = {this.state.isModalVisible}
                         style={styles.modal}
-                    >   
+                    >
                         <View style={styles.modalContent}>
                             <Text style={styles.modalDesc}>Êtes-vous sûr de vouloir rajouter la porte ayant l'addresse ip :</Text>
                             <Text style={styles.modalDesc,styles.value}>{this.state.ipAddress}</Text>
@@ -214,6 +218,7 @@ export default class Admin extends React.Component {
                                     labelStyle= {styles.buttonText}
                                     style={styles.modalButton}
                                     mode="contained"
+                                    testID='yes'
                                 >
                                     Oui
                                 </Button>    
@@ -223,6 +228,7 @@ export default class Admin extends React.Component {
                                     contentStyle = {styles.modalButtonIn}
                                     labelStyle= {styles.buttonText,styles.modalButtonText}
                                     mode="contained"
+                                    testID='no'
                                 >
                                     Non
                                 </Button>
@@ -238,7 +244,8 @@ export default class Admin extends React.Component {
                             onPress: () => {
                                 this.setState({isSnackVisible : false})
                             },
-                        }}       
+                        }}
+                        testID='snack'      
                     > 
                         {this.state.message.type === "success" ? 
                         <Icon size={30} style={styles.icon} name="md-checkmark"></Icon> :
