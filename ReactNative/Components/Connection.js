@@ -22,7 +22,7 @@ class Connection extends React.Component {
   */
   getHistory = async (user) => {
     let doors = [];
-    axios.get('http://localhost:8081/doorHistory/user/'+user.id)
+    axios.get('http://82.165.248.136:8081/doorHistory/user/'+user.id)
       .then(res => {
         console.log(res.data)
         for(let i = 0; i<res.data.length; i ++) {
@@ -49,7 +49,7 @@ class Connection extends React.Component {
   }
 
   async userConnection() {
-    return await axios.post('http://localhost:8081/userConnection/', {user : {
+    return await axios.post('http://82.165.248.136:8081/userConnection/', {user : {
         mail: this.state.mail.toLowerCase(),
         password : this.state.password
       }
