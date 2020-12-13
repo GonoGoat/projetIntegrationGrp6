@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
@@ -30,7 +30,7 @@ class Connection extends React.Component {
         }
         AsyncStorage.setItem('user', user.id);
         AsyncStorage.setItem('doors', doors);
-        AsyncStorage.setItem('isadmin', user.admin)
+        AsyncStorage.setItem('isAdmin', user.admin)
         this.redirect();
       })
   };

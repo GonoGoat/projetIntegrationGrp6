@@ -69,9 +69,9 @@ class MonCompte extends React.Component {
                 }
             }
         })
-        axios.delete('http://localhost:8081/user/' + user)
+        axios.delete('http://localhost:8081/deleteUser/' + user)
             .then(res => {
-
+                console.log(res)
             })
 
             .catch(error => {
@@ -80,10 +80,12 @@ class MonCompte extends React.Component {
         this.clearAllData();
     }
     async getMail(mail){
+        console.log('ici')
         if(mail != this.state.user[0].mail) {
             let user = {
                 mail : mail
-            };
+            }
+            console.log('ici1')
             await axios.post('http://82.165.248.136:8081/userMail/', {user})
             .then(res => {
                 const verif = res.data;
@@ -156,12 +158,14 @@ class MonCompte extends React.Component {
             this.getUser()
         });
         AsyncStorage.getItem('user').then((result) => {
-          this.setState({user : result});
-          console.log(this.state.user);
-          if(this.state.user == null) {
-            this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
-          }
-        })
+            this.setState({user : result});
+            console.log(this.state.user);
+            console.log(result)
+            if(this.state.user == null) {
+              console.log(result)
+              this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
+            }
+          })
     }
 
     componentWillUnmount() {
@@ -177,7 +181,7 @@ class MonCompte extends React.Component {
                             let id = this.state.user[0].id;
                             console.log(id);
                             this.send(this.state.newInfos[1], this.state.newInfos[0], this.state.newInfos[4], this.state.newInfos[2], this.state.newInfos[3], id);
-                            this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4], id : this.state.user[0].id }]})
+                            this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4]}]})
                             this.setState({reussite : "Votre compte a bien été modifié"});
                             this.setState({error : ""});
                             this.setState({visible1: false});
@@ -345,9 +349,6 @@ class MonCompte extends React.Component {
                             </View>
                         </View>
                     </Modal>
-                    <Snackbar visible={this.state.reussite !== ""} onDismiss={() => this.setState({reussite: ""})} style = {this.state.type = styles.success } duration={2000} action={{label: 'Ok', onPress: () => {this.setState({reussite: ""})}}}>
-                        {this.state.reussite}
-                    </Snackbar>
                     <View style={{flex: 6}}>
                         <TouchableHighlight testID='deleteAccount' style={styles.editPassword}
                                             onPress={() => this.setState({visible3: true})}>
@@ -393,6 +394,9 @@ class MonCompte extends React.Component {
                             </View>
                         </View>
                     </Modal>
+                    <Snackbar visible={this.state.reussite !== ""} onDismiss={() => this.setState({reussite: ""})} style = {this.state.type = styles.success } duration={2000} action={{label: 'Ok', onPress: () => {this.setState({reussite: ""})}}}>
+                        {this.state.reussite}
+                    </Snackbar>
                 </View>
             )
         }

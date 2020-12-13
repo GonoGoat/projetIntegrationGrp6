@@ -456,6 +456,15 @@ app.get('/user/:id', async (req, res) => {
     })
 });
 
+app.delete('/deleteUser/:id', async (req, res) => {
+    let userId = req.url.split('/deleteUser/').pop();
+    let values = [parseInt(userId)]
+    let sql = 'DELETE from users where id = $1';
+    pool.query(sql, values, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+})
 
 
 // PORTE FAVORITE 
