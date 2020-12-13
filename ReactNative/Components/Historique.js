@@ -106,6 +106,9 @@ export default class Historique extends React.Component {
               <FlatList
               data={this.state.histo}
               keyExtractor={(item) => item.id.toString()}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={50}   
+              initialNumToRender={10}
               renderItem={({item, index}) => 
                 <View style={styles.itemHisto, getStyleByIntex(index)}>
                   <Text style={this.getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
