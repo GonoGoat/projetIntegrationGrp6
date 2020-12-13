@@ -1,4 +1,3 @@
-//import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {StyleSheet, View,TextInput} from 'react-native';
 import { Button,Text } from 'react-native-paper';
@@ -22,7 +21,6 @@ export default class AjoutPorte_FormVerif extends React.Component {
     }
 
     async isDoorExisting() {
-        let storedUser = await AsyncStorage.getItem('user');
         let valeurs = {
             user : "",
             password : this.state.password,

@@ -1,14 +1,13 @@
 import React from "react"
-import Enzyme,{shallow, mount, render} from 'enzyme';
+import Enzyme,{shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 import AjoutPorte from "../Components/AjoutPorte";
 import AjoutPorte_FormAjout from "../Components/AjoutPorte_FormAjout"
 import AjoutPorte_FormVerif from "../Components/AjoutPorte_FormVerif"
+import Error from "../Components/Error"
 
 import {Snackbar} from 'react-native-paper';
-
-import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from 'axios';
 
@@ -22,26 +21,52 @@ describe ("AjoutPorte Component" , () => {
         expect(wrap.exists()).toBe(true);
     });
 
-    it('should by default render verification form', () => {
+    it('should render error form if no user is selected', () => {
         const wrap = shallow(<AjoutPorte/>)
+        expect(wrap.containsMatchingElement(<Error/>)).toBeTruthy();
+        expect(wrap.containsMatchingElement(<AjoutPorte_FormVerif/>)).toBeFalsy();
+        expect(wrap.containsMatchingElement(<AjoutPorte_FormAjout/>)).toBeFalsy();
+    });
+    it('should by default render the verification form', () => {
+        const wrap = shallow(<AjoutPorte/>)
+        wrap.setState({user : "1"})
+        expect(wrap.containsMatchingElement(<Error/>)).toBeFalsy();
         expect(wrap.containsMatchingElement(<AjoutPorte_FormVerif/>)).toBeTruthy();
         expect(wrap.containsMatchingElement(<AjoutPorte_FormAjout/>)).toBeFalsy();
     });
-
+    
     it('should render adding form if a door is selected', () => {
         const wrap = shallow(<AjoutPorte/>)
+        wrap.setState({user : "1"});
         wrap.setState({door : 1})
         expect(wrap.containsMatchingElement(<AjoutPorte_FormVerif/>)).toBeFalsy();
         expect(wrap.containsMatchingElement(<AjoutPorte_FormAjout/>)).toBeTruthy();
     });
 
-    it("displays the message on change of the message and then disapear",() => {
+    it("displays the message on change of the message",() => {
         const wrap = shallow(<AjoutPorte/>);
-        wrap.setState({message : {type:'fail',message:'test'}})
-        bar = wrap.find(Snackbar).props().visible
+        wrap.setState({user : "1"});
+        wrap.setState({message : {type:'fail',message:'test'},visible : true})
+        bar = wrap.find(Snackbar).first().props().visible
         expect(bar).toEqual(true);
-        setTimeout(function(){ expect(bar).toEqual(false); }, 5000);
     })
+
+    it('should make the error disapear by pressing the error button', () => {
+        const wrap = shallow(<AjoutPorte/>);
+        wrap.setState({user : "1"});
+        wrap.setState({message : {type:'fail',message:'test'},visible : true})
+        wrap.find(Snackbar).first().props().action.onPress();
+        expect(wrap.find(Snackbar).first().prop('visible')).toEqual(false);
+    });
+
+    it('should make the error disapear by dismissing it', () => {
+        const wrap = shallow(<AjoutPorte/>);
+        wrap.setState({user : "1"});
+        wrap.setState({message : {type:'fail',message:'test'},visible : true})
+        wrap.find(Snackbar).first().simulate('dismiss');
+        expect(wrap.find(Snackbar).first().prop('visible')).toEqual(false);
+        
+    });
 });
 
 describe ("AjoutPorte Component - Verification Form" , () => {
@@ -54,18 +79,18 @@ describe ("AjoutPorte Component - Verification Form" , () => {
         const wrap = shallow(<AjoutPorte_FormVerif/>)
         expect(wrap.state('idPorte')).toEqual("");
         expect(wrap.state('password')).toEqual("");
-        expect(wrap.find("[testID='id']").at(0).prop('value')).toEqual("");
-        expect(wrap.find("[testID='pswd']").at(0).prop('value')).toEqual("");
+        expect(wrap.find("[testID='id']").first().prop('value')).toEqual("");
+        expect(wrap.find("[testID='pswd']").first().prop('value')).toEqual("");
     });
 
    it('should update state depending on the user\'s input', () => {
         let id = "1"
         let pswd = "abcdefghij"
         const wrap = shallow(<AjoutPorte_FormVerif/>)
-        wrap.find("[testID='id']").at(0).simulate('changeText', id);
-        wrap.find("[testID='pswd']").at(0).simulate('changeText', pswd);
-        expect(wrap.find("[testID='id']").at(0).prop('value')).toEqual(id);
-        expect(wrap.find("[testID='pswd']").at(0).prop('value')).toEqual(pswd);
+        wrap.find("[testID='id']").first().simulate('changeText', id);
+        wrap.find("[testID='pswd']").first().simulate('changeText', pswd);
+        expect(wrap.find("[testID='id']").first().prop('value')).toEqual(id);
+        expect(wrap.find("[testID='pswd']").first().prop('value')).toEqual(pswd);
     });
 
     it('should submit an API request on press of the button and on pressing ENTER in the Text Inputs', () => {
@@ -77,9 +102,9 @@ describe ("AjoutPorte Component - Verification Form" , () => {
         const wrap = shallow(<AjoutPorte_FormVerif />);
         wrap.setState({idPorte : idPorte,password : password});
         wrap.find("[testID='button-verif']").simulate('press');
-        wrap.find("[testID='id']").at(0).simulate('submitEditing');
-        wrap.find("[testID='pswd']").at(0).simulate('submitEditing');
-        expect(axios.post).toHaveBeenCalledTimes(3);
+        wrap.find("[testID='id']").first().simulate('submitEditing');
+        wrap.find("[testID='pswd']").first().simulate('submitEditing');
+        setTimeout(function() {expect(axios.post).toHaveBeenCalledTimes(3)},5000);
         jest.clearAllMocks();
     });
 
@@ -106,7 +131,7 @@ describe ("AjoutPorte Component - Verification Form" , () => {
         jest.clearAllMocks();
     });
 
-    /*it('should change the message of the parent component if the server answered badly', () => {
+   /* it('should change the message of the parent component if the server answered badly', () => {
         const mockMessage = jest.fn();
         const mockDoor = jest.fn(); 
         let test = [{id : "1",password:"testeteste"},{id:"2",password:"autreteste"}]
@@ -127,10 +152,6 @@ describe ("AjoutPorte Component - Verification Form" , () => {
         jest.clearAllMocks();
     });*/
 
-    //it('should call the props function to edit doorId if the API call was successful', () => {
-        
-    
-    //})
 });
 
 describe ("AjoutPorte Component - Adding form" , () => {
@@ -143,32 +164,32 @@ describe ("AjoutPorte Component - Adding form" , () => {
         const wrap = shallow(<AjoutPorte_FormAjout/>)
         expect(wrap.state('nickname')).toEqual("");
         expect(wrap.state('tag')).toEqual("");
-        expect(wrap.find("[testID='name']").at(0).prop('value')).toEqual("");
-        expect(wrap.find("[testID='tag']").at(0).prop('value')).toEqual("");
+        expect(wrap.find("[testID='name']").first().prop('value')).toEqual("");
+        expect(wrap.find("[testID='tag']").first().prop('value')).toEqual("");
     });
 
     it('should update state depending on the user\'s input', () => {
         let tag = "test"
         let name = "test"
         const wrap = shallow(<AjoutPorte_FormAjout/>)
-        wrap.find("[testID='name']").at(0).simulate('changeText', name);
-        wrap.find("[testID='tag']").at(0).simulate('changeText', tag);
-        expect(wrap.find("[testID='name']").at(0).prop('value')).toEqual(name);
-        expect(wrap.find("[testID='tag']").at(0).prop('value')).toEqual(tag);
+        wrap.find("[testID='name']").first().simulate('changeText', name);
+        wrap.find("[testID='tag']").first().simulate('changeText', tag);
+        expect(wrap.find("[testID='name']").first().prop('value')).toEqual(name);
+        expect(wrap.find("[testID='tag']").first().prop('value')).toEqual(tag);
     });
 
     it('should submit an API request on press of the button and on pressing ENTER in the Text Inputs', () => {
         let name = "test";
         let tag = "test"
         axios.post.mockResolvedValue({
-                data : true
+            data : true
         })
         const wrap = shallow(<AjoutPorte_FormAjout />);
         wrap.setState({nickname : name,tag : tag});
         wrap.find("[testID='button-ajout']").simulate('press');
-        wrap.find("[testID='name']").at(0).simulate('submitEditing');
-        wrap.find("[testID='tag']").at(0).simulate('submitEditing');
-        expect(axios.post).toHaveBeenCalledTimes(3);
+        wrap.find("[testID='name']").first().simulate('submitEditing');
+        wrap.find("[testID='tag']").first().simulate('submitEditing');
+        setTimeout(function() {expect(axios.post).toHaveBeenCalledTimes(3)},5000);
         jest.clearAllMocks();
     });
 
