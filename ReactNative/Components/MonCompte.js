@@ -124,7 +124,7 @@ class MonCompte extends React.Component {
                                     new: this.state.pass.new,
                                     id: this.state.user[0].id
                                 };
-                                axios.put('http://localhost:8081/changePassword/', {user})
+                                axios.put('http://82.165.248.136:8081/changePassword/', {user})
                                     .catch(err => console.log(err));
                                 this.setState({reussite : "Votre mot de passe a bien été modifié"});
                                 this.setState({visible2: false});
@@ -152,6 +152,9 @@ class MonCompte extends React.Component {
     }
 
     componentDidMount() {
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.getUser()
+        });
         AsyncStorage.getItem('user').then((result) => {
           this.setState({user : result});
           console.log(this.state.user);
@@ -159,6 +162,10 @@ class MonCompte extends React.Component {
             this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
           }
         })
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe;
     }
 
     submit(){

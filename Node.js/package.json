@@ -4,6 +4,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "analytics-node": "^3.4.0-beta.3",
     "argon2": "^0.27.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

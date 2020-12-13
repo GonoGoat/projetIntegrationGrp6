@@ -9,6 +9,8 @@ const nodemailer = require("nodemailer");
 const { validationResult} = require('express-validator');
 var Chance = require('chance')
 var chance = new Chance();
+var Analytics = require('analytics-node');
+var analytics = new Analytics('bxdqVC7sHvozNzEePEduAcDECyFj4nuC');
 
 const argon2 = require("argon2");
 
@@ -85,6 +87,9 @@ app.post('/newUsers', async (req, res) => {
             if (err) {
                 return res.send(false);
             } else {
+                analytics.track({
+                    event: 'New user',
+                });
                 return res.send(true);
             }
         });
@@ -217,6 +222,24 @@ app.get('/doors', async (req, res) => {
 *************************************************/
 app.put('/doorStatus', (req, res) => {
     const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id;
+    if(req.body.door.status == 0) {
+        analytics.track({
+            userId: 1,
+            event: 'Door closed',
+            properties: {
+              doorId: req.body.door.id
+            }
+        });
+    }
+    else if(req.body.door.status == 1) {
+        analytics.track({
+            userId: 1,
+            event: 'Door opened',
+            properties: {
+                doorId: req.body.door.id
+            }
+        });
+    }
     pool.query(query, (err) => {
         if (err) return res.send(false);
         return res.send(true);

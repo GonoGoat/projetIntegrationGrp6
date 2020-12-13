@@ -6,7 +6,6 @@ import axios from 'axios';
 import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString} from '../Functions/functionsHistorique'
 import {Modal} from "react-native-paper";
 
-
 export default class Historique extends React.Component {
   constructor(props){
     super(props)
@@ -29,13 +28,29 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://localhost:8081/users/name`)
+    axios.get(`http://82.165.248.136:8081/users/name`)
     .then(res => {
       this.setState({isLoading:false, users: res.data})
     })
     .catch(error => {
       this.setState({errorVisible: true})
   })
+  }
+
+  getStyleInfosGauche(index) {
+    let infoImpair = {
+      color: "black",
+      fontSize: 15
+    }
+    let infoPair = {
+      color: "white",
+      fontSize: 15
+    }
+    if(index%2 == 0) {
+      return infoPair
+    } else {
+      return infoImpair
+    }
   }
 
   render() {
@@ -91,10 +106,13 @@ export default class Historique extends React.Component {
               <FlatList
               data={this.state.histo}
               keyExtractor={(item) => item.id.toString()}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={50}   
+              initialNumToRender={10}
               renderItem={({item, index}) => 
                 <View style={styles.itemHisto, getStyleByIntex(index)}>
-                  <Text style={{fontSize: 15}}>{getNomPrenom(item.users, this.state.users)}</Text>
-                  <Text style={{fontSize: 15}}>{getDateFormat(item.date)}</Text>
+                  <Text style={this.getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
+                  <Text style={this.getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>
                   <Text style={getActionStyle(index)}>{getActionString(item.action)}</Text>
                 </View>
               }

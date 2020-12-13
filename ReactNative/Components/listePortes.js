@@ -49,6 +49,9 @@ class listPortes extends React.Component {
     _loadTag(utili).then(data => {
       if(data) {
       this.setState({
+        listeTag : []
+      }),
+      this.setState({
         listeTag : [ ...this.state.listeTag, ...data.data]
       })}
       else {
@@ -69,20 +72,25 @@ class listPortes extends React.Component {
   _goToDetail = item => {
     this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})
   }
-componentDidMount() {
+  componentDidMount() {
+    AsyncStorage.getItem('user', function(errs, result) {
+      if (!errs) {
+        if (result !== null) {
+          user = result
+        }
+        else {
+          //alert("Connectez-vous avant de pouvoir accéder à vos portes")
+          //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
+        }
+      }
+    })
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this._getTag(user)
+    });
+  }
 
-  AsyncStorage.getItem('user', function(errs, result) {
-    if (!errs) {
-      if (result !== null) {
-        user = result
-      }
-      else {
-        //alert("Connectez-vous avant de pouvoir accéder à vos portes")
-        //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
-      }
-    }
-  })
-  this._getTag(user)
+  componentWillUnmount() {
+    this._unsubscribe;
   }
 
   render() {
