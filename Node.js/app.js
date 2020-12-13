@@ -87,9 +87,10 @@ app.post('/newUsers', async (req, res) => {
             if (err) {
                 return res.send(false);
             } else {
-                /*analytics.track({
-                    event: 'New user',
-                });*/
+                analytics.track({
+                    userId: 1,
+                    event: 'New User'
+                });
                 return res.send(true);
             }
         });
@@ -131,6 +132,10 @@ app.post('/userConnection/', async (req, res) => {
         } else {
         if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
             id = rows.rows[0].id;
+            analytics.track({
+                userId: 1,
+                event: 'New Connection'
+            });
             return res.send({status : true, msg : {id: id, admin: rows.rows[0].isadmin ? true : false }});
         } else {
             return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
@@ -175,6 +180,10 @@ app.put('/resetPassword/', async (req, res) => {
     pool.query(sql, values, (err) => {
         if (err) throw err;
         CreateMail(mail, newPass);
+        analytics.track({
+            userId: 1,
+            event: 'Password Reset'
+        });
         return res.send(true);
     })
 });
@@ -432,6 +441,10 @@ app.put('/changePassword/', async (req, res) => {
         if (err) {
             return res.send(false);
         } else {
+            analytics.track({
+                userId: 1,
+                event: 'Password Changed'
+            });
             return res.send(true);
         }
     })
@@ -511,6 +524,10 @@ app.post('/newdoor', async (req, res) => {
           if (err) {
               return res.send(false);
           }
+          analytics.track({
+            userId: 1,
+            event: 'New Door Installed'
+          });
           return res.send(rows.rows[0]);
       });
 });
