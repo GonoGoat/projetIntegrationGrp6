@@ -20,7 +20,7 @@ function ModificationInfos(props) {
         type : "fail"});
 
 
-    function updateAccess(nickname, tagName, door) {
+    async function updateAccess(nickname, tagName, door) {
 
         await AsyncStorage.getItem('user').then((result) => {
             user = result
