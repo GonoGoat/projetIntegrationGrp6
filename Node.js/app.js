@@ -87,6 +87,9 @@ app.post('/newUsers', async (req, res) => {
             if (err) {
                 return res.send(false);
             } else {
+                analytics.track({
+                    event: 'New user',
+                });
                 return res.send(true);
             }
         });
