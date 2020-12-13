@@ -12,6 +12,7 @@ class MonCompte extends React.Component {
     constructor(props){
         super(props)
         this.state={
+            reload: 0,
             isLoading: true,
             user: [],
             visible1: false,
@@ -151,6 +152,9 @@ class MonCompte extends React.Component {
     }
 
     componentDidMount() {
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.setState({reload: 0})
+        });
         AsyncStorage.getItem('user').then((result) => {
           this.setState({user : result});
           console.log(this.state.user);
@@ -158,6 +162,10 @@ class MonCompte extends React.Component {
             this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
           }
         })
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe;
     }
 
     submit(){

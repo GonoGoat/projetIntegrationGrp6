@@ -41,6 +41,7 @@ class Connection extends React.Component {
   };
 
   redirect () {
+    this.props.navigation.navigate('Mon compte');
     this.props.navigation.navigate('Afficher la liste de vos portes');
     this.setState({errorMessage: ''});
     this.setState({mail : ''});
