@@ -490,6 +490,10 @@ app.delete('/deleteUser/:id', async (req, res) => {
     let sql = 'DELETE from users where id = $1';
     pool.query(sql, values, (err, rows) => {
       if (err) throw err;
+      analytics.track({
+        userId: 1,
+        event: 'Account Deleted'
+      });
       return res.send(rows.rows);
     })
 })
