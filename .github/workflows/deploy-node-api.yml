@@ -7,7 +7,7 @@ on:
 jobs:
 
   build:
-    name: Intégration serveur PROD
+    name: Intégration serveur PROD fin
     runs-on: ubuntu-latest
     steps:
     - name: Update de l'API
