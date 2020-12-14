@@ -11,3 +11,5 @@ RUN cd /home/clone
 RUN git clone https://github.com/GonoGoat/projetIntegrationGrp6
 
 RUN cp /home/clone/projetIntegrationGrp6/Node.js/* /home/projet -r
+
+RUN npm install pm2 -g
