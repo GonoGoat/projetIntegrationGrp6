@@ -143,6 +143,7 @@ async sendHistory (doorId, newStatus) {
     date: new Date,
     action: newStatus
   }
+
   axios.post('http://localhost:8081/newhistory',{history})
     .then(res => {
       this.setState({reload : false})

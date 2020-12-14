@@ -21,7 +21,7 @@ export function getDoorById(doorId, table) {
     }
 }
 
-export function getTitle(status, bool) {
+export function getTitle(status) {
     if(status == 0) {
         return("Ouvrir");
     } 

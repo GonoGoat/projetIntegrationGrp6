@@ -28,7 +28,7 @@ export default class Historique extends React.Component {
   }
 
   getUsers() {
-    axios.get(`http://82.165.248.136:8081/users/name`)
+    axios.get(`http://localhost:8081/users/name`)
     .then(res => {
       this.setState({isLoading:false, users: res.data})
     })
@@ -37,12 +37,23 @@ export default class Historique extends React.Component {
   })
   }
 
+  componentDidMount() {
+    this.getUsers();
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({histo: ""})
+      this.getData(this.props.route.params.doorIdParam);
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe;
+  } 
+
   render() {
     const doorIdParam = this.props.route.params.doorIdParam;
     const nickname = this.props.route.params.nickname;
-    this.getData(doorIdParam);
     if(this.state.isLoading) {
-      this.getUsers();
+      
       return (
         <View style={styles.container}>
           <ActivityIndicator style={{alignContent: "center", justifyContent: "space-around", padding: 10}}/>
@@ -91,9 +102,9 @@ export default class Historique extends React.Component {
               data={this.state.histo}
               keyExtractor={(item) => item.id.toString()}
               maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={50}
-              initialNumToRender={10}
-              renderItem={({item, index}) =>
+              updateCellsBatchingPeriod={999999}   
+              initialNumToRender={20}
+              renderItem={({item, index}) => 
                 <View style={styles.itemHisto, getStyleByIntex(index)}>
                   <Text style={getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
                   <Text style={getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>

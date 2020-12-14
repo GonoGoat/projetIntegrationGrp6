@@ -5,6 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import Historique from '../Components/Historique';
 
 import axios from 'axios';
+import { FlatList } from "react-native";
 
 jest.mock('axios');
 
@@ -17,21 +18,14 @@ describe('Historique', () => {
         })
         let route = {params: {doorIdParam: 1, nickname:"Testing"}}
         wrap = shallow(<Historique route={route}/>)
-        expect(wrap.exists()).toBe(true);
-    })
-
-    it('should render without crashing when histo empty', () => {
-        
-        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
-        wrap = shallow(<Historique route={route}/>)
         wrap.setState({isLoading: false, histo: ""})
         expect(wrap.exists()).toBe(true);
     })
 
-    it('should render without crashing when histo not empty', () => {
-        histo = [{"id":1,"door":1,"users":1,"date":"2020-12-11T17:21:47.240Z","action":0}]
+    it('should render without crashing when histo empty', () => {
         let route = {params: {doorIdParam: 1, nickname:"Testing"}}
-        wrap = shallow(<Historique route={route} setState={{isLoading: false, histo: histo}}/>)
+        wrap = shallow(<Historique route={route}/>)
+        wrap.setState({isLoading: false, histo: ""})
         expect(wrap.exists()).toBe(true);
     })
 
@@ -45,20 +39,4 @@ describe('Historique', () => {
         wrap = shallow(<Historique route={route}/>)
         setTimeout(function(){ expect(wrap.state().errorVisible).toEqual(true);}, 100);
     })
-
-    /*it('should press goBack button', () => {
-        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
-        wrap = shallow(<Historique route={route}/>)
-        wrap.find("[testID='goBackHistorique']").simulate('press')
-    })*/
-
-    /*it('should return when histo empty', () => {
-        axios.get.mockResolvedValue({
-            data : [""]
-        })
-        let route = {params: {doorIdParam: 1, nickname:"Testing"}}
-        wrap = shallow(<Historique route={route}/>)
-        wrap.setState({histo: ""})
-        wrap.find("[testID='goBackHistoriqueEmpty']").first().props().onPress()
-    })*/
 })
