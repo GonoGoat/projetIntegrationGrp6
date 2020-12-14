@@ -18,11 +18,11 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo docker exec projet_node pm2 stop /home/projet/app.js
+          sudo docker exec api pm2 stop /home/projet/app.js
           cd /home/git/projetIntegrationGrp6
           sudo git pull
           sudo cp /home/git/projetIntegrationGrp6/Node.js/* /home/projet/node/ -r
-          sudo docker exec projet_node npm install
-          sudo docker exec projet_node pm2 start /home/projet/app.js -f
+          sudo docker exec api npm install
+          sudo docker exec api pm2 start /home/projet/app.js -f
           
           

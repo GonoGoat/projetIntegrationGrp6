@@ -4,10 +4,10 @@ services :
 
     postgresqldb :
         build : "./Postgre"
-        container_name:  postgresqldb
+        container_name: pg
         tty : true
         volumes:
-         - /home/projet/sql:/var/lib/postgresql/data
+         - /home/projet/postgresdata:/var/lib/postgresql/data
         ports :
          - "5432:5432"
         environment:
@@ -20,7 +20,7 @@ services :
 
     node:
         build : "./Node"
-        container_name: node
+        container_name: api
         tty: true
         volumes:
          - /home/projet/node/:/home/projet
