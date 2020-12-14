@@ -2,6 +2,8 @@ FROM node:latest
 
 WORKDIR /home/projet
 
+RUN apt-get update
+
 RUN mkdir /home/clone
 
 RUN cd /home/clone

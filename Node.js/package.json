@@ -9,14 +9,21 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "chance": "^1.1.7",
+    "component-type": "^1.2.1",
     "connect-pg-simple": "^6.2.1",
     "cors": "^2.8.5",
+    "crypt": "^0.0.2",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "express-validator": "^6.6.1",
+    "is-buffer": "^2.0.5",
+    "is-retry-allowed": "^1.2.0",
+    "join-component": "^1.1.0",
+    "lodash.isstring": "^4.0.1",
     "nodemailer": "^6.4.16",
     "password": "^0.1.1",
     "pg": "^8.4.1",
-    "pm2": "^4.5.0"
+    "pm2": "^4.5.0",
+    "remove-trailing-slash": "^0.1.1"
   }
 }
