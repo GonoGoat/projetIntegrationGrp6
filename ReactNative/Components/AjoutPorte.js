@@ -4,7 +4,7 @@ import AjoutPorte_FormVerif from "./AjoutPorte_FormVerif"
 import AjoutPorte_FormAjout from "./AjoutPorte_FormAjout"
 import {Snackbar,Button,Text} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-ionicons';
 import Error from "./Error"
 
 export default class AjoutPorte extends React.Component {
@@ -51,6 +51,7 @@ export default class AjoutPorte extends React.Component {
           <AjoutPorte_FormVerif
             setMessage = {(msg) => this.setState({message : msg,visible : true})}
             setDoor={(id) => this.setState({door : id})}
+            testID='verif'
           />
         </View>
       );
@@ -62,6 +63,7 @@ export default class AjoutPorte extends React.Component {
             setMessage = {(msg) => this.setState({message : msg,visible : true})}
             doorId={this.state.door}
             setDoor={(id) => this.setState({door : id})}
+            testID='ajout'
           />
         </View>
       )
