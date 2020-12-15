@@ -168,7 +168,7 @@ class MonCompte extends React.Component {
                         if (this.state.mailVerified){
                             let id = this.state.user[0].id;
                             this.send(this.state.newInfos[1], this.state.newInfos[0], this.state.newInfos[4], this.state.newInfos[2], this.state.newInfos[3], id);
-                            this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4]}]})
+                            this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4], id : this.state.user[0].id}]})
                             this.setState({reussite : "Votre compte a bien été modifié"});
                             this.setState({error : ""});
                             this.setState({visible1: false});
