@@ -416,8 +416,8 @@ app.patch('/access/update', (req, res) => {
 *************************************************/
 app.post('/verifyPassword/', async (req, res) => {
     let values = [req.body.user.id];
-    let sql = 'select password from users where id = ' + req.body.user.id;
-    pool.query(sql,async (err, rows) => {
+    let sql = 'select password from users where id = $1';
+    pool.query(sql, values, async (err, rows) => {
         if (err) throw err;
         if (await argon2.verify(rows.rows[0].password, req.body.user.old)) {
             id = rows.rows[0].id;
