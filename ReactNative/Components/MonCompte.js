@@ -39,7 +39,7 @@ class MonCompte extends React.Component {
                 }
             }
         })
-        axios.get('http://82.165.248.136:8081/user/' + user)
+        axios.get('http://localhost:8081/user/' + user)
             .then(res => {
                 this.setState({
                     isLoading:false,
@@ -86,7 +86,7 @@ class MonCompte extends React.Component {
                 mail : mail
             }
             console.log('ici1')
-            await axios.post('http://82.165.248.136:8081/userMail/', {user})
+            await axios.post('http://localhost:8081/userMail/', {user})
             .then(res => {
                 const verif = res.data;
                 if (verif) {
@@ -116,7 +116,7 @@ class MonCompte extends React.Component {
             id: this.state.user[0].id
         };
         if (this.state.pass.old !== undefined && this.state.pass.old !== "" && this.state.pass.new !== undefined && this.state.pass.new !== "" && this.state.pass.confirm !== undefined && this.state.pass.confirm !== "") {
-            axios.post('http://82.165.248.136:8081/verifyPassword/', {user})
+            axios.post('http://localhost:8081/verifyPassword/', {user})
                 .then(res => {
                     const verif = res.data;
                     if (verif) {
@@ -126,7 +126,7 @@ class MonCompte extends React.Component {
                                     new: this.state.pass.new,
                                     id: this.state.user[0].id
                                 };
-                                axios.put('http://82.165.248.136:8081/changePassword/', {user})
+                                axios.put('http://localhost:8081/changePassword/', {user})
                                     .catch(err => console.log(err));
                                 this.setState({reussite : "Votre mot de passe a bien été modifié"});
                                 this.setState({visible2: false});
@@ -213,7 +213,7 @@ class MonCompte extends React.Component {
         };
 
 
-        axios.put('http://82.165.248.136:8081/modifUsers',{user})
+        axios.put('http://localhost:8081/modifUsers',{user})
             .then(() => {
                 this.setState({modifBoolean : true})
             })

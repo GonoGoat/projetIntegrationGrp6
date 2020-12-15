@@ -24,10 +24,6 @@ export default class PorteDetail extends React.Component {
     }
   }
 
-  setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });
-  }
-
   send(doorId, status) {
     if(status == 2 || status== 3) {
       alert('Erreur')
@@ -73,7 +69,7 @@ export default class PorteDetail extends React.Component {
           id : doorId,
           status : newStatus
         };
-        axios.put('http://localhost:8081/doorStatus',{door})
+        axios.put('http://82.165.248.136:8081/doorStatus',{door})
         .then(res => {
           this.sendHistory(doorId, newStatus)
         })
