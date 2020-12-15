@@ -53,9 +53,6 @@ export default class PorteDetail extends React.Component {
           .then(res => {
             this.setState({isLoading: false});
           })
-          .catch(error => {
-          console.log(error)
-      })
       })
       .catch(err => {
           this.setState({isLoading: false})

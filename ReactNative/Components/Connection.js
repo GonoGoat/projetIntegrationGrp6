@@ -24,8 +24,6 @@ class Connection extends React.Component {
     let doors = [];
     axios.get('http://82.165.248.136:8081/doorHistory/user/'+user.id)
       .then(res => {
-        console.log(res.data);
-        console.log(user.id);
         for(let i = 0; i<res.data.length; i ++) {
           doors[i] = parseInt(res.data[i].door);
         }
@@ -66,7 +64,6 @@ class Connection extends React.Component {
         }
         else {
           this.setState({errorMessage:''});
-          console.log(response.data)
           this.getHistory(response.data.msg);
         }});
     } else {
