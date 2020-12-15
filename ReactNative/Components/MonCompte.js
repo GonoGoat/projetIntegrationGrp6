@@ -159,8 +159,6 @@ class MonCompte extends React.Component {
         });
         AsyncStorage.getItem('user').then((result) => {
             this.setState({user : result});
-            console.log(this.state.user);
-            console.log(result)
             if(this.state.user == null) {
               console.log(result)
               this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})

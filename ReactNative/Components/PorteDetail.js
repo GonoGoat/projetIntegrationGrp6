@@ -122,7 +122,7 @@ export default class PorteDetail extends React.Component {
   }
 
   getDoors() {
-    
+
     axios.get(`http://localhost:8081/doors`)
     .then(res => {
       this.setState({isLoading: false, doors: res.data});
@@ -197,6 +197,7 @@ export default class PorteDetail extends React.Component {
 
               <Icon.Button
               name="ios-trash"
+              testID = 'dlt'
               size={30}
               onPress={() => this.setState({modalVisible: true})}
               style={{backgroundColor: "#719ada",}}>
@@ -224,6 +225,7 @@ export default class PorteDetail extends React.Component {
           <View style={{flex: 6}}>
             <TouchableHighlight disabled={this.state.isChangingStatus}
             style={styles.openButton}
+                                testID='openDoor'
               onPress={() => this.send(doorIdParam, dataDoor[1])}
               >
               <View>
@@ -232,6 +234,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.histoButton}
+                                testID='openHisto'
               onPress={() =>
               this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
               <View>
@@ -264,6 +267,7 @@ export default class PorteDetail extends React.Component {
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={styles.okModal}
+              testID = 'confirmDlt'
               onPress={() => this.deleteAccess(this.state.userLogged, doorIdParam)}>
               <View>
                 <Text style={{fontSize: 20}}>Oui</Text>

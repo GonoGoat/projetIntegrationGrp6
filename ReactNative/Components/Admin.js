@@ -46,7 +46,7 @@ export default class Admin extends React.Component {
     componentDidMount() {
         this.interval = setInterval(() => this.checkUser(), 1000);
     }
-    
+
     componentWillUnmount() {
         clearInterval(this.interval);
     }
@@ -107,12 +107,13 @@ export default class Admin extends React.Component {
                         <Text style={styles.finalDesc}>Voici les identifiants :</Text>
                     </View>
                     <View style={styles.final}>
-                        <Text style={styles.finalText}>Numéro identifiant : {this.state.id}</Text>
-                        <Text style={styles.finalText}>Mot de passe : {this.state.password}</Text>
+                        <Text style={styles.finalText} testID='idNewDoor'>Numéro identifiant : {this.state.id}</Text>
+                        <Text style={styles.finalText} testID='passNewDoor'>Mot de passe : {this.state.password}</Text>
                         <Text style={styles.finalText}>Etat de la porte : {this.state.status === 1 ? "Ouverte" : "Fermée"}</Text>
                         <Text style={styles.finalText}>Adresse IP de la porte : {this.state.ipAddress}</Text>
                     </View>
                     <Button
+                        testID='returnToMenu'
                         color="#D0D0D0"
                         onPress={() => this.setState({id : ""})}
                         mode="contained"
@@ -132,6 +133,7 @@ export default class Admin extends React.Component {
                     <View style={styles.sub}>
                         <Text style={styles.inputDesc}>Veuillez insérer une <Text style={styles.bold}>adresse ip :</Text></Text>
                         <TextInput
+                            testID='adminIp'
                             placeholder="Veuillez introduire l'adresse IP"
                             onSubmitEditing={() => this.submit()}
                             onChangeText={(text) =>this.setState({ipAddress : text})}
@@ -141,7 +143,7 @@ export default class Admin extends React.Component {
                             testID='ip'
                         />
                     </View>
-                
+
                     <View style={styles.radioContainer}>
                         <Text style={styles.radioDesc}>La porte est-elle <Text style={styles.bold}>ouverte</Text> ou <Text style={styles.bold}>fermée ?</Text></Text>
                         <View style={styles.radioDiv}>
@@ -191,7 +193,7 @@ export default class Admin extends React.Component {
             )
         }
         else if (this.state.user === false) {
-            return (            
+            return (
                 <View style={styles.container}>
                     <Error/>
                 </View>
@@ -212,6 +214,7 @@ export default class Admin extends React.Component {
                             <Text style={styles.modalDesc,styles.value}>{this.state.status === 1 ? "Ouverte" : "Fermée"}</Text>
                             <View style={styles.buttons}>
                                 <Button
+                                    testID='comfirmAddIp'
                                     color="#719ADA"
                                     onPress = {() => this.displayNewDoor()}
                                     contentStyle = {styles.modalButtonIn}
@@ -221,7 +224,7 @@ export default class Admin extends React.Component {
                                     testID='yes'
                                 >
                                     Oui
-                                </Button>    
+                                </Button>
                                 <Button
                                     color="#D0D0D0"
                                     onPress = {() => this.setState({isModalVisible : false})}
