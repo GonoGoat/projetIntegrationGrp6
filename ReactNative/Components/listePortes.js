@@ -106,6 +106,7 @@ class listPortes extends React.Component {
             renderItem={({item}) =>
             <TouchableHighlight
             style={styles.tagList}
+            testID={item.tag }
             onPress={() => this._getDoor(item, user)}
             >
               <Text style={styles.tagText}>{item.tag}</Text>
@@ -118,6 +119,7 @@ class listPortes extends React.Component {
             data={this.state.listeDoor}
             keyExtractor={(item) => item.door.toString()}
             renderItem={({item}) => <TouchableHighlight
+                testID={item.nickname }
             onPress={() => this._goToDetail(item)}>
             <Text style={styles.doorText}>{item.nickname}</Text>
             </TouchableHighlight>}

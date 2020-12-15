@@ -73,7 +73,7 @@ function CreateMail(mail, password) {
 
 /*************************************************
 *		Inscription : POST - create new USER
-*************************************************/	
+*************************************************/
 app.post('/newUsers', async (req, res) => {
     let hash;
     const errors = validationResult(req);
@@ -87,9 +87,9 @@ app.post('/newUsers', async (req, res) => {
             if (err) {
                 return res.send(false);
             } else {
-                analytics.track({
+                /*analytics.track({
                     event: 'New user',
-                });
+                });*/
                 return res.send(true);
             }
         });
@@ -140,7 +140,7 @@ app.post('/userConnection/', async (req, res) => {
 
 /*************************************************
 		Connection : GET - HISTORY most used doors by user id
-*************************************************/	
+*************************************************/
 app.get('/doorHistory/user/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/doorHistory/user/').pop());
     let values = [userId];
@@ -196,7 +196,7 @@ app.post('/newhistory', (req, res) => {
 
 /*************************************************
  *      Porte Detail : POST - ACCESS remove
- *************************************************/	
+ *************************************************/
  app.post('/access/delete', async (req, res) => {
     let values = [req.body.params.door, req.body.params.users]
     let query = 'DELETE FROM access where door= $1 AND users=$2';
@@ -338,7 +338,7 @@ app.get('/users/name', async (req, res) => {
 
 
 
-// LISTE PORTES 
+// LISTE PORTES
 
 /*************************************************
 *       Liste Portes : GET - ACCESS door with tag and user
@@ -351,7 +351,7 @@ app.get('/doorTagUser/:tag/:users', async (req, res) => {
       return res.send(rows.rows);
     })
 });
-  
+
 /*************************************************
 *       Liste Portes : GET - ACCESS door tags by user
 *************************************************/
@@ -363,7 +363,7 @@ app.get('/userTag/:userId', async (req, res) => {
             return res.send(rows.rows);
       })
 });
-  
+
 
 
 // MODIFICATION PORTE
@@ -407,7 +407,7 @@ app.post('/verifyPassword/', async (req, res) => {
 
 /*************************************************
 *       Mon Compte : PUT - USER update password
-*************************************************/	
+*************************************************/
 app.put('/changePassword/', async (req, res) => {
     let hash;
     let sql = 'UPDATE users SET password = $1 where id = $2'  ;
@@ -467,7 +467,7 @@ app.delete('/deleteUser/:id', async (req, res) => {
 })
 
 
-// PORTE FAVORITE 
+// PORTE FAVORITE
 
 /*************************************************
 *       Porte Favorite : GET - DOOR/ACCESS door information from user access by door id and user

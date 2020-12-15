@@ -64,7 +64,7 @@ export default class AjoutPorte_FormAjout extends React.Component {
             value={this.state.nickname}
           />
           <Text style={styles.label}>Tag</Text>
-          <TextInput 
+          <TextInput
             style={styles.input}
             placeholder="Créez un tag"
             onSubmitEditing={() => this.submit()}
@@ -80,7 +80,7 @@ export default class AjoutPorte_FormAjout extends React.Component {
           contentStyle = {styles.buttonIn}
           labelStyle= {styles.buttonText}
           style={styles.button}
-          testID='button-ajout'
+          testID='button-ajout2'
         >
           Rechercher la porte
         </Button>

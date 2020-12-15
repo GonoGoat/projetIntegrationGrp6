@@ -107,8 +107,8 @@ export default class Admin extends React.Component {
                         <Text style={styles.finalDesc}>Voici les identifiants :</Text>
                     </View>
                     <View style={styles.final}>
-                        <Text style={styles.finalText}>Numéro identifiant : {this.state.id}</Text>
-                        <Text style={styles.finalText}>Mot de passe : {this.state.password}</Text>
+                        <Text style={styles.finalText} testID='idNewDoor'>Numéro identifiant : {this.state.id}</Text>
+                        <Text style={styles.finalText} testID='passNewDoor'>Mot de passe : {this.state.password}</Text>
                         <Text style={styles.finalText}>Etat de la porte : {this.state.status === 1 ? "Ouverte" : "Fermée"}</Text>
                         <Text style={styles.finalText}>Adresse IP de la porte : {this.state.ipAddress}</Text>
                     </View>

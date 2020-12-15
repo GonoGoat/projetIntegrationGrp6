@@ -9,7 +9,7 @@ import {Modal} from "react-native-paper";
 export default class Historique extends React.Component {
   constructor(props){
     super(props)
-    this.state={ 
+    this.state={
       isLoading: true,
       histo: [],
       users: [],
@@ -66,7 +66,7 @@ export default class Historique extends React.Component {
             <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Erreur !</Text>
             <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>Une erreur s'est produite. Essayez de redémarrez l'application. Si l'erreur persiste, veuillez réessayer plus tard.</Text>
             <TouchableHighlight style={styles.okErrorModal}
-              onPress={() => this.props.navigation.goBack()             
+              onPress={() => this.props.navigation.goBack()
               }>
               <View>
                 <Text style={{fontSize: 15}}>Ok</Text>
@@ -88,7 +88,7 @@ export default class Historique extends React.Component {
             </SafeAreaView>
             <View style={{flex: 1}}>
               <TouchableOpacity style={styles.backButton}
-                onPress={() => 
+                onPress={() =>
                   this.props.navigation.goBack()}>
                 <Text>Retour</Text>
               </TouchableOpacity>
@@ -107,9 +107,9 @@ export default class Historique extends React.Component {
               data={this.state.histo}
               keyExtractor={(item) => item.id.toString()}
               maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={50}   
+              updateCellsBatchingPeriod={50}
               initialNumToRender={10}
-              renderItem={({item, index}) => 
+              renderItem={({item, index}) =>
                 <View style={styles.itemHisto, getStyleByIntex(index)}>
                   <Text style={this.getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
                   <Text style={this.getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>
@@ -120,7 +120,8 @@ export default class Historique extends React.Component {
             </SafeAreaView>
               <View style={{flex: 1}}>
                 <TouchableOpacity style={styles.backButton}
-                  onPress={() => 
+                  testID='backingHisto'
+                  onPress={() =>
                     this.props.navigation.goBack()}>
                   <Text>Retour</Text>
                 </TouchableOpacity>
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textDecorationLine: 'underline',
     top: 20,
-    
+
   },
 
   backButton: {
