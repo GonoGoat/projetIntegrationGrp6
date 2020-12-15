@@ -30,9 +30,6 @@ class MotDePasseOublie extends React.Component {
                     this._changePassword(this.mail);
                     this.mailInput.clear();
                 }
-                if (!this.state.mailVerif){
-                    console.log('Ce mail n\'existe pas');
-                }
                 this.setState({mailVerif : false});
         })
     }
@@ -56,7 +53,7 @@ class MotDePasseOublie extends React.Component {
                 <TouchableOpacity testID='submit' style={styles.envoi} onPress={()=> this._verifyMail(this.mail)}>
                     <Text style={styles.textEnvoi}>Envoyer</Text>
                 </TouchableOpacity>
-                <Snackbar visible={this.state.error != ""} onDismiss={() => this.setState({type : this.state.type})} style = {this.state.type === "success" ? styles.success : styles.fail}duration={2000} >
+                <Snackbar visible={this.state.error != ""} onDismiss={() => this.setState({error : ""})} style = {this.state.type === "success" ? styles.success : styles.fail}duration={2000} >
                     {this.state.error}
                 </Snackbar>
                 <TouchableOpacity testID='back' style={styles.text} onPress={() => nav.goBack()}>

@@ -106,9 +106,6 @@ class Inscription extends React.Component {
 
 
         axios.post('http://82.165.248.136:8081/newUsers',{user})
-
-            .catch(err => console.log(err));
-
     }
 
 
