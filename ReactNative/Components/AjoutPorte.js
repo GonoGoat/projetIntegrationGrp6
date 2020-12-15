@@ -41,7 +41,7 @@ export default class AjoutPorte extends React.Component {
     if (this.state.user === false) {
       return (
         <View style={styles.container}>
-          <Error/>
+          <Error deconnexion={() => {this.props.navigation.navigate("Deconnexion")}}/>
         </View>
       )
     }

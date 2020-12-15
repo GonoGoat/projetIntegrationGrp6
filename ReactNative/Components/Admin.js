@@ -35,6 +35,9 @@ export default class Admin extends React.Component {
                 if (JSON.parse(res) === true) {
                     AsyncStorage.getItem('user').then(res => this.setState({user : parseInt(res),isLoading : ""}));
                 }
+                else {
+                    this.setState({user : false,isLoading : ""});
+                }
             })
           }
           else {
@@ -195,7 +198,7 @@ export default class Admin extends React.Component {
         else if (this.state.user === false) {
             return (
                 <View style={styles.container}>
-                    <Error/>
+                    <Error deconnexion={() => {this.props.navigation.navigate("Deconnexion")}}/>
                 </View>
             )
         }
