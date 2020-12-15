@@ -9,7 +9,7 @@ import Error from "./Error"
 const axios = require('axios')
 
 async function newDoor(valeurs) {
-    return axios.post("http://localhost:8081/newDoor", valeurs);
+    return axios.post("http://82.165.248.136:8081/newDoor", valeurs);
 }
 
 export default class Admin extends React.Component {

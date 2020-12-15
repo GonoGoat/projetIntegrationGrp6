@@ -13,6 +13,7 @@ services :
         environment:
          POSTGRES_PASSWORD: zGwgD4he37QvL7YY
          POSTGRES_USER : postgresArnaud
+         POSTGRES_DB : projetIntegration
         networks:
             integration6:
                 ipv4_address: 172.18.0.2

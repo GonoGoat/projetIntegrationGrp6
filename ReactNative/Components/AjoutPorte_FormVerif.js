@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 const axios = require('axios')
 
 export async function getCheck(valeurs) {
-    return axios.post("http://localhost:8081/door/check", valeurs);
+    return axios.post("http://82.165.248.136:8081/door/check", valeurs);
 }
 
 export default class AjoutPorte_FormVerif extends React.Component {
