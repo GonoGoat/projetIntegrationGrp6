@@ -88,7 +88,7 @@ export default class PorteDetail extends React.Component {
       date: new Date,
       action: newStatus
     }
-    await axios.post('http://localhost:8081/newhistory',{history})
+    await axios.post('http://82.165.248.136:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -105,7 +105,7 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://localhost:8081/access/delete',{params})
+    axios.post('http://82.165.248.136:8081/access/delete',{params})
       .then(res => {
         this.props.navigation.navigate("ListePortes")
         this.setState({isLoading: false})

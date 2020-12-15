@@ -1,7 +1,7 @@
 import 'react-native';
 import { getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString, getStyleInfosGauche} from '../Functions/functionsHistorique'
 
-describe("Date format", () => {
+/*describe("Date format", () => {
   it('Send correct date format', () => {
     let sendedDate = '2000-01-01T00:00:00.000Z';
     let receivedDate = getDateFormat(sendedDate)
@@ -99,4 +99,4 @@ it('Returns -InfoPair- for pair action', () => {
     fontSize: 15
   })
 })
-
+*/
