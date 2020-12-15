@@ -104,7 +104,7 @@ openDoor(doorId, status){
   axios.put('http://82.165.248.136:8081/doorStatus',{door})
   .then(res => {
       this.componentDidMount()
-      axios.get(`http://192.168.1.60/` + textStatus + '/' + res.data[0].password)
+      axios.get(`http://192.168.1.19/` + textStatus + '/' + res.data[0].password)
       .then(res => {
       })
       .catch(error => {
