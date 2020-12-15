@@ -1,9 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
@@ -12,7 +7,7 @@ on:
 jobs:
 
   build:
-    name: Intégration serveur PROD
+    name: Intégration serveur PROD fin
     runs-on: ubuntu-latest
     steps:
     - name: Update de l'API
@@ -20,14 +15,14 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
+        key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo docker exec node pm2 stop /home/app.js
-          cd /usr/src/projet
+          sudo docker exec api pm2 stop /home/projet/app.js
+          cd /home/git/projetIntegrationGrp6
           sudo git pull
-          sudo cp /usr/src/projet/Node.js/* /var/porte/ -r
-          sudo docker exec node npm install
-          sudo docker exec node pm2 start /home/app.js -f
+          sudo cp /home/git/projetIntegrationGrp6/Node.js/* /home/projet/node/ -r
+          sudo docker exec api npm install
+          sudo docker exec api pm2 start /home/projet/app.js -f
           
           

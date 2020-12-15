@@ -1,20 +1,18 @@
 const express = require('express');
 const pg = require('pg');
-const session = require('express-session');
 const bodyParser = require('body-parser');
-const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
 const nodemailer = require("nodemailer");
-var password = require('password');                 //générateur de mdp
-const { check, validationResult} = require('express-validator');
+const { validationResult} = require('express-validator');
 var Chance = require('chance')
 var chance = new Chance();
+var Analytics = require('analytics-node');
+var analytics = new Analytics('bxdqVC7sHvozNzEePEduAcDECyFj4nuC');
 
 const argon2 = require("argon2");
-const saltRounds = 5;
 
 const app = express();
 
@@ -25,7 +23,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-//connection avec la db
+
+/* CONNEXION BASE DE DONNÉES */
 let pool = new pg.Pool({
   user: 'postgresArnaud',
   host: '82.165.248.136',
@@ -40,6 +39,8 @@ pool.connect(function (err) {
   }
 });
 
+
+/* ENVOI DES MAILS DE CHANGEMENT DE MOT DE PASSE */
 var transporter = nodemailer.createTransport({              //Compte gmail envoyant les mails
     host: 'smtp.gmail.com',
     auth: {
@@ -55,20 +56,107 @@ var mailOptions = {                         //Création du mail
     text: 'That was easy!'
 };
 
-
 function CreateMail(mail, password) {
     mailOptions.to = mail;
     mailOptions.text = "Votre mot de passe temporaire est : \"" + password + "\". Veuillez le changer le plus rapidement possible dans l'onglet prévu à cet effet de la section 'profil'";
 
     transporter.sendMail(mailOptions, function(error, info){  // Envoie le mail
         if (error) {
-            console.log(error);
+            throw error;
         }
     });
 }
 
+/*                         ROUTES BACKEND                          */
+
+// INSCRIPTION
+
 /*************************************************
- *     RESET PASSWORD
+*		Inscription : POST - create new USER
+*************************************************/
+app.post('/newUsers', async (req, res) => {
+    let hash;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.send(errors);
+    } else {
+        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password, isadmin) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+        hash = await argon2.hash(req.body.user.password, {type: argon2.argon2id});
+        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash, false];
+        pool.query(query, valeur, (err) => {
+            if (err) {
+                return res.send(false);
+            } else {
+                /*analytics.track({
+                    event: 'New user',
+                });*/
+                return res.send(true);
+            }
+        });
+    }
+    ;
+});
+
+/*************************************************
+*       Inscription, MotDePasseOublie, Mon Compte : GET - USER with mail
+ *************************************************/
+ app.post('/userMail', async (req, res) => {
+    let mail = [req.body.user.mail];
+    let sql = 'select mail from users where mail = $1' ;
+    pool.query(sql, mail,(err, rows) => {
+        if (err) throw err;
+        if (rows.rows.length === 0 ){
+            res.send(true)
+        }else {
+            res.send(false)
+        }
+    })
+});
+
+
+
+// CONNECTION
+
+/*************************************************
+		Connection : POST - USER find with mail and password
+*************************************************/
+app.post('/userConnection/', async (req, res) => {
+    let sql = "select id, password, isadmin FROM users WHERE mail = $1";
+    let values = [req.body.user.mail];
+    let id = false;
+    pool.query(sql, values, async (error, rows) => {
+        if (error) res.send({status : false, msg : error});
+        if (rows.rowCount < 1) {
+            return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
+        } else {
+        if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
+            id = rows.rows[0].id;
+            return res.send({status : true, msg : {id: id, admin: rows.rows[0].isadmin ? true : false }});
+        } else {
+            return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
+        }
+    }})
+});
+
+/*************************************************
+		Connection : GET - HISTORY most used doors by user id
+*************************************************/
+app.get('/doorHistory/user/:userId', async (req, res) => {
+    let userId = parseInt(req.url.split('/doorHistory/user/').pop());
+    let values = [userId];
+    let sql = 'SELECT history.door FROM history WHERE history.users = $1 GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
+    pool.query(sql, values, (err, rows) => {
+        if (err) return res.send(err);
+        return res.send(rows.rows);
+    })
+});
+
+
+
+// MOT DE PASSE OUBLIE
+
+/*************************************************
+ *     MotDePasseOublie : PUT - USER reset password
  *************************************************/
 app.put('/resetPassword/', async (req, res) => {
     let hash;
@@ -84,155 +172,43 @@ app.put('/resetPassword/', async (req, res) => {
     hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
     let values = [hash, mail];
-    pool.query(sql, values, (err, rows) => {
+    pool.query(sql, values, (err) => {
         if (err) throw err;
         CreateMail(mail, newPass);
-        return res.send(rows.rows);
-    })
-
-});
-/*************************************************
-		GET USER
-*************************************************/	// TEST OK
-
-app.get('/user/:id', async (req, res) => {
-  let userId = req.url.split('/user/').pop();
-  let sql = 'select * from users where id = ' + parseInt(userId);
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
-});
-
-/*************************************************
-		GET NAME OF ALL USERS
-*************************************************/
-
-app.get('/users/name', async (req, res) => {
-    let sql = 'select id, firstname, lastname from users';
-    pool.query(sql, (err, rows) => {
-      if (err) throw err;
-      return res.send(rows.rows);
-    })
-  });
-
-/*************************************************
-		GET USER WITH MAIL AND PASSWORD
-*************************************************/	// TEST OK
-
-app.post('/userConnection/', async (req, res) => {
-    let sql = "select id, password FROM users WHERE mail = '"+req.body.user.mail+"'";
-    let id = false;
-    pool.query(sql, async (error, rows) => {
-        if (error) console.log('ok'), res.send({status : false, msg : error});
-        if (rows.rowCount != 1) {
-            return res.send({status : false, msg : "Cette adresse mail n'existe pas encore. Veuillez vous inscrire."});
-        } else {
-        if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
-            id = rows.rows[0].id;
-            return res.send({status : true, msg : id});
-        } else {
-            return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
-        }
-    }
-    })
-  });
-
-/*************************************************
-		POST USER
-*************************************************/	// TEST OK
-
-app.post('/newUsers', async (req, res) => {  //argon2 test
-    let hash;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.send(errors);
-    } else {
-        const query = "INSERT INTO users (firstname, lastname, phone, sexe, mail, password, isadmin) VALUES ($1,$2,$3,$4,$5,$6,$7)";
-        hash = await argon2.hash(req.body.user.password, {type: argon2.argon2id});
-        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail, hash, false];
-        pool.query(query, valeur, (err) => {
-            if (err) {
-                console.log(err);
-                return res.send(false);
-            } else {
-                return res.send(true);
-            }
-        });
-    }
-    ;
-});
-
-
-/*************************************************
- GET USER BY MAIL
- *************************************************/	// TEST OK
-
- app.post('/userMail/', async (req, res) => {
-    let mail = [req.body.user.mail];
-    let sql = 'select mail from users where mail = $1' ;
-    pool.query(sql, mail,(err, rows) => {
-        if (err) throw err;
-        if (rows.rows.length === 0 ){
-            res.send(true)
-        }else {
-            res.send(false)
-        }
-    })
-});
-
-
-
-/*************************************************
- PATCH ACCESS
- *************************************************/	// TEST OK
-
-app.patch('/access/update', (req, res) => {
-    let door = parseInt(req.body.door);
-    let tag = req.body.tagName;
-    let nickname = req.body.nickname;
-
-    let query = `UPDATE access SET nickname = ${nickname}, tag =${tag} WHERE door = ${door}`;
-    pool.query(query, (err) => {
-        if (err) return res.send(err);
         return res.send(true);
-    });
+    })
 });
 
 
+// PORTE DETAIL
+
 /*************************************************
- DELETE ACCESS
- *************************************************/	// TEST OK
+*       Porte Detail : POST - HISTORY add new history
+*************************************************/
+app.post('/newhistory', (req, res) => {
+    let values = [req.body.history.door, req.body.history.users, req.body.history.date, req.body.history.action]
+    const query = "INSERT INTO history (door, users, date, action) VALUES ($1, $2, $3,$4)";
+    pool.query(query, values, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    })
+});
 
+/*************************************************
+ *      Porte Detail : POST - ACCESS remove
+ *************************************************/
  app.post('/access/delete', async (req, res) => {
-    let door = req.body.params.door;
-    let user = req.body.params.users;
-
-    let query = 'DELETE FROM access where door=' + door + ' AND users=' + user;
-    await pool.query(query, (err) => {
+    let values = [req.body.params.door, req.body.params.users]
+    let query = 'DELETE FROM access where door= $1 AND users=$2';
+    await pool.query(query,values, (err) => {
         if (err) return res.send(false);
         return res.send(true);
     });
 });
 
-
-
 /*************************************************
- GET ALL TAG
- *************************************************/	// TEST OK
-
- app.get('/listTag', async (req, res) => {
-  let sql = 'select DISTINCT tag from access';
-  pool.query(sql, (err, rows) => {
-      if (err) throw err;
-      return res.send(rows.rows);
-  })
-});
-
-/*************************************************
-		GET ALL DOORS
-*************************************************/	// TEST OK
-
+*       Porte Detail : GET - DOOR all doors
+*************************************************/
 app.get('/doors', async (req, res) => {
     let sql = 'select * from door ';
     pool.query(sql, (err, rows) => {
@@ -241,24 +217,41 @@ app.get('/doors', async (req, res) => {
     })
 });
 
-
 /*************************************************
-		GET DOOR by ID
-*************************************************/	// TEST OK
-
-app.get('/door/:id', async (req, res) => {
-  let doorId = parseInt(req.url.split('/door/').pop());
-  let sql = 'select * from door where id = ' + doorId;
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
+*       Porte Detail : PUT - DOOR change status
+*************************************************/
+app.put('/doorStatus', (req, res) => {
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id;
+    if(req.body.door.status == 0) {
+        analytics.track({
+            userId: 1,
+            event: 'Door closed',
+            properties: {
+              doorId: req.body.door.id
+            }
+        });
+    }
+    else if(req.body.door.status == 1) {
+        analytics.track({
+            userId: 1,
+            event: 'Door opened',
+            properties: {
+                doorId: req.body.door.id
+            }
+        });
+    }
+    pool.query(query, (err) => {
+        if (err) return res.send(false);
+        return res.send(true);
+    });
 });
 
-/*************************************************
-		POST DOOR - Check si mot de passe OK pour cette porte
-*************************************************/
 
+// AJOUT PORTE
+
+/*************************************************
+*       Ajout Porte : POST - DOOR verify door password
+*************************************************/
 app.post('/door/check', async (req, res) => {
     let id = parseInt(req.body.id);
     let user = parseInt(req.body.user);
@@ -295,46 +288,29 @@ app.post('/door/check', async (req, res) => {
             return res.status(404).send("Invalid id");
         })
     })
-  });
+});
 
 /*************************************************
-		UPDATE DOOR STATUS
+*       Ajout Porte : POST - ACCESS add new access
 *************************************************/
-
-app.put('/doorStatus', (req, res) => {
-    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id + ' returning password';
-    pool.query(query, (err, rows) => {
-        if (err) return res.send(false);
-        return res.send(rows.rows);
+app.post('/newaccess', async (req, res) => {
+    let sql = 'SELECT * FROM access WHERE '
+    const query = 'INSERT INTO access (door, users, tag, nickname) VALUES ($1,$2,$3,$4)';
+    let values = [parseInt(req.body.door),parseInt(req.body.user),req.body.tag, req.body.nickname];
+    pool.query(query, values, (err) => {
+        if (err) {
+            if (err.code === "23505") {
+                return res.status(403).send(false)
+            }
+            return res.send(false);
+        }
+	    return res.send(true);
     });
 });
 
-/*************************************************
-		GET DOOR BY TAG
-*************************************************/	//TEST OK
 
-app.get('/doorTag/:tag', async (req, res) => {
-  let doorTag = req.url.split('/doorTag/').pop();
-  let sql = 'select * from access where tag = \'' + doorTag + '\'';
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
-});
 
-/*************************************************
-		GET DOORS BY SPECIFIC TAG & USER
-*************************************************/	//TEST OK
-
-app.get('/doorTagUser/:tag/:users', async (req, res) => {
-  let tag=req.params.tag;
-  let users=req.params.users;
-  let sql = 'select * from access where tag = \'' + tag + '\' AND users = \'' + users + '\'';
-  pool.query(sql, (err, rows) => {
-    if (err) throw err;
-    return res.send(rows.rows);
-  })
-});
+// HISTORIQUE
 
 /*************************************************
 		GET DOOR BY SPECIFIC DOOR ID & USER
@@ -358,85 +334,192 @@ app.get('/userTag/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/userTag/').pop());
     let sql = 'select distinct tag from access where users = ' + userId ;
     pool.query(sql, (err, rows) => {
-        if (err) throw err;
-
-        return res.send(rows.rows);
-    })
-});
-
-/*************************************************
-		GET DOOR HISTORY BY DOOR ID
-*************************************************/	//TEST OK
-
-app.get('/doorHistory/:doorId', async (req, res) => {
-    let doorId = parseInt(req.url.split('/doorHistory/').pop());
-    let sql = 'select * from history where door = ' + doorId + ' order by date desc' ;
-    pool.query(sql, (err, rows) => {
+		Historique : GET - HISTORY by door id
+*************************************************/
+app.get('/doorHistory/door/:doorId', async (req, res) => {
+    let doorId = parseInt(req.url.split('/doorHistory/door/').pop());
+    let values = [doorId]
+    let sql = 'select * from history where door = $1 order by date desc';
+    pool.query(sql, values, (err, rows) => {
         if (err) throw err;
         return res.send(rows.rows);
     })
 });
 
 /*************************************************
-		GET DOOR HISTORY BY USER ID
-*************************************************/	//TEST OK
-
-app.get('/doorHistory/user/:userId', async (req, res) => {
-    let userId = parseInt(req.url.split('/doorHistory/user/').pop());
-    let sql = 'SELECT history.door FROM history WHERE history.users = '+userId+' GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
+		Historique : GET - USER all names
+*************************************************/
+app.get('/users/name', async (req, res) => {
+    let sql = 'select id, firstname, lastname from users';
     pool.query(sql, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+});
+
+
+
+// LISTE PORTES
+
+/*************************************************
+*       Liste Portes : GET - ACCESS door with tag and user
+*************************************************/
+app.get('/doorTagUser/:tag/:users', async (req, res) => {
+    let values = [req.params.tag, req.params.users]
+    let sql = 'select * from access where tag = $1 AND users = $2';
+    pool.query(sql, values, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+});
+
+/*************************************************
+*       Liste Portes : GET - ACCESS door tags by user
+*************************************************/
+app.get('/userTag/:userId', async (req, res) => {
+    let values = [parseInt(req.url.split('/userTag/').pop())];
+    let sql = 'select distinct tag from access where users = $1';
+    pool.query(sql, values, (err, rows) => {
+        if (err) throw err;
+            return res.send(rows.rows);
+      })
+});
+
+
+
+// MODIFICATION PORTE
+
+/*************************************************
+*      Modification Porte : PATCH - ACCESS change tag and/or name
+*************************************************/
+app.patch('/access/update', (req, res) => {
+    let user = parseInt(req.body.users);
+    let door = parseInt(req.body.door);
+    let tag = req.body.tagName;
+    let nickname = req.body.nickname;
+    let query = `UPDATE access SET nickname = '${nickname}', tag ='${tag}' WHERE access.door = ${door} AND access.users = ${user}`;
+    pool.query(query, (err) => {
         if (err) return res.send(err);
-        return res.send(rows.rows);
+        return res.send(true);
+    });
+});
+
+
+
+// MON COMPTE (+ '/userMail' in Inscription)
+
+/*************************************************
+*     Mon Compte : POST - USER check password
+*************************************************/
+app.post('/verifyPassword/', async (req, res) => {
+    let values = [req.body.user.id];
+    let sql = 'select password from users where id = $1';
+    pool.query(sql,async (err, rows) => {
+        if (err) throw err;
+        if (await argon2.verify(rows.rows[0].password, req.body.user.old)) {
+            id = rows.rows[0].id;
+            res.send(true);
+        }
+        else {
+            res.send(false)
+        }
     })
 });
 
 /*************************************************
-		POST ACCESS
-*************************************************/	//TEST OK
-
-app.post('/newaccess', async (req, res) => {
-    const query = 'INSERT INTO access (door, users, tag, nickname) VALUES ($1,$2,$3,$4)';
-    let values = [parseInt(req.body.door),parseInt(req.body.user),req.body.tag, req.body.nickname];
-    pool.query(query, values, (err) => {
+*       Mon Compte : PUT - USER update password
+*************************************************/
+app.put('/changePassword/', async (req, res) => {
+    let hash;
+    let sql = 'UPDATE users SET password = $1 where id = $2'  ;
+    hash = await argon2.hash(req.body.user.new, {type: argon2.argon2id});
+    let valeur = [hash, req.body.user.id];
+    pool.query(sql,valeur,async (err, rows) => {
         if (err) {
-            if (err.code === "23505") {
-                return res.status(403).send(false)
+            return res.send(false);
+        } else {
+            return res.send(true);
+        }
+    })
+});
+
+/*************************************************
+*      Mon Compte : PUT - USER change information
+*************************************************/
+app.put('/modifUsers', async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.send(errors);
+    } else {
+        const query = "UPDATE users SET firstname = $1 , lastname = $2 , phone = $3 , sexe = $4 , mail = $5 where id ="  + req.body.user.id;
+        let valeur = [req.body.user.firstname, req.body.user.name, req.body.user.phone, req.body.user.gender, req.body.user.mail];
+        pool.query(query, valeur, (err) => {
+            if (err) {
+                return res.send(false);
+            } else {
+                return res.send(true);
             }
-            return res.send(false);
-        }
-	    return res.send(true);
-    });
+        });
+    }
+    ;
 });
 
 /*************************************************
-		POST DOOR
-*************************************************/	//TEST OK
+*      Mon Compte : GET - USER all information with ID
+*************************************************/
+app.get('/user/:id', async (req, res) => {
+    let userId = req.url.split('/user/').pop();
+    let values = [parseInt(userId)]
+    let sql = 'select * from users where id = $1';
+    pool.query(sql, values, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+});
 
+app.delete('/deleteUser/:id', async (req, res) => {
+    let userId = req.url.split('/deleteUser/').pop();
+    let values = [parseInt(userId)]
+    let sql = 'DELETE from users where id = $1';
+    pool.query(sql, values, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+})
+
+
+// PORTE FAVORITE
+
+/*************************************************
+*       Porte Favorite : GET - DOOR/ACCESS door information from user access by door id and user
+*************************************************/
+app.get('/doorIdUser/:door/:users', async (req, res) => {
+    let values = [req.params.door, req.params.users];
+    let sql = 'select door.id,access.nickname,access.tag,door.status,door.adresseip from access inner join door on access.door =  door.id where door.id = $1 and access.users = $2';
+    pool.query(sql, values, (err, rows) => {
+      if (err) throw err;
+      return res.send(rows.rows);
+    })
+});
+
+
+
+// ADMIN
+
+/*************************************************
+*       Admin : POST - DOOR add new door
+*************************************************/
 app.post('/newdoor', async (req, res) => {
-  let pswd = chance.string({length : 10, alpha : true});
-  const query = "insert into door (password, status, adresseip) values ($1,$2,$3) returning *";
-  let valeur = [pswd, parseInt(req.body.status),req.body.ipAdress];
-  pool.query(query, valeur,(err, rows) => {
-        if (err) {
-            return res.send(false);
-        }
-        return res.send(rows.rows[0]);
-    });
+    let pswd = chance.string({length : 10, alpha : true});
+    const query = "insert into door (password, status, adresseip) values ($1,$2,$3) returning *";
+    let valeur = [pswd, parseInt(req.body.status),req.body.ipAddress];
+    pool.query(query, valeur,(err, rows) => {
+          if (err) {
+              return res.send(false);
+          }
+          return res.send(rows.rows[0]);
+      });
 });
-
-
-/*************************************************
-		POST HISTORY
-*************************************************/	//TEST OK
-
-app.post('/newhistory', (req, res) => {
-  const query = "INSERT INTO history (door, users, date, action) VALUES (" + req.body.history.door + "," + req.body.history.users + ",'" +  req.body.history.date + "'," +  req.body.history.action + ")";
-  pool.query(query, (err) => {
-	if (err) return res.send(false);
-    return res.send(true);
-  })
-});
-
 
 app.all("/*", function(req, res, next){
   res.header('Access-Control-Allow-Origin', '*');
@@ -457,6 +540,3 @@ var httpsServer = https.createServer(httpsOptions, app);
 
 httpServer.listen(8081);
 httpsServer.listen(4433);
-
-
-//app.listen(8081);

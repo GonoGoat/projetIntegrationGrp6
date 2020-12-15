@@ -4,8 +4,6 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import Inscription from "../Components/Inscription";
 
-import {Snackbar} from 'react-native-paper';
-
 import axios from 'axios';
 
 jest.mock('axios');
@@ -43,8 +41,8 @@ describe ("Inscription Component" , () => {
         let gender = 'M';
         const wrap = shallow(<Inscription/>)
         const instance = wrap.instance();
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -72,8 +70,8 @@ describe ("Inscription Component" , () => {
             data : true
         });
         wrap.setState({mailVerified : true})
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -104,8 +102,8 @@ describe ("Inscription Component" , () => {
         axios.post.mockResolvedValue({
             data : true
         });
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -120,7 +118,7 @@ describe ("Inscription Component" , () => {
     it("shouldn't submit an API request on press of the button because the mail already exist", () => {
         let mail = "this@is.mail";
         const wrap = shallow(<Inscription/>);
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
         const instance = wrap.instance();
         axios.post.mockResolvedValue({
             data : false
@@ -143,8 +141,8 @@ describe ("Inscription Component" , () => {
         const wrap = shallow(<Inscription navigation={navigation}/>)
         const instance = wrap.instance();
         wrap.setState({mailVerified : true})
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -165,8 +163,8 @@ describe ("Inscription Component" , () => {
         const wrap = shallow(<Inscription navigation={navigation}/>)
         const instance = wrap.instance();
         wrap.setState({mailVerified : true})
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -187,8 +185,8 @@ describe ("Inscription Component" , () => {
         const wrap = shallow(<Inscription navigation={navigation}/>)
         const instance = wrap.instance();
         wrap.setState({mailVerified : true})
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -209,8 +207,8 @@ describe ("Inscription Component" , () => {
         const wrap = shallow(<Inscription navigation={navigation}/>)
         const instance = wrap.instance();
         wrap.setState({mailVerified : true})
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -231,8 +229,8 @@ describe ("Inscription Component" , () => {
         const wrap = shallow(<Inscription navigation={navigation}/>)
         const instance = wrap.instance();
         wrap.setState({mailVerified : true})
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -254,8 +252,8 @@ describe ("Inscription Component" , () => {
         const wrap = shallow(<Inscription navigation={navigation}/>)
         const instance = wrap.instance();
         wrap.setState({mailVerified : true})
-        wrap.find("[testID='mail']").at(0).simulate('changeText', mail);
-        wrap.find("[testID='password']").at(0).simulate('changeText', pwd);
+        wrap.find("[testID='mailInscript']").at(0).simulate('changeText', mail);
+        wrap.find("[testID='passwordInscript']").at(0).simulate('changeText', pwd);
         wrap.find("[testID='confirm']").at(0).simulate('changeText', confirm);
         wrap.find("[testID='phone']").at(0).simulate('changeText', phone);
         wrap.find("[testID='name']").at(0).simulate('changeText', name);
@@ -270,5 +268,24 @@ describe ("Inscription Component" , () => {
         const wrap = shallow(<Inscription navigation={navigation}/>);
         const instance = wrap.instance();
         wrap.find("[testID='redirect']").simulate('press');
+    });
+
+    it("catch error on _send ", () => {
+        axios.post.mockRejectedValue({
+            response : {
+                status : 403
+            }
+        });
+        let mail = "this@is.mail";
+        let pwd = "Passw0rd!";
+        let phone = "0476090014";
+        let name = 'Pastori';
+        let firstname = 'Lucas';
+        let gender = 'M';
+        const wrap = shallow(<Inscription navigation={navigation}/>)
+        const instance = wrap.instance();
+        instance._send(firstname, name, phone, gender, mail, pwd)
+        expect(axios.post).toHaveBeenCalledTimes(1);
+        jest.clearAllMocks();
     });
 });

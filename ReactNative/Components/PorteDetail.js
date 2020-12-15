@@ -40,7 +40,7 @@ export default class PorteDetail extends React.Component {
       if(status == 0) {
         newStatus = 2
         textStatus = "ouverture";
-      } else { 
+      } else {
         newStatus = 3
         textStatus = "fermeture";
       }
@@ -49,7 +49,7 @@ export default class PorteDetail extends React.Component {
         status : newStatus
       };
 
-      axios.put('http://localhost:8081/doorStatus',{door})
+      axios.put('http://82.165.248.136:8081/doorStatus',{door})
       .then(res => {
           axios.get(`http://192.168.1.60/` + textStatus + '/' + res.data[0].password)
           .then(res => {
@@ -66,7 +66,7 @@ export default class PorteDetail extends React.Component {
         this.setState({isChangingStatus: false})
         if(status == 0) {
           newStatus = 1
-        } else { 
+        } else {
           newStatus = 0
         }
         door = {
@@ -122,7 +122,7 @@ export default class PorteDetail extends React.Component {
   }
 
   getDoors() {
-    
+
     axios.get(`http://localhost:8081/doors`)
     .then(res => {
       this.setState({isLoading: false, doors: res.data});
@@ -164,7 +164,7 @@ export default class PorteDetail extends React.Component {
             <Text style={{fontSize: 11, textAlign: "center", color:"red"}}>Erreur !</Text>
             <Text style={{fontSize: 8, textAlign: "center", marginBottom: 60}}>{this.state.errorMessage}</Text>
             <TouchableHighlight style={styles.okErrorModal}
-              onPress={() => this.props.navigation.goBack()             
+              onPress={() => this.props.navigation.goBack()
               }>
               <View>
                 <Text style={{fontSize: 15}}>Ok</Text>
@@ -181,7 +181,7 @@ export default class PorteDetail extends React.Component {
       const nickname = this.props.route.params.nickname;
       const tagName = this.props.route.params.tagName;
       let modalVisible = this.state.modalVisible;
-      
+
       var dataDoor =  getDoorById(doorIdParam, this.state.doors);
       var statusString = getStatus(dataDoor[1]);
       if(dataDoor[1] == 2 || dataDoor[1] == 3) {
@@ -194,10 +194,11 @@ export default class PorteDetail extends React.Component {
         <View style={styles.container}>
           <View style={{flex: 1}}>
             <View style={styles.delete}>
-              
-              <Icon.Button  
-              name="ios-trash" 
-              size={30} 
+
+              <Icon.Button
+              name="ios-trash"
+              testID = 'dlt'
+              size={30}
               onPress={() => this.setState({modalVisible: true})}
               style={{backgroundColor: "#719ada",}}>
                 Delete door
@@ -224,6 +225,7 @@ export default class PorteDetail extends React.Component {
           <View style={{flex: 6}}>
             <TouchableHighlight disabled={this.state.isChangingStatus}
             style={styles.openButton}
+                                testID='openDoor'
               onPress={() => this.send(doorIdParam, dataDoor[1])}
               >
               <View>
@@ -232,7 +234,8 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.histoButton}
-              onPress={() => 
+                                testID='openHisto'
+              onPress={() =>
               this.props.navigation.navigate("Historique", {doorIdParam: doorIdParam, nickname: nickname})}>
               <View>
                 <Text style={{fontSize: 20}}>Historique</Text>
@@ -264,6 +267,7 @@ export default class PorteDetail extends React.Component {
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={styles.okModal}
+              testID = 'confirmDlt'
               onPress={() => this.deleteAccess(this.state.userLogged, doorIdParam)}>
               <View>
                 <Text style={{fontSize: 20}}>Oui</Text>
@@ -271,7 +275,7 @@ export default class PorteDetail extends React.Component {
             </TouchableHighlight>
           </Modal>
         </View>
-        
+
       );
     }
   }

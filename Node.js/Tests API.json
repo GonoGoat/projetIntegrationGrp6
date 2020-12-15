@@ -1,0 +1,752 @@
+{
+	"info": {
+		"_postman_id": "a901f8f5-93b0-40b9-b886-6ad03b6048fe",
+		"name": "Projet d'intégration 6",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Inscription",
+			"item": [
+				{
+					"name": "POST - User by Mail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a@a.a\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/userMail",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userMail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - User inscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"firstname\": \"Post\",\r\n        \"name\": \"Man\",\r\n        \"phone\": \"0477777777\",\r\n        \"gender\": \"M\",\r\n        \"mail\": \"postman@test.test\",\r\n        \"password\": \"Passw0rd!\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/newUsers",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"newUsers"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Connection",
+			"item": [
+				{
+					"name": "POST - User connection",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a@a.a\",\r\n        \"password\": \"Passw0rd!\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/userConnection",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userConnection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - History by User id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/doorHistory/user/:userId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"doorHistory",
+								"user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "18"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Change password",
+			"item": [
+				{
+					"name": "PUT - User reset password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a@a.a\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/resetPassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resetPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - User by Mail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a@a.a\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/userMail",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userMail"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PorteDetail",
+			"item": [
+				{
+					"name": "PUT - Update Door Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"door\": {\r\n        \"status\": \"0\",\r\n        \"id\": \"1\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/doorStatus",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"doorStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - New history",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"history\":{\r\n        \"door\": \"1\",\r\n        \"users\": \"18\",\r\n        \"date\": \"2020-11-25T20:10:18.181Z\",\r\n        \"action\": \"0\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/newhistory",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"newhistory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Remove access",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"params\": {\r\n        \"door\": \"1\",\r\n        \"users\": \"18\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/access/delete",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"access",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Door get all doors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/doors",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"doors"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Ajout Porte",
+			"item": [
+				{
+					"name": "POST - Verify Door Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\",\r\n    \"user\": \"18\",\r\n    \"password\": \"cPpTNICYou\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/door/check",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"door",
+								"check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Add access",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"door\": \"37\",\r\n    \"user\": \"9\",\r\n    \"tag\": \"FirstTag\",\r\n    \"nickname\": \"SecondDoor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/newaccess",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"newaccess"
+							]
+						},
+						"description": "params: doorid, userid, tag, nickname"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Historique",
+			"item": [
+				{
+					"name": "GET - History by Door id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/doorHistory/door/:doorId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"doorHistory",
+								"door",
+								":doorId"
+							],
+							"variable": [
+								{
+									"key": "doorId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Users names",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/users/name",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users",
+								"name"
+							]
+						},
+						"description": "get id, name, lastname of all users"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Liste Portes",
+			"item": [
+				{
+					"name": "GET - Door by Tag & User ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/doorTagUser/:tag/:users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"doorTagUser",
+								":tag",
+								":users"
+							],
+							"variable": [
+								{
+									"description": "Nom du tag",
+									"key": "tag",
+									"value": "Tag"
+								},
+								{
+									"description": "Identifiant de l'utilisateur",
+									"key": "users",
+									"value": "18"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Door Tag by User ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/userTag/:userId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"userTag",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "18"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Modification porte",
+			"item": [
+				{
+					"name": "PATCH - Update door tag and name",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"users\": \"18\",\r\n    \"door\": \"38\",\r\n    \"tagName\": \"Tag\",\r\n    \"nickname\": \"Door\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/access/update",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"access",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Mon compte",
+			"item": [
+				{
+					"name": "GET - User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/user/:id",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "18",
+									"description": "Identifiant de l'utilisateur"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - User by Mail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/userMail",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userMail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - User check password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"id\": \"18\",\r\n        \"old\": \"Passw0rd!\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/verifyPassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"verifyPassword"
+							]
+						},
+						"description": "Argon2id"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - User change password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"new\": \"Passw0rd!\",\r\n        \"id\": \"18\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/changePassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"changePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT - User Update data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"id\": \"114\",\r\n        \"firstname\": \"Post\",\r\n        \"name\": \"Woman\",\r\n        \"phone\": \"0477777777\",\r\n        \"gender\": \"M\",\r\n        \"mail\": \"postman@test.test\",\r\n        \"password\": \"Passw0rd!\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/modifUsers",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"modifUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL - User : Delete user by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/deleteUser/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"deleteUser",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Porte Favorite",
+			"item": [
+				{
+					"name": "GET - Door by door ID & User ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/doorIdUser/:door/:users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"doorIdUser",
+								":door",
+								":users"
+							],
+							"variable": [
+								{
+									"key": "door",
+									"value": "1",
+									"description": "Door id"
+								},
+								{
+									"key": "users",
+									"value": "18",
+									"description": "User id"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "POST - Add door",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"1\",\r\n    \"ipAdress\": \"192.169.0.27\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/newdoor",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"newdoor"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f47f1e2f-ce9e-4f42-9e1e-98fe4171b00c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9a44b6e4-11c3-4e69-8289-d7fd3a56c2cd",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "9654f710-afb8-4639-9f99-757dd216dfb5",
+			"key": "URL",
+			"value": "82.165.248.136:8081"
+		},
+		{
+			"id": "7b209cfa-443b-4da2-a3d6-8c54e5525a42",
+			"key": "local",
+			"value": "localhost:8081"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

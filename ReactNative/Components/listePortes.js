@@ -43,10 +43,13 @@ class listPortes extends React.Component {
       erreur : false
     }
   }
-  
+
   _getTag(utili) {
     _loadTag(utili).then(data => {
       if(data) {
+      this.setState({
+        listeTag : []
+      }),
       this.setState({
         listeTag : [ ...this.state.listeTag, ...data.data]
       })}
@@ -70,54 +73,63 @@ class listPortes extends React.Component {
     })
   }
   _goToDetail = item => {
-    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
+    this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})
   }
-componentDidMount() {
-  AsyncStorage.getItem('user', function(errs, result) {
-    if (!errs) {
-      if (result !== null) {
-        user = result
+  componentDidMount() {
+    AsyncStorage.getItem('user', function(errs, result) {
+      if (!errs) {
+        if (result !== null) {
+          user = result
+        }
+        else {
+          //alert("Connectez-vous avant de pouvoir accéder à vos portes")
+          //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
+        }
       }
-      else {
-        //alert("Connectez-vous avant de pouvoir accéder à vos portes")        
-        //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
-      }
-    }
-  })
-  this._getTag(user)
-}
+    })
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this._getTag(user)
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe;
+  }
+
   render() {
     if ((this.state.erreur === false) && (this.state.listeTag.length !== 0)) {
   return (
     <View style={styles.MainContainer}>
         <Text style={styles.Title}>Mes tags :</Text>
         <View style={styles.tagContainer}>
-            <FlatList        
+            <FlatList
             data={this.state.listeTag}
             keyExtractor={(item) => item}
             numColumns={3}
             renderItem={({item}) =>
             <TouchableHighlight
-            style={styles.tagList}  
+            style={styles.tagList}
+            testID={item.tag }
             onPress={() => this._getDoor(item, user)}
             >
-              <Text style={styles.tagText}>{item.tag}</Text>  
+              <Text style={styles.tagText}>{item.tag}</Text>
             </TouchableHighlight>}
             />
-          </View>          
+          </View>
           <Text style={styles.Title}>Mes portes :</Text>
           <ScrollView style={styles.contentDoor}>
             <FlatList
             data={this.state.listeDoor}
             keyExtractor={(item) => item.door.toString()}
             renderItem={({item}) => <TouchableHighlight
+                testID={item.nickname }
             onPress={() => this._goToDetail(item)}>
             <Text style={styles.doorText}>{item.nickname}</Text>
             </TouchableHighlight>}
             />
-            </ScrollView>      
+            </ScrollView>
     </View>
-  )} //Si la personne ne possède pas encore de tag 
+  )} //Si la personne ne possède pas encore de tag
   else if ((this.state.erreur === false) && (this.state.listeTag.length == 0)) {
     return (
     <View>
@@ -127,8 +139,8 @@ componentDidMount() {
             <TouchableHighlight style={styles.addDoor} onPress={() => this.props.navigation.navigate('Ajouter une porte')}>
               <Text style={styles.tagText}  >Commencez par ajouter une porte</Text>
               </TouchableHighlight>
-          </View>          
-            </View>      
+          </View>
+            </View>
     </View>
   )
   } //Si une erreur survient lors de la requête
@@ -142,7 +154,7 @@ componentDidMount() {
     </View>
     )
   }
-} 
+}
 };
 
 const styles = StyleSheet.create({
