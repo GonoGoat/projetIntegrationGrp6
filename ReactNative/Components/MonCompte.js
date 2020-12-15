@@ -39,7 +39,7 @@ class MonCompte extends React.Component {
                 }
             }
         })
-        axios.get('http://82.165.248.136/:8081/user/' + user)
+        axios.get('http://82.165.248.136:8081/user/' + user)
             .then(res => {
                 this.setState({
                     isLoading:false,
