@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableHighlight, View, Dimensions, ScrollView} from 'react-native';
 import axios from 'axios';
 import {FlatList} from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-community/async-storage';
+import {AsyncStorage} from '@react-native-community/async-storage';
 
 let user;
 

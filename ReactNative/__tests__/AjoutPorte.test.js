@@ -130,28 +130,6 @@ describe ("AjoutPorte Component - Verification Form" , () => {
         expect(mockDoor).toHaveBeenCalledTimes(0);
         jest.clearAllMocks();
     });
-
-   /* it('should change the message of the parent component if the server answered badly', () => {
-        const mockMessage = jest.fn();
-        const mockDoor = jest.fn(); 
-        let test = [{id : "1",password:"testeteste"},{id:"2",password:"autreteste"}]
-        axios.post.mockResolvedValue({
-            data: true
-          });
-        const wrap = shallow(<AjoutPorte_FormVerif 
-                                setMessage = {(msg) => mockMessage(msg)}
-                                setDoor = {(id) => mockDoor(id)}
-                            />);
-        let instance = wrap.instance();
-        for (var i=0;i<test.length;i++) {
-            wrap.setState({idPorte : test[i].id,password : test[i].password,user:1});
-            instance.submit()
-        }
-        expect(mockMessage).toHaveBeenCalledTimes(0);
-        expect(mockDoor).toHaveBeenCalledTimes(i);
-        jest.clearAllMocks();
-    });*/
-
 });
 
 describe ("AjoutPorte Component - Adding form" , () => {
@@ -186,7 +164,7 @@ describe ("AjoutPorte Component - Adding form" , () => {
         })
         const wrap = shallow(<AjoutPorte_FormAjout />);
         wrap.setState({nickname : name,tag : tag});
-        wrap.find("[testID='button-ajout']").simulate('press');
+        wrap.find("[testID='button-ajout2']").simulate('press');
         wrap.find("[testID='name']").first().simulate('submitEditing');
         wrap.find("[testID='tag']").first().simulate('submitEditing');
         setTimeout(function() {expect(axios.post).toHaveBeenCalledTimes(3)},5000);
