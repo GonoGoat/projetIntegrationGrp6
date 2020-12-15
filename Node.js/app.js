@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({
 /* CONNEXION BASE DE DONNÉES */
 let pool = new pg.Pool({
   user: 'postgresArnaud',
-  host: '82.165.248.136',
+  host: '172.18.0.2',
   database: 'projetIntegration',
   password: 'zGwgD4he37QvL7YY',
   port: '5432'
