@@ -99,4 +99,3 @@ it('Returns -InfoPair- for pair action', () => {
     fontSize: 15
   })
 })
-
