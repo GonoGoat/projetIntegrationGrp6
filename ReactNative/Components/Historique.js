@@ -6,7 +6,6 @@ import axios from 'axios';
 import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString} from '../Functions/functionsHistorique'
 import {Modal} from "react-native-paper";
 
-
 export default class Historique extends React.Component {
   constructor(props){
     super(props)
@@ -36,6 +35,22 @@ export default class Historique extends React.Component {
     .catch(error => {
       this.setState({errorVisible: true})
   })
+  }
+
+  getStyleInfosGauche(index) {
+    let infoImpair = {
+      color: "black",
+      fontSize: 15
+    }
+    let infoPair = {
+      color: "white",
+      fontSize: 15
+    }
+    if(index%2 == 0) {
+      return infoPair
+    } else {
+      return infoImpair
+    }
   }
 
   render() {
@@ -93,8 +108,8 @@ export default class Historique extends React.Component {
               keyExtractor={(item) => item.id.toString()}
               renderItem={({item, index}) => 
                 <View style={styles.itemHisto, getStyleByIntex(index)}>
-                  <Text style={{fontSize: 15}}>{getNomPrenom(item.users, this.state.users)}</Text>
-                  <Text style={{fontSize: 15}}>{getDateFormat(item.date)}</Text>
+                  <Text style={this.getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
+                  <Text style={this.getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>
                   <Text style={getActionStyle(index)}>{getActionString(item.action)}</Text>
                 </View>
               }

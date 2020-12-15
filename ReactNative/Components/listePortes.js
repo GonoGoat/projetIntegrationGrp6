@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableHighlight, View, Dimensions, ScrollView} from 'react-native';
 import axios from 'axios';
 import {FlatList} from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let user;
 
@@ -22,8 +22,7 @@ export function _loadTag (utili) {
 
 export function _loadDoor (tag, utili) {
   return axios
-    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + user)
-
+    .get("http://localhost:8081/doorTagUser/" + tag + "/" + utili)
     .catch(function(error) {
       if (error.response) {
         alert("40X Not Found page")
@@ -61,20 +60,32 @@ class listPortes extends React.Component {
       listeDoor: []
     })
     _loadDoor(item.tag, utili).then(data => {
+      if(data) {
       this.setState({
         listeDoor : [ ...this.state.listeDoor, ...data.data]
-      })
+      })}
+      else {
+        this.setState({erreur : true})
+      }
     })
   }
   _goToDetail = item => {
     this.props.navigation.navigate('PorteDetail', {doorIdParam: item.door, nickname: item.nickname, tagName: item.tag})    
   }
 componentDidMount() {
-
-  this._getTag()
-
-  }
-
+  AsyncStorage.getItem('user', function(errs, result) {
+    if (!errs) {
+      if (result !== null) {
+        user = result
+      }
+      else {
+        //alert("Connectez-vous avant de pouvoir accéder à vos portes")        
+        //Le cas ne devrait pas arriver si on bloque la navigation avant d'être connecté
+      }
+    }
+  })
+  this._getTag(user)
+}
   render() {
     if ((this.state.erreur === false) && (this.state.listeTag.length !== 0)) {
   return (
