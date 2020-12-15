@@ -1,4 +1,4 @@
-import {loadDoors} from '../Functions/functionPorteFavorite'
+import {loadDoors} from '../Functions/functionsPorteFavorite'
 
 const axios = require('axios');
 jest.mock('axios');
