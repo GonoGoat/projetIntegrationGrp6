@@ -8,7 +8,7 @@ let user;
 
 export function _loadTag (utili) {
      return axios
-      .get('http://localhost:8081/userTag/' + utili)
+      .get('http://82.165.248.136:8081/userTag/' + utili)
       .catch(function(error) {
         if (error.response) {
           alert("40X Not Found page")
@@ -22,7 +22,7 @@ export function _loadTag (utili) {
 
 export function _loadDoor (tag, utili) {
   return axios
-    .get("http://localhost:8081/doorTagUser/" + tag + "/" + utili)
+    .get("http://82.165.248.136:8081/doorTagUser/" + tag + "/" + utili)
     .catch(function(error) {
       if (error.response) {
         alert("40X Not Found page")
