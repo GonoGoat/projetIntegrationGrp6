@@ -24,7 +24,7 @@ class Inscription extends React.Component {
         let user = {
             mail : this.state.mail.trim().toLowerCase()
         };
-        await axios.post('http://82.165.248.136:8081/userMail/', {user})
+        await axios.post('http://localhost:8081/userMail/', {user})
              .then(res => {
                 const verif = res.data;
                 if (verif) {

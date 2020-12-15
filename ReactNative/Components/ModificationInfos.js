@@ -25,7 +25,7 @@ function ModificationInfos(props) {
         await AsyncStorage.getItem('user').then((result) => {
             user = result
         })
-        axios.patch('http://82.165.248.136:8081/access/update',{tagName : tagName, nickname : nickname, door : door, users: user})
+        axios.patch('http://localhost:8081/access/update',{tagName : tagName, nickname : nickname, door : door, users: user})
             .then(res => {
                 console.log(res);
                 setMessage({

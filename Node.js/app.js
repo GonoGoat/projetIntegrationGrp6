@@ -177,13 +177,13 @@ app.put('/resetPassword/', async (req, res) => {
     hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
     let values = [hash, mail];
+    analytics.track({
+        userId: 1,
+        event: 'Password Reset'
+    });
     pool.query(sql, values, (err) => {
         if (err) throw err;
         CreateMail(mail, newPass);
-        analytics.track({
-            userId: 1,
-            event: 'Password Reset'
-        });
         return res.send(true);
     })
 });
@@ -416,7 +416,7 @@ app.patch('/access/update', (req, res) => {
 *************************************************/
 app.post('/verifyPassword/', async (req, res) => {
     let values = [req.body.user.id];
-    let sql = 'select password from users where id = $1';
+    let sql = 'select password from users where id = ' + req.body.user.id;
     pool.query(sql,async (err, rows) => {
         if (err) throw err;
         if (await argon2.verify(rows.rows[0].password, req.body.user.old)) {
