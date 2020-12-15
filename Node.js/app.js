@@ -327,15 +327,9 @@ app.get('/doorIdUser/:door/:users', async (req, res) => {
   });
 
 /*************************************************
-		GET TAGS BY USER
-*************************************************/	//TEST OK
-
-app.get('/userTag/:userId', async (req, res) => {
-    let userId = parseInt(req.url.split('/userTag/').pop());
-    let sql = 'select distinct tag from access where users = ' + userId ;
-    pool.query(sql, (err, rows) => {
 		Historique : GET - HISTORY by door id
 *************************************************/
+
 app.get('/doorHistory/door/:doorId', async (req, res) => {
     let doorId = parseInt(req.url.split('/doorHistory/door/').pop());
     let values = [doorId]
