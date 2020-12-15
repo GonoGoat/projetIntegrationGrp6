@@ -72,7 +72,6 @@ class PorteFavorite extends React.Component {
         user = result
       }
       else {
-        console.log("pas connecté")
       }
     }
   })
@@ -108,12 +107,8 @@ openDoor(doorId, status){
       .then(res => {
       })
       .catch(error => {
-      console.log(error)
   })
   })
-  .catch(err => {
-    console.log(err)
-  });
   this.timeoutHandle = setTimeout(()=>{
     this.setState({isChangingStatus: false})
     if(status == 0) {
@@ -149,9 +144,6 @@ async sendHistory (doorId, newStatus) {
       this.setState({reload : false})
       this.componentDidMount();
     })
-    .catch(err => {
-        console.log(err)
-    });
 }
 
  getColorButton(boolStatus) {
