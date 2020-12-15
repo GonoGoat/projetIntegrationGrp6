@@ -186,7 +186,7 @@ describe ("AjoutPorte Component - Adding form" , () => {
         })
         const wrap = shallow(<AjoutPorte_FormAjout />);
         wrap.setState({nickname : name,tag : tag});
-        wrap.find("[testID='button-ajout']").simulate('press');
+        wrap.find("[testID='button-ajout2']").simulate('press');
         wrap.find("[testID='name']").first().simulate('submitEditing');
         wrap.find("[testID='tag']").first().simulate('submitEditing');
         setTimeout(function() {expect(axios.post).toHaveBeenCalledTimes(3)},5000);
