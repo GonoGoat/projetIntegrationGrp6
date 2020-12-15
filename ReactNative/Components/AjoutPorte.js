@@ -11,7 +11,7 @@ export default class AjoutPorte extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      door : undefined,
+      door : "",
       message : {type: "fail"},
       user : false,
       visible : ''
@@ -45,7 +45,7 @@ export default class AjoutPorte extends React.Component {
         </View>
       )
     }
-    else if (this.state.door === undefined) { 
+    else if (!this.state.door) { 
       return (
         <View style={styles.container}>
           <AjoutPorte_FormVerif
