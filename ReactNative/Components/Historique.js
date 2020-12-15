@@ -3,7 +3,7 @@
 import {StyleSheet, View, Text, SafeAreaView, FlatList, TouchableOpacity, TouchableHighlight, ActivityIndicator } from 'react-native';
 import React from 'react';
 import axios from 'axios';
-import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString} from '../Functions/functionsHistorique'
+import {getDateFormat, getNomPrenom, getStyleByIntex, getActionStyle, getActionString, getStyleInfosGauche} from '../Functions/functionsHistorique'
 import {Modal} from "react-native-paper";
 
 export default class Historique extends React.Component {
@@ -18,7 +18,7 @@ export default class Historique extends React.Component {
   }
 
   getData(doorId) {
-    axios.get(`http://localhost:8081/doorHistory/door/`+ doorId)
+    axios.get(`http://82.165.248.136:8081/doorHistory/door/`+ doorId)
     .then(res => {
       this.setState({histo: res.data})
     })
@@ -37,28 +37,23 @@ export default class Historique extends React.Component {
   })
   }
 
-  getStyleInfosGauche(index) {
-    let infoImpair = {
-      color: "black",
-      fontSize: 15
-    }
-    let infoPair = {
-      color: "white",
-      fontSize: 15
-    }
-    if(index%2 == 0) {
-      return infoPair
-    } else {
-      return infoImpair
-    }
+  componentDidMount() {
+    this.getUsers();
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({histo: ""})
+      this.getData(this.props.route.params.doorIdParam);
+    });
   }
+
+  componentWillUnmount() {
+    this._unsubscribe;
+  } 
 
   render() {
     const doorIdParam = this.props.route.params.doorIdParam;
     const nickname = this.props.route.params.nickname;
-    this.getData(doorIdParam);
     if(this.state.isLoading) {
-      this.getUsers();
+      
       return (
         <View style={styles.container}>
           <ActivityIndicator style={{alignContent: "center", justifyContent: "space-around", padding: 10}}/>
@@ -107,12 +102,12 @@ export default class Historique extends React.Component {
               data={this.state.histo}
               keyExtractor={(item) => item.id.toString()}
               maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={50}
-              initialNumToRender={10}
-              renderItem={({item, index}) =>
+              updateCellsBatchingPeriod={999999}   
+              initialNumToRender={20}
+              renderItem={({item, index}) => 
                 <View style={styles.itemHisto, getStyleByIntex(index)}>
-                  <Text style={this.getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
-                  <Text style={this.getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>
+                  <Text style={getStyleInfosGauche(index)}>{getNomPrenom(item.users, this.state.users)}</Text>
+                  <Text style={getStyleInfosGauche(index)}>{getDateFormat(item.date)}</Text>
                   <Text style={getActionStyle(index)}>{getActionString(item.action)}</Text>
                 </View>
               }

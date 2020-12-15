@@ -1,0 +1,1695 @@
+{
+	"id": "a6df6778-52da-41c3-8814-24e3bc5b246a",
+	"name": "Projet d'intégration 6",
+	"timestamp": "2020-12-15T22:30:34.337Z",
+	"collection_id": "a901f8f5-93b0-40b9-b886-6ad03b6048fe",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 116,
+	"totalFail": 1,
+	"results": [
+		{
+			"id": "394f804d-d3ba-475f-9f83-cbc1b09a9a36",
+			"name": "POST - User by Mail - Mail exists",
+			"url": "http://82.165.248.136:8081/userMail",
+			"time": 74,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Send false because mail exists already": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Send false because mail exists already": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				74
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Send false because mail exists already": true
+				}
+			]
+		},
+		{
+			"id": "d0c411bf-3424-467a-b852-926320a8405c",
+			"name": "POST - User by Mail - Mail don't exist",
+			"url": "http://82.165.248.136:8081/userMail",
+			"time": 35,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Return true because mail doesn't exist": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Return true because mail doesn't exist": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				35
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Return true because mail doesn't exist": true
+				}
+			]
+		},
+		{
+			"id": "c49c5a73-5516-492e-8a29-d97d09f4aa8f",
+			"name": "POST - User inscription",
+			"url": "http://82.165.248.136:8081/newUsers",
+			"time": 50,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Return true because user added": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Return true because user added": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				50
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Return true because user added": true
+				}
+			]
+		},
+		{
+			"id": "aea2bb52-2a6e-4992-bbf0-194595733294",
+			"name": "POST - User connection - OK",
+			"url": "http://82.165.248.136:8081/userConnection",
+			"time": 56,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response includes connected user information": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response includes connected user information": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				56
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response includes connected user information": true
+				}
+			]
+		},
+		{
+			"id": "8c8e2ca6-8078-4684-9d0f-c2eb622cf0d3",
+			"name": "POST - User connection - Bad password",
+			"url": "http://82.165.248.136:8081/userConnection",
+			"time": 48,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Responses includes password error": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Responses includes password error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				48
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Responses includes password error": true
+				}
+			]
+		},
+		{
+			"id": "9a1cabfa-f322-4065-93a0-21ee9feb3acf",
+			"name": "POST - User connection - Bad mail",
+			"url": "http://82.165.248.136:8081/userConnection",
+			"time": 30,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response include unexisting user error": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response include unexisting user error": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				30
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response include unexisting user error": true
+				}
+			]
+		},
+		{
+			"id": "6fa8d95d-b04e-4d04-91fb-3ba467af5f70",
+			"name": "GET - History by User id - With door",
+			"url": "http://82.165.248.136:8081/doorHistory/user/18",
+			"time": 43,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response include door value": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response include door value": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				43
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response include door value": true
+				}
+			]
+		},
+		{
+			"id": "12315957-cc73-42c3-ad48-ca142549f9bb",
+			"name": "GET - History by User id - Without door ",
+			"url": "http://82.165.248.136:8081/doorHistory/user/0",
+			"time": 34,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response empty because user not found": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response empty because user not found": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				34
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response empty because user not found": true
+				}
+			]
+		},
+		{
+			"id": "7b45e175-0b0d-44f7-9646-0d7f731056ea",
+			"name": "PUT - User reset password",
+			"url": "http://82.165.248.136:8081/resetPassword",
+			"time": 50,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response true : user password reset": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response true : user password reset": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				50
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response true : user password reset": true
+				}
+			]
+		},
+		{
+			"id": "6364d476-94f8-437f-96f1-5d0da7755163",
+			"name": "PUT - Update Door Status - OK",
+			"url": "http://82.165.248.136:8081/doorStatus",
+			"time": 29,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response true : status updated": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response true : status updated": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				29
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response true : status updated": true
+				}
+			]
+		},
+		{
+			"id": "cc7f3424-5e2a-46bc-ba6a-8645be7b23af",
+			"name": "PUT - Update Door Status - Wrong body",
+			"url": "http://82.165.248.136:8081/doorStatus",
+			"time": 1166,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": false,
+				"Status code is 200": true,
+				"Wrong parameters in body": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Wrong parameters in body": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1166
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": false,
+					"Status code is 200": true,
+					"Wrong parameters in body": true
+				}
+			]
+		},
+		{
+			"id": "265d2528-7f09-47a6-a5db-2e2bdfacc13e",
+			"name": "POST - New history - OK",
+			"url": "http://82.165.248.136:8081/newhistory",
+			"time": 46,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response true : new history created": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response true : new history created": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				46
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response true : new history created": true
+				}
+			]
+		},
+		{
+			"id": "1315c621-8447-430a-b495-40283bea28e4",
+			"name": "POST - New history - Body error",
+			"url": "http://82.165.248.136:8081/newhistory",
+			"time": 38,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response false : request missing data": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response false : request missing data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				38
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response false : request missing data": true
+				}
+			]
+		},
+		{
+			"id": "7e58b033-4acf-4882-bd80-459e5d05088a",
+			"name": "POST - Remove access",
+			"url": "http://82.165.248.136:8081/access/delete",
+			"time": 55,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response true : access removed": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response true : access removed": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				55
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response true : access removed": true
+				}
+			]
+		},
+		{
+			"id": "b91f9216-8a07-4be4-8b0d-0465360e534d",
+			"name": "GET - Door get all doors",
+			"url": "http://82.165.248.136:8081/doors",
+			"time": 40,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response include door information": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response include door information": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				40
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response include door information": true
+				}
+			]
+		},
+		{
+			"id": "d6d0b5bd-4f7b-485f-9091-6e9a95d0aa8f",
+			"name": "POST - Verify Door Password",
+			"url": "http://82.165.248.136:8081/door/check",
+			"time": 37,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Returns true door password ok": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returns true door password ok": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				37
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Returns true door password ok": true
+				}
+			]
+		},
+		{
+			"id": "a3bd1964-1043-4f5a-8d6a-6ce943fa5726",
+			"name": "POST - Verify Door Password - Bad password",
+			"url": "http://82.165.248.136:8081/door/check",
+			"time": 31,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 403": true,
+				"Bad password error response": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 403": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Bad password error response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				31
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 403": true,
+					"Bad password error response": true
+				}
+			]
+		},
+		{
+			"id": "4fccc156-f0fd-4dc8-8754-9ed73385814b",
+			"name": "POST - Verify Door Password - invalid id",
+			"url": "http://82.165.248.136:8081/door/check",
+			"time": 35,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 404": true,
+				"Invalid id error response": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 404": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Invalid id error response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				35
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 404": true,
+					"Invalid id error response": true
+				}
+			]
+		},
+		{
+			"id": "88c7b37f-f989-4145-9c64-9b2eff152dd9",
+			"name": "POST - Add access",
+			"url": "http://82.165.248.136:8081/newaccess",
+			"time": 40,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response false user already have access to that door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response false user already have access to that door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				40
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response false user already have access to that door": true
+				}
+			]
+		},
+		{
+			"id": "5ca6e5e6-e841-41b5-be23-72950d973aa2",
+			"name": "GET - History by Door id",
+			"url": "http://82.165.248.136:8081/doorHistory/door/1",
+			"time": 97,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				97
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response include door": true
+				}
+			]
+		},
+		{
+			"id": "d5de7108-d5a3-4aae-a853-88e8c954975b",
+			"name": "GET - History by Door id - Unexisting door",
+			"url": "http://82.165.248.136:8081/doorHistory/door/100",
+			"time": 46,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response dont include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response dont include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				46
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response dont include door": true
+				}
+			]
+		},
+		{
+			"id": "2675762b-c59d-4474-aaa6-cd82c1ef6419",
+			"name": "GET - Users names",
+			"url": "http://82.165.248.136:8081/users/name",
+			"time": 30,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response dont include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response dont include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				30
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response dont include door": true
+				}
+			]
+		},
+		{
+			"id": "a026da0c-3204-432e-a6a0-586a6728bc78",
+			"name": "GET - Door by Tag & User ID",
+			"url": "http://82.165.248.136:8081/doorTagUser/Tag/18",
+			"time": 33,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response dont include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response dont include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				33
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response dont include door": true
+				}
+			]
+		},
+		{
+			"id": "958d0ef1-0d35-4f43-a0c7-488854babb54",
+			"name": "GET - Door by Tag & User ID - Unexisting user",
+			"url": "http://82.165.248.136:8081/doorTagUser/Tag/1800000000",
+			"time": 35,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response dont include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response dont include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				35
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response dont include door": true
+				}
+			]
+		},
+		{
+			"id": "b4425d0d-0fa7-4bd7-89e0-dfb272fe26ef",
+			"name": "GET - Door by Tag & User ID - Unexisting tag",
+			"url": "http://82.165.248.136:8081/doorTagUser/Tagafezrgsvberfdg/18",
+			"time": 31,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response dont include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response dont include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				31
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response dont include door": true
+				}
+			]
+		},
+		{
+			"id": "460ef0f2-d818-4fb8-8355-32f579ff6d15",
+			"name": "GET - Door Tag by User ID",
+			"url": "http://82.165.248.136:8081/userTag/18",
+			"time": 29,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response dont include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response dont include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				29
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response dont include door": true
+				}
+			]
+		},
+		{
+			"id": "db3bf841-0849-4fe8-9d00-1d6c9daaf1e6",
+			"name": "GET - Door Tag by User ID - Unexisting user",
+			"url": "http://82.165.248.136:8081/userTag/18000000",
+			"time": 31,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response dont include door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response dont include door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				31
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response dont include door": true
+				}
+			]
+		},
+		{
+			"id": "ac36b023-fbc2-4565-8cf3-ffce1cd41721",
+			"name": "PATCH - Update door tag and name",
+			"url": "http://82.165.248.136:8081/access/update",
+			"time": 36,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response true : door tag and/or name changed succesfuly": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response true : door tag and/or name changed succesfuly": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				36
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response true : door tag and/or name changed succesfuly": true
+				}
+			]
+		},
+		{
+			"id": "de0d6df6-c665-4173-9222-8ec681a1b87c",
+			"name": "GET - User by ID",
+			"url": "http://82.165.248.136:8081/user/18",
+			"time": 34,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response found user data": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response found user data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				34
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response found user data": true
+				}
+			]
+		},
+		{
+			"id": "6f279bc6-f4d0-44b6-bde4-da6f3d705c61",
+			"name": "GET - User by ID - Unexisting id",
+			"url": "http://82.165.248.136:8081/user/18000000",
+			"time": 33,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response empty : no user found with id": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response empty : no user found with id": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				33
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response empty : no user found with id": true
+				}
+			]
+		},
+		{
+			"id": "9796d980-bf21-40eb-930a-68e6f3421abc",
+			"name": "POST - User check password",
+			"url": "http://82.165.248.136:8081/verifyPassword/",
+			"time": 47,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response false : passwords different": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response false : passwords different": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				47
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response false : passwords different": true
+				}
+			]
+		},
+		{
+			"id": "9e72b9ce-531e-4c60-bf21-bdb40b7644a1",
+			"name": "PUT - User change password",
+			"url": "http://82.165.248.136:8081/changePassword",
+			"time": 67,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response true : password updated": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response true : password updated": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				67
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response true : password updated": true
+				}
+			]
+		},
+		{
+			"id": "d06d8147-278f-4fed-b177-f3e8750d713d",
+			"name": "PUT - User Update data",
+			"url": "http://82.165.248.136:8081/modifUsers",
+			"time": 32,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response true : user updated": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response true : user updated": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				32
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response true : user updated": true
+				}
+			]
+		},
+		{
+			"id": "40803b5a-bd6e-47c3-a700-a8ac27c185dd",
+			"name": "DEL - User : Delete user by ID",
+			"url": "http://82.165.248.136:8081/deleteUser/2",
+			"time": 38,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Returns nothing": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Returns nothing": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				38
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Returns nothing": true
+				}
+			]
+		},
+		{
+			"id": "49d5a259-f4b0-4563-a6ac-043c4c75c9cc",
+			"name": "GET - Door by door ID & User ID",
+			"url": "http://82.165.248.136:8081/doorIdUser/37/18",
+			"time": 30,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response contains new door data": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains new door data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				30
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response contains new door data": true
+				}
+			]
+		},
+		{
+			"id": "f80371e7-5e8e-4dd8-b51a-ae802b5924b1",
+			"name": "GET - Door by door ID & User ID - Unexisting door",
+			"url": "http://82.165.248.136:8081/doorIdUser/10000000000000000/18",
+			"time": 31,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response empty door not existing": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response empty door not existing": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				31
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response empty door not existing": true
+				}
+			]
+		},
+		{
+			"id": "0ef42eef-2ab3-4867-aed8-7f9a25fe4916",
+			"name": "GET - Door by door ID & User ID - Unexisting user",
+			"url": "http://82.165.248.136:8081/doorIdUser/1/180000",
+			"time": 30,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response empty because no door": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response empty because no door": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				30
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response empty because no door": true
+				}
+			]
+		},
+		{
+			"id": "8ff84e5a-4b51-479f-8f09-1690a87d7aa0",
+			"name": "POST - Add door",
+			"url": "http://82.165.248.136:8081/newdoor",
+			"time": 36,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response new door data": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response new door data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				36
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response new door data": true
+				}
+			]
+		},
+		{
+			"id": "0aabf0d9-7d51-4063-be12-6eab0b52c48b",
+			"name": "POST - Add door Copy",
+			"url": "http://82.165.248.136:8081/newdoor",
+			"time": 40,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response time is less than 200ms": true,
+				"Status code is 200": true,
+				"Response new door data": true
+			},
+			"testPassFailCounts": {
+				"Response time is less than 200ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response new door data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				40
+			],
+			"allTests": [
+				{
+					"Response time is less than 200ms": true,
+					"Status code is 200": true,
+					"Response new door data": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 2723,
+	"collection": {
+		"requests": [
+			{
+				"id": "394f804d-d3ba-475f-9f83-cbc1b09a9a36",
+				"method": "POST"
+			},
+			{
+				"id": "d0c411bf-3424-467a-b852-926320a8405c",
+				"method": "POST"
+			},
+			{
+				"id": "c49c5a73-5516-492e-8a29-d97d09f4aa8f",
+				"method": "POST"
+			},
+			{
+				"id": "aea2bb52-2a6e-4992-bbf0-194595733294",
+				"method": "POST"
+			},
+			{
+				"id": "8c8e2ca6-8078-4684-9d0f-c2eb622cf0d3",
+				"method": "POST"
+			},
+			{
+				"id": "9a1cabfa-f322-4065-93a0-21ee9feb3acf",
+				"method": "POST"
+			},
+			{
+				"id": "6fa8d95d-b04e-4d04-91fb-3ba467af5f70",
+				"method": "GET"
+			},
+			{
+				"id": "12315957-cc73-42c3-ad48-ca142549f9bb",
+				"method": "GET"
+			},
+			{
+				"id": "7b45e175-0b0d-44f7-9646-0d7f731056ea",
+				"method": "PUT"
+			},
+			{
+				"id": "6364d476-94f8-437f-96f1-5d0da7755163",
+				"method": "PUT"
+			},
+			{
+				"id": "cc7f3424-5e2a-46bc-ba6a-8645be7b23af",
+				"method": "PUT"
+			},
+			{
+				"id": "265d2528-7f09-47a6-a5db-2e2bdfacc13e",
+				"method": "POST"
+			},
+			{
+				"id": "1315c621-8447-430a-b495-40283bea28e4",
+				"method": "POST"
+			},
+			{
+				"id": "7e58b033-4acf-4882-bd80-459e5d05088a",
+				"method": "POST"
+			},
+			{
+				"id": "b91f9216-8a07-4be4-8b0d-0465360e534d",
+				"method": "GET"
+			},
+			{
+				"id": "d6d0b5bd-4f7b-485f-9091-6e9a95d0aa8f",
+				"method": "POST"
+			},
+			{
+				"id": "a3bd1964-1043-4f5a-8d6a-6ce943fa5726",
+				"method": "POST"
+			},
+			{
+				"id": "4fccc156-f0fd-4dc8-8754-9ed73385814b",
+				"method": "POST"
+			},
+			{
+				"id": "88c7b37f-f989-4145-9c64-9b2eff152dd9",
+				"method": "POST"
+			},
+			{
+				"id": "5ca6e5e6-e841-41b5-be23-72950d973aa2",
+				"method": "GET"
+			},
+			{
+				"id": "d5de7108-d5a3-4aae-a853-88e8c954975b",
+				"method": "GET"
+			},
+			{
+				"id": "2675762b-c59d-4474-aaa6-cd82c1ef6419",
+				"method": "GET"
+			},
+			{
+				"id": "a026da0c-3204-432e-a6a0-586a6728bc78",
+				"method": "GET"
+			},
+			{
+				"id": "958d0ef1-0d35-4f43-a0c7-488854babb54",
+				"method": "GET"
+			},
+			{
+				"id": "b4425d0d-0fa7-4bd7-89e0-dfb272fe26ef",
+				"method": "GET"
+			},
+			{
+				"id": "460ef0f2-d818-4fb8-8355-32f579ff6d15",
+				"method": "GET"
+			},
+			{
+				"id": "db3bf841-0849-4fe8-9d00-1d6c9daaf1e6",
+				"method": "GET"
+			},
+			{
+				"id": "ac36b023-fbc2-4565-8cf3-ffce1cd41721",
+				"method": "PATCH"
+			},
+			{
+				"id": "de0d6df6-c665-4173-9222-8ec681a1b87c",
+				"method": "GET"
+			},
+			{
+				"id": "6f279bc6-f4d0-44b6-bde4-da6f3d705c61",
+				"method": "GET"
+			},
+			{
+				"id": "9796d980-bf21-40eb-930a-68e6f3421abc",
+				"method": "POST"
+			},
+			{
+				"id": "9e72b9ce-531e-4c60-bf21-bdb40b7644a1",
+				"method": "PUT"
+			},
+			{
+				"id": "d06d8147-278f-4fed-b177-f3e8750d713d",
+				"method": "PUT"
+			},
+			{
+				"id": "40803b5a-bd6e-47c3-a700-a8ac27c185dd",
+				"method": "DELETE"
+			},
+			{
+				"id": "49d5a259-f4b0-4563-a6ac-043c4c75c9cc",
+				"method": "GET"
+			},
+			{
+				"id": "f80371e7-5e8e-4dd8-b51a-ae802b5924b1",
+				"method": "GET"
+			},
+			{
+				"id": "0ef42eef-2ab3-4867-aed8-7f9a25fe4916",
+				"method": "GET"
+			},
+			{
+				"id": "8ff84e5a-4b51-479f-8f09-1690a87d7aa0",
+				"method": "POST"
+			},
+			{
+				"id": "0aabf0d9-7d51-4063-be12-6eab0b52c48b",
+				"method": "POST"
+			}
+		]
+	}
+}

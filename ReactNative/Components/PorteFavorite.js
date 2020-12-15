@@ -31,7 +31,7 @@ class PorteFavorite extends React.Component {
     let numero = idPorte[0].split(',')
         for(let i of numero) {
        axios
-        .get('http://localhost:8081/doorIdUser/' + i + "/" + user)
+        .get('http://82.165.248.136:8081/doorIdUser/' + i + "/" + user)
         .catch(function(error) {
           if (error.response) {
             alert("40X Not Found page")
@@ -72,7 +72,6 @@ class PorteFavorite extends React.Component {
         user = result
       }
       else {
-        console.log("pas connecté")
       }
     }
   })
@@ -104,16 +103,12 @@ openDoor(doorId, status){
   axios.put('http://82.165.248.136:8081/doorStatus',{door})
   .then(res => {
       this.componentDidMount()
-      axios.get(`http://192.168.1.60/` + textStatus + '/' + res.data[0].password)
+      axios.get(`http://192.168.1.19/` + textStatus + '/' + res.data[0].password)
       .then(res => {
       })
       .catch(error => {
-      console.log(error)
   })
   })
-  .catch(err => {
-    console.log(err)
-  });
   this.timeoutHandle = setTimeout(()=>{
     this.setState({isChangingStatus: false})
     if(status == 0) {
@@ -143,14 +138,12 @@ async sendHistory (doorId, newStatus) {
     date: new Date,
     action: newStatus
   }
-  axios.post('http://localhost:8081/newhistory',{history})
+
+  axios.post('http://82.165.248.136:8081/newhistory',{history})
     .then(res => {
       this.setState({reload : false})
       this.componentDidMount();
     })
-    .catch(err => {
-        console.log(err)
-    });
 }
 
  getColorButton(boolStatus) {

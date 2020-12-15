@@ -10,10 +10,10 @@ export default class Error extends React.Component {
                 <Text>Vous n'avez pas de compte adéquat pour accéder à cette fonctionnalité. Veuillez vous connecter avec un compte valide.</Text>
                 <Button
                     mode="contained"
-                    onPress={() => this.props.navigation.navigate('Connexion')}
+                    onPress={() => this.props.deconnexion()}
                     testID='redirect'
                 >
-                    Se connecter
+                    Se déconnecter
                 </Button>
             </View>
         )

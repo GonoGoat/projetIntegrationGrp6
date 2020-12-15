@@ -49,7 +49,6 @@ class MonCompte extends React.Component {
             })
 
             .catch(error => {
-                console.log(error)
             })
     }
     async clearAllData() {
@@ -71,21 +70,17 @@ class MonCompte extends React.Component {
         })
         axios.delete('http://82.165.248.136:8081/deleteUser/' + user)
             .then(res => {
-                console.log(res)
             })
 
             .catch(error => {
-                console.log(error)
             })
         this.clearAllData();
     }
     async getMail(mail){
-        console.log('ici')
         if(mail != this.state.user[0].mail) {
             let user = {
                 mail : mail
             }
-            console.log('ici1')
             await axios.post('http://82.165.248.136:8081/userMail/', {user})
             .then(res => {
                 const verif = res.data;
@@ -100,7 +95,6 @@ class MonCompte extends React.Component {
                     this.setState({
                         mailVerified: false
                     });
-                    console.log(this.state.error)
                 }
             });
         }
@@ -127,7 +121,6 @@ class MonCompte extends React.Component {
                                     id: this.state.user[0].id
                                 };
                                 axios.put('http://82.165.248.136:8081/changePassword/', {user})
-                                    .catch(err => console.log(err));
                                 this.setState({reussite : "Votre mot de passe a bien été modifié"});
                                 this.setState({visible2: false});
                                 this.textInput5.clear();
@@ -144,8 +137,6 @@ class MonCompte extends React.Component {
                         this.setState({error: "l'ancien mot de passe indiqué n'est pas bon"});
                     }
                 })
-                .catch(err => console.log(err));
-
 
         }
         else {
@@ -160,7 +151,6 @@ class MonCompte extends React.Component {
         AsyncStorage.getItem('user').then((result) => {
             this.setState({user : result});
             if(this.state.user == null) {
-              console.log(result)
               this.props.navigation.navigate('Connexion', {inscriptionSubmitted: false})
             }
           })
@@ -177,7 +167,6 @@ class MonCompte extends React.Component {
                    if (this.state.newInfos[2] == "M" || this.state.newInfos[2] == "F") {
                         if (this.state.mailVerified){
                             let id = this.state.user[0].id;
-                            console.log(id);
                             this.send(this.state.newInfos[1], this.state.newInfos[0], this.state.newInfos[4], this.state.newInfos[2], this.state.newInfos[3], id);
                             this.setState({user : [{ lastname : this.state.newInfos[0], firstname : this.state.newInfos[1], sexe : this.state.newInfos[2], mail : this.state.newInfos[3], phone :this.state.newInfos[4], id : this.state.user[0].id}]})
                             this.setState({reussite : "Votre compte a bien été modifié"});
@@ -217,8 +206,6 @@ class MonCompte extends React.Component {
             .then(() => {
                 this.setState({modifBoolean : true})
             })
-            .catch(err => console.log(err));
-
 
     }
 

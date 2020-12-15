@@ -9,7 +9,7 @@ import Error from "./Error"
 const axios = require('axios')
 
 async function newDoor(valeurs) {
-    return axios.post("http://localhost:8081/newDoor", valeurs);
+    return axios.post("http://82.165.248.136:8081/newDoor", valeurs);
 }
 
 export default class Admin extends React.Component {
@@ -34,6 +34,9 @@ export default class Admin extends React.Component {
             AsyncStorage.getItem('isAdmin').then(res => {
                 if (JSON.parse(res) === true) {
                     AsyncStorage.getItem('user').then(res => this.setState({user : parseInt(res),isLoading : ""}));
+                }
+                else {
+                    this.setState({user : false,isLoading : ""});
                 }
             })
           }
@@ -195,7 +198,7 @@ export default class Admin extends React.Component {
         else if (this.state.user === false) {
             return (
                 <View style={styles.container}>
-                    <Error/>
+                    <Error deconnexion={() => {this.props.navigation.navigate("Deconnexion")}}/>
                 </View>
             )
         }

@@ -87,9 +87,10 @@ app.post('/newUsers', async (req, res) => {
             if (err) {
                 return res.send(false);
             } else {
-                /*analytics.track({
-                    event: 'New user',
-                });*/
+                analytics.track({
+                    userId: 1,
+                    event: 'New User'
+                });
                 return res.send(true);
             }
         });
@@ -131,6 +132,10 @@ app.post('/userConnection/', async (req, res) => {
         } else {
         if (await argon2.verify(rows.rows[0].password, req.body.user.password)) {
             id = rows.rows[0].id;
+            analytics.track({
+                userId: 1,
+                event: 'New Connection'
+            });
             return res.send({status : true, msg : {id: id, admin: rows.rows[0].isadmin ? true : false }});
         } else {
             return res.send({status : false, msg :"Mot de passe incorrect. Veuillez réessayer."});
@@ -172,6 +177,10 @@ app.put('/resetPassword/', async (req, res) => {
     hash = await argon2.hash(newPass, {type: argon2.argon2id});
     let sql = 'update users set password = $1 where mail = $2';
     let values = [hash, mail];
+    analytics.track({
+        userId: 1,
+        event: 'Password Reset'
+    });
     pool.query(sql, values, (err) => {
         if (err) throw err;
         CreateMail(mail, newPass);
@@ -408,7 +417,7 @@ app.patch('/access/update', (req, res) => {
 app.post('/verifyPassword/', async (req, res) => {
     let values = [req.body.user.id];
     let sql = 'select password from users where id = $1';
-    pool.query(sql,async (err, rows) => {
+    pool.query(sql, values, async (err, rows) => {
         if (err) throw err;
         if (await argon2.verify(rows.rows[0].password, req.body.user.old)) {
             id = rows.rows[0].id;
@@ -432,6 +441,10 @@ app.put('/changePassword/', async (req, res) => {
         if (err) {
             return res.send(false);
         } else {
+            analytics.track({
+                userId: 1,
+                event: 'Password Changed'
+            });
             return res.send(true);
         }
     })
@@ -477,6 +490,10 @@ app.delete('/deleteUser/:id', async (req, res) => {
     let sql = 'DELETE from users where id = $1';
     pool.query(sql, values, (err, rows) => {
       if (err) throw err;
+      analytics.track({
+        userId: 1,
+        event: 'Account Deleted'
+      });
       return res.send(rows.rows);
     })
 })
@@ -511,6 +528,10 @@ app.post('/newdoor', async (req, res) => {
           if (err) {
               return res.send(false);
           }
+          analytics.track({
+            userId: 1,
+            event: 'New Door Installed'
+          });
           return res.send(rows.rows[0]);
       });
 });

@@ -9,7 +9,28 @@
 			"name": "Inscription",
 			"item": [
 				{
-					"name": "POST - User by Mail",
+					"name": "POST - User by Mail - Mail exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51fc8929-b35b-49c1-80f2-ac1c340fa8c5",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Send false because mail exists already\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -35,7 +56,75 @@
 					"response": []
 				},
 				{
+					"name": "POST - User by Mail - Mail don't exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "09d38a98-3270-46b4-ae5e-2cc1079b09c1",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Return true because mail doesn't exist\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a.a\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/userMail",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userMail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "POST - User inscription",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74d2be09-a0c0-4eea-ae3d-efcf643e4174",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Return true because user added\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -67,7 +156,29 @@
 			"name": "Connection",
 			"item": [
 				{
-					"name": "POST - User connection",
+					"name": "POST - User connection - OK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f3fae7a-f505-4bae-b0e5-fb9cfc216f83",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response includes connected user information\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -93,14 +204,131 @@
 					"response": []
 				},
 				{
-					"name": "GET - History by User id",
+					"name": "POST - User connection - Bad password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f276202e-e11c-48fb-83bd-fd73c65e4ff4",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Responses includes password error\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"Mot de passe incorrect\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a@a.a\",\r\n        \"password\": \"P\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/userConnection",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userConnection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - User connection - Bad mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a7c2f60-0d73-4549-8866-86acd037a768",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response include unexisting user error\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"Veuillez vous inscrire\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a.a\",\r\n        \"password\": \"Passw0rd!\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/userConnection",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userConnection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - History by User id - With door",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c9cb32a6-ccf7-4ec7-8762-344155ad9f4d",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response include door value\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"door\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/doorHistory/user/:userId",
+							"raw": "{{URL}}/doorHistory/user/:userId",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"doorHistory",
@@ -116,6 +344,52 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GET - History by User id - Without door ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "46b94615-cdfa-4876-915f-ddc1865e2273",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response empty because user not found\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/doorHistory/user/:userId",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"doorHistory",
+								"user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -125,6 +399,28 @@
 			"item": [
 				{
 					"name": "PUT - User reset password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a975147-cbb4-4248-a208-d115e3e2fb8a",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response true : user password reset\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -148,32 +444,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "POST - User by Mail",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"a@a.a\"\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{URL}}/userMail",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"userMail"
-							]
-						}
-					},
-					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -182,7 +452,29 @@
 			"name": "PorteDetail",
 			"item": [
 				{
-					"name": "PUT - Update Door Status",
+					"name": "PUT - Update Door Status - OK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6928d8b0-627d-4a5d-afc6-26a72525b99a",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response true : status updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -208,7 +500,77 @@
 					"response": []
 				},
 				{
-					"name": "POST - New history",
+					"name": "PUT - Update Door Status - Wrong body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "59a1b3d6-41ab-4488-b723-06a3e916e77c",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Wrong parameters in body\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"door\": {\r\n        \"id\": \"1\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/doorStatus",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"doorStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - New history - OK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f506c9f7-4a1e-4812-9185-e2ae8af6b2e0",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response true : new history created\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -222,9 +584,56 @@
 							}
 						},
 						"url": {
-							"raw": "{{local}}/newhistory",
+							"raw": "{{URL}}/newhistory",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
+							],
+							"path": [
+								"newhistory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - New history - Body error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9735508a-c84d-49ae-b386-17e7052c7b71",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response false : request missing data\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"history\":{\r\n        \"users\": \"18\",\r\n        \"date\": \"2020-11-25T20:10:18.181Z\",\r\n        \"action\": \"0\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/newhistory",
+							"host": [
+								"{{URL}}"
 							],
 							"path": [
 								"newhistory"
@@ -235,6 +644,28 @@
 				},
 				{
 					"name": "POST - Remove access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "16d42200-9f99-4b97-b847-7d967f6d11cf",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response true : access removed\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -262,13 +693,35 @@
 				},
 				{
 					"name": "GET - Door get all doors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "28aa98cd-d786-4c47-b1f3-7bae1424d686",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response include door information\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"{\\\"password\\\":\\\"dKLbsFDUGU\\\",\\\"status\\\":0,\\\"adresseip\\\":\\\"1.1.1.1\\\",\\\"id\\\":36}\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/doors",
+							"raw": "{{URL}}/doors",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"doors"
@@ -285,6 +738,28 @@
 			"item": [
 				{
 					"name": "POST - Verify Door Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ee606797-1b91-4daf-8f88-de8ba1ef08f8",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Returns true door password ok\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -311,7 +786,126 @@
 					"response": []
 				},
 				{
+					"name": "POST - Verify Door Password - Bad password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ef987368-4bd9-4e04-8918-614032895c7d",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Bad password error response\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Bad password\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\",\r\n    \"user\": \"18\",\r\n    \"password\": \"a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/door/check",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"door",
+								"check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Verify Door Password - invalid id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "960ac636-c23a-4fa3-ade9-5ce90f0c8019",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Invalid id error response\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid id\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"100000\",\r\n    \"user\": \"18\",\r\n    \"password\": \"cPpTNICYou\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/door/check",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"door",
+								"check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "POST - Add access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e6b943df-55c5-4019-b8e2-e8522ee2521b",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response false user already have access to that door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -345,13 +939,39 @@
 			"item": [
 				{
 					"name": "GET - History by Door id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "da00bac3-b61c-47c1-829f-3446a8737d3c",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"door\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"users\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"date\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"action\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/doorHistory/door/:doorId",
+							"raw": "{{URL}}/doorHistory/door/:doorId",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"doorHistory",
@@ -369,14 +989,85 @@
 					"response": []
 				},
 				{
-					"name": "GET - Users names",
+					"name": "GET - History by Door id - Unexisting door",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4b9c7cf-d05d-4f57-97a7-167fbf1ba593",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response dont include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/users/name",
+							"raw": "{{URL}}/doorHistory/door/:doorId",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
+							],
+							"path": [
+								"doorHistory",
+								"door",
+								":doorId"
+							],
+							"variable": [
+								{
+									"key": "doorId",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Users names",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cd356a1b-553d-4ef3-81aa-5d90663c503d",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response dont include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"firstname\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"lastname\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/name",
+							"host": [
+								"{{URL}}"
 							],
 							"path": [
 								"users",
@@ -395,13 +1086,38 @@
 			"item": [
 				{
 					"name": "GET - Door by Tag & User ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1789784d-81e3-43ef-b116-e5ea3722a7a3",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response dont include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"door\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"users\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"tag\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"nickname\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/doorTagUser/:tag/:users",
+							"raw": "{{URL}}/doorTagUser/:tag/:users",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"doorTagUser",
@@ -425,14 +1141,143 @@
 					"response": []
 				},
 				{
-					"name": "GET - Door Tag by User ID",
+					"name": "GET - Door by Tag & User ID - Unexisting user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea4b7104-45d9-407e-8336-01d9b086291b",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response dont include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/userTag/:userId",
+							"raw": "{{URL}}/doorTagUser/:tag/:users",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
+							],
+							"path": [
+								"doorTagUser",
+								":tag",
+								":users"
+							],
+							"variable": [
+								{
+									"description": "Nom du tag",
+									"key": "tag",
+									"value": "Tag"
+								},
+								{
+									"description": "Identifiant de l'utilisateur",
+									"key": "users",
+									"value": "1800000000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Door by Tag & User ID - Unexisting tag",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "959e6aee-fd88-445f-ac2e-b148a06aca9d",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response dont include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/doorTagUser/:tag/:users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"doorTagUser",
+								":tag",
+								":users"
+							],
+							"variable": [
+								{
+									"description": "Nom du tag",
+									"key": "tag",
+									"value": "Tagafezrgsvberfdg"
+								},
+								{
+									"description": "Identifiant de l'utilisateur",
+									"key": "users",
+									"value": "18"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Door Tag by User ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3e596134-4f35-4cca-853c-727811fbba9f",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response dont include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"tag\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/userTag/:userId",
+							"host": [
+								"{{URL}}"
 							],
 							"path": [
 								"userTag",
@@ -447,6 +1292,53 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GET - Door Tag by User ID - Unexisting user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bbfd866-ee1b-42b9-b448-f0e27148214d",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response dont include door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/userTag/:userId",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"userTag",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "18000000"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -456,6 +1348,29 @@
 			"item": [
 				{
 					"name": "PATCH - Update door tag and name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4952b055-f0f1-4f3a-bc59-5803576a2f41",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response true : door tag and/or name changed succesfuly\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -469,9 +1384,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{local}}/access/update",
+							"raw": "{{URL}}/access/update",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"access",
@@ -489,13 +1404,43 @@
 			"item": [
 				{
 					"name": "GET - User by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b6db7f90-42ff-4e86-941d-dbf340defde6",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response found user data\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"firstname\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"lastname\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"phone\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"sexe\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"mail\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"password\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"isadmin\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/user/:id",
+							"raw": "{{URL}}/user/:id",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"user",
@@ -513,26 +1458,48 @@
 					"response": []
 				},
 				{
-					"name": "POST - User by Mail",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"user\": {\r\n        \"mail\": \"\"\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+					"name": "GET - User by ID - Unexisting id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "81b58ebc-64f1-4560-905b-1e6d5e79ad74",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response empty : no user found with id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
 							}
-						},
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
 						"url": {
-							"raw": "{{URL}}/userMail",
+							"raw": "{{URL}}/user/:id",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"userMail"
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"description": "Identifiant de l'utilisateur",
+									"key": "id",
+									"value": "18000000"
+								}
 							]
 						}
 					},
@@ -540,6 +1507,38 @@
 				},
 				{
 					"name": "POST - User check password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d6a2fa92-6c13-4f5e-a962-5b425053c0e5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "84e5b2a6-0141-4092-8e71-d7bcf400c059",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response false : passwords different\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -553,12 +1552,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/verifyPassword",
+							"raw": "{{URL}}/verifyPassword/",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"verifyPassword"
+								"verifyPassword",
+								""
 							]
 						},
 						"description": "Argon2id"
@@ -567,6 +1567,28 @@
 				},
 				{
 					"name": "PUT - User change password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f6003ca-a4c8-41d3-a614-2758ae26021f",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response true : password updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -593,6 +1615,28 @@
 				},
 				{
 					"name": "PUT - User Update data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "436895f3-70fe-4de2-b732-201374d12860",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response true : user updated\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -606,9 +1650,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{local}}/modifUsers",
+							"raw": "{{URL}}/modifUsers",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"modifUsers"
@@ -619,6 +1663,28 @@
 				},
 				{
 					"name": "DEL - User : Delete user by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4566193b-be42-4fc0-83ca-a24b85a32d61",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Returns nothing\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -634,7 +1700,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "2"
 								}
 							]
 						}
@@ -649,13 +1715,39 @@
 			"item": [
 				{
 					"name": "GET - Door by door ID & User ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3acffac5-1527-4bd0-aabb-c7eca39ff16a",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains new door data\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"nickname\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"tag\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"status\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"adresseip\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{local}}/doorIdUser/:door/:users",
+							"raw": "{{URL}}/doorIdUser/:door/:users",
 							"host": [
-								"{{local}}"
+								"{{URL}}"
 							],
 							"path": [
 								"doorIdUser",
@@ -665,13 +1757,119 @@
 							"variable": [
 								{
 									"key": "door",
-									"value": "1",
+									"value": "37",
 									"description": "Door id"
 								},
 								{
 									"key": "users",
 									"value": "18",
 									"description": "User id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Door by door ID & User ID - Unexisting door",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1879b103-cdce-46ac-8030-2da9b14d2eb3",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response empty door not existing\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/doorIdUser/:door/:users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"doorIdUser",
+								":door",
+								":users"
+							],
+							"variable": [
+								{
+									"key": "door",
+									"value": "10000000000000000",
+									"description": "Door id"
+								},
+								{
+									"key": "users",
+									"value": "18",
+									"description": "User id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Door by door ID & User ID - Unexisting user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aded2e3f-04de-4b0a-b82a-2806198064c7",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response empty because no door\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"[]\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/doorIdUser/:door/:users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"doorIdUser",
+								":door",
+								":users"
+							],
+							"variable": [
+								{
+									"description": "Door id",
+									"key": "door",
+									"value": "1"
+								},
+								{
+									"description": "User id",
+									"key": "users",
+									"value": "180000"
 								}
 							]
 						}
@@ -686,12 +1884,105 @@
 			"item": [
 				{
 					"name": "POST - Add door",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c01301ee-1158-477f-9e5a-cf3225aa4de2",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0d0734e3-d285-4668-86bb-8415f4574095",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response new door data\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"password\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"status\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"adresseip\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"status\": \"1\",\r\n    \"ipAdress\": \"192.169.0.27\"\r\n}",
+							"raw": "{\r\n    \"status\": 1,\r\n    \"ipAdress\": \"192.169.0.27\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/newdoor",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"newdoor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Add door Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "89526bc1-cc74-419d-a6ee-17a7e7b65084",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "73706ecd-e7c6-4696-99e6-6de1f66b55ef",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response new door data\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"false\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ipAdress\": \"192.169.0.27\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

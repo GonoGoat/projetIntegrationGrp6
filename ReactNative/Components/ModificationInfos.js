@@ -25,9 +25,8 @@ function ModificationInfos(props) {
         await AsyncStorage.getItem('user').then((result) => {
             user = result
         })
-        axios.patch('http://82.165.248.136:8081/access/update',{tagName : tagName, nickname : nickname, door : door, users: user})
+        axios.patch('http://82.165.248.136/:8081/access/update',{tagName : tagName, nickname : nickname, door : door, users: user})
             .then(res => {
-                console.log(res);
                 setMessage({
                     message : "Informations sauvegardées !",
                     type : "success"
@@ -38,7 +37,6 @@ function ModificationInfos(props) {
                 return true;
             })
             .catch(err => {
-                console.log(err)
                 setMessage({
                     message : "Erreur lors de la modification de vos données",
                     type : "fail"
@@ -61,7 +59,6 @@ function ModificationInfos(props) {
 
     function save(){
         let messageErreur = check(nickname,tagName);
-        console.log(messageErreur);
         messageErreur === true ?  updateAccess(nickname, tagName, door) : fail(messageErreur);
     }
 

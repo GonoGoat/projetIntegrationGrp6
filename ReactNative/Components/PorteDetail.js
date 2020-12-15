@@ -24,10 +24,6 @@ export default class PorteDetail extends React.Component {
     }
   }
 
-  setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });
-  }
-
   send(doorId, status) {
     if(status == 2 || status== 3) {
       alert('Erreur')
@@ -51,13 +47,12 @@ export default class PorteDetail extends React.Component {
 
       axios.put('http://82.165.248.136:8081/doorStatus',{door})
       .then(res => {
-          axios.get(`http://192.168.1.60/` + textStatus + '/' + res.data[0].password)
+        var datadoor = getDoorById(doorId, this.state.doors);
+        var request = ('http://'+ datadoor[2]  + '/' + textStatus + '/' + res.data[0].password) 
+          axios.get(request)
           .then(res => {
             this.setState({isLoading: false});
           })
-          .catch(error => {
-          console.log(error)
-      })
       })
       .catch(err => {
           this.setState({isLoading: false})
@@ -73,7 +68,7 @@ export default class PorteDetail extends React.Component {
           id : doorId,
           status : newStatus
         };
-        axios.put('http://localhost:8081/doorStatus',{door})
+        axios.put('http://82.165.248.136:8081/doorStatus',{door})
         .then(res => {
           this.sendHistory(doorId, newStatus)
         })
@@ -92,7 +87,7 @@ export default class PorteDetail extends React.Component {
       date: new Date,
       action: newStatus
     }
-    await axios.post('http://localhost:8081/newhistory',{history})
+    await axios.post('http://82.165.248.136:8081/newhistory',{history})
       .then(res => {
           this.setState({isLoading: false})
           this.componentDidMount();
@@ -109,7 +104,7 @@ export default class PorteDetail extends React.Component {
       door: doorId,
       users : userId,
     }
-    axios.post('http://localhost:8081/access/delete',{params})
+    axios.post('http://82.165.248.136:8081/access/delete',{params})
       .then(res => {
         this.props.navigation.navigate("ListePortes")
         this.setState({isLoading: false})
@@ -123,7 +118,7 @@ export default class PorteDetail extends React.Component {
 
   getDoors() {
 
-    axios.get(`http://localhost:8081/doors`)
+    axios.get(`http://82.165.248.136:8081/doors`)
     .then(res => {
       this.setState({isLoading: false, doors: res.data});
     })
