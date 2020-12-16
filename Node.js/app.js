@@ -230,7 +230,7 @@ app.get('/doors', async (req, res) => {
 *       Porte Detail : PUT - DOOR change status
 *************************************************/
 app.put('/doorStatus', (req, res) => {
-    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id;
+    const query = "UPDATE door SET status = " + req.body.door.status + " WHERE id = " + req.body.door.id + ' returning password';
     if(req.body.door.status == 0) {
         analytics.track({
             userId: 1,
@@ -249,9 +249,9 @@ app.put('/doorStatus', (req, res) => {
             }
         });
     }
-    pool.query(query, (err) => {
+    pool.query(query, (err, rows) => {
         if (err) return res.send(false);
-        return res.send(true);
+        return res.send(rows.rows);
     });
 });
 
