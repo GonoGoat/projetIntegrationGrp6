@@ -17,7 +17,7 @@ describe("Date format", () => {
 
 it('Returns correct name format', () => {
   let id = 1;
-  let table = [{"id":1,"firstname":"testingFirstname","lastname":"testingLastname","phone":null,"sexe":"M","mail":"testing@testing.testing","password":"testing"}]
+  let table = [{"id":2,"firstname":"testing2Firstname","lastname":"testing2Lastname","phone":null,"sexe":"M","mail":"testing2@testing.testing","password":"testing"},{"id":1,"firstname":"testingFirstname","lastname":"testingLastname","phone":null,"sexe":"M","mail":"testing@testing.testing","password":"testing"}]
   let receivedName = getNomPrenom(id, table)
   expect(receivedName).toBe('testingLastname testingFirstname')
 })
