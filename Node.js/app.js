@@ -149,7 +149,7 @@ app.post('/userConnection/', async (req, res) => {
 app.get('/doorHistory/user/:userId', async (req, res) => {
     let userId = parseInt(req.url.split('/doorHistory/user/').pop());
     let values = [userId];
-    let sql = 'SELECT history.door FROM history WHERE history.users = $1 GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
+    let sql = 'SELECT history.door FROM history WHERE history.users = $1 and exists (select users, door from access where access.door = history.door and access.users=history.users) GROUP BY history.door ORDER BY count(history.door) DESC LIMIT 3';
     pool.query(sql, values, (err, rows) => {
         if (err) return res.send(err);
         return res.send(rows.rows);
