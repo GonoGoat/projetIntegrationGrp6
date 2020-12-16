@@ -100,10 +100,17 @@ openDoor(doorId, status){
     status : newStatus
   }
 
-  axios.put('http://82.165.248.136:8081/doorStatus',{door})
+  axios.put('http://localhost:8081/doorStatus',{door})
   .then(res => {
+    let ip;
+    for(let i in this.state.listePorte) {
+      if(this.state.listePorte[i].id == doorId) {
+        ip = this.state.listePorte[i].adresseip
+      }
+    }
       this.componentDidMount()
-      axios.get(`http://192.168.1.19/` + textStatus + '/' + res.data[0].password)
+      let request = `http://` + ip + '/' + textStatus + '/' + res.data[0].password
+      axios.get(request)
       .then(res => {
       })
       .catch(error => {
