@@ -100,7 +100,7 @@ openDoor(doorId, status){
     status : newStatus
   }
 
-  axios.put('http://localhost:8081/doorStatus',{door})
+  axios.put('http://82.165.248.136:8081/doorStatus',{door})
   .then(res => {
     let ip;
     for(let i in this.state.listePorte) {
